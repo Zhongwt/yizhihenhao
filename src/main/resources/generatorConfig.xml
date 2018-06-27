@@ -38,11 +38,55 @@
       <property name="enableSubPackages" value="true"/>
    </javaClientGenerator>
 
-      <table schema="DB2ADMIN" tableName="develop_promotion">
+      <table schema="DB2ADMIN" tableName="admin">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="collection_position">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="company">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="company_notice">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="delivery_resume">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="educational_background">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="internship_experience">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="interview">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="job_seeker">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="log">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="position">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="project_experience">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="resume">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="self_evaluation">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="skill_hobby">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="works_show">
           <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
       </table>
 
 
-    
   </context>
 </generatorConfiguration>

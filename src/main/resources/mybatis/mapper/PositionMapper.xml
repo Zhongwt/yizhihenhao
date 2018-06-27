@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzhh.backstage.api.dao.mapper.PositionMapper">
+  <resultMap id="BaseResultMap" type="com.yzhh.backstage.api.entity.Position">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="release_date" jdbcType="BIGINT" property="releaseDate" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="perple_num" jdbcType="INTEGER" property="perpleNum" />
+    <result column="seduction" jdbcType="VARCHAR" property="seduction" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="education" jdbcType="INTEGER" property="education" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="is_internship" jdbcType="INTEGER" property="isInternship" />
+    <result column="internship_time" jdbcType="INTEGER" property="internshipTime" />
+    <result column="per_diem" jdbcType="DOUBLE" property="perDiem" />
+    <result column="work_time" jdbcType="INTEGER" property="workTime" />
+    <result column="correction_chance" jdbcType="INTEGER" property="correctionChance" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="deadline" jdbcType="BIGINT" property="deadline" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, last_access, company_id, release_date, type, name, city, perple_num, seduction, 
+    description, education, address, is_internship, internship_time, per_diem, work_time, 
+    correction_chance, status, deadline
+  </sql>
+  <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.PositionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from position
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from position
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from position
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.yzhh.backstage.api.entity.PositionExample">
+    delete from position
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.yzhh.backstage.api.entity.Position">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into position (last_access, company_id, release_date, 
+      type, name, city, perple_num, 
+      seduction, description, education, 
+      address, is_internship, internship_time, 
+      per_diem, work_time, correction_chance, 
+      status, deadline)
+    values (#{lastAccess,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT}, #{releaseDate,jdbcType=BIGINT}, 
+      #{type,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{perpleNum,jdbcType=INTEGER}, 
+      #{seduction,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{education,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR}, #{isInternship,jdbcType=INTEGER}, #{internshipTime,jdbcType=INTEGER}, 
+      #{perDiem,jdbcType=DOUBLE}, #{workTime,jdbcType=INTEGER}, #{correctionChance,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{deadline,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.Position">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into position
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="lastAccess != null">
+        last_access,
+      </if>
+      <if test="companyId != null">
+        company_id,
+      </if>
+      <if test="releaseDate != null">
+        release_date,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="perpleNum != null">
+        perple_num,
+      </if>
+      <if test="seduction != null">
+        seduction,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="education != null">
+        education,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="isInternship != null">
+        is_internship,
+      </if>
+      <if test="internshipTime != null">
+        internship_time,
+      </if>
+      <if test="perDiem != null">
+        per_diem,
+      </if>
+      <if test="workTime != null">
+        work_time,
+      </if>
+      <if test="correctionChance != null">
+        correction_chance,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="deadline != null">
+        deadline,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="lastAccess != null">
+        #{lastAccess,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null">
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="releaseDate != null">
+        #{releaseDate,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="perpleNum != null">
+        #{perpleNum,jdbcType=INTEGER},
+      </if>
+      <if test="seduction != null">
+        #{seduction,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="education != null">
+        #{education,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="isInternship != null">
+        #{isInternship,jdbcType=INTEGER},
+      </if>
+      <if test="internshipTime != null">
+        #{internshipTime,jdbcType=INTEGER},
+      </if>
+      <if test="perDiem != null">
+        #{perDiem,jdbcType=DOUBLE},
+      </if>
+      <if test="workTime != null">
+        #{workTime,jdbcType=INTEGER},
+      </if>
+      <if test="correctionChance != null">
+        #{correctionChance,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="deadline != null">
+        #{deadline,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.yzhh.backstage.api.entity.PositionExample" resultType="java.lang.Long">
+    select count(*) from position
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update position
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.lastAccess != null">
+        last_access = #{record.lastAccess,jdbcType=BIGINT},
+      </if>
+      <if test="record.companyId != null">
+        company_id = #{record.companyId,jdbcType=BIGINT},
+      </if>
+      <if test="record.releaseDate != null">
+        release_date = #{record.releaseDate,jdbcType=BIGINT},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.city != null">
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.perpleNum != null">
+        perple_num = #{record.perpleNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.seduction != null">
+        seduction = #{record.seduction,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.education != null">
+        education = #{record.education,jdbcType=INTEGER},
+      </if>
+      <if test="record.address != null">
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isInternship != null">
+        is_internship = #{record.isInternship,jdbcType=INTEGER},
+      </if>
+      <if test="record.internshipTime != null">
+        internship_time = #{record.internshipTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.perDiem != null">
+        per_diem = #{record.perDiem,jdbcType=DOUBLE},
+      </if>
+      <if test="record.workTime != null">
+        work_time = #{record.workTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.correctionChance != null">
+        correction_chance = #{record.correctionChance,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.deadline != null">
+        deadline = #{record.deadline,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update position
+    set id = #{record.id,jdbcType=BIGINT},
+      last_access = #{record.lastAccess,jdbcType=BIGINT},
+      company_id = #{record.companyId,jdbcType=BIGINT},
+      release_date = #{record.releaseDate,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      perple_num = #{record.perpleNum,jdbcType=INTEGER},
+      seduction = #{record.seduction,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      education = #{record.education,jdbcType=INTEGER},
+      address = #{record.address,jdbcType=VARCHAR},
+      is_internship = #{record.isInternship,jdbcType=INTEGER},
+      internship_time = #{record.internshipTime,jdbcType=INTEGER},
+      per_diem = #{record.perDiem,jdbcType=DOUBLE},
+      work_time = #{record.workTime,jdbcType=INTEGER},
+      correction_chance = #{record.correctionChance,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      deadline = #{record.deadline,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yzhh.backstage.api.entity.Position">
+    update position
+    <set>
+      <if test="lastAccess != null">
+        last_access = #{lastAccess,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null">
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="releaseDate != null">
+        release_date = #{releaseDate,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="perpleNum != null">
+        perple_num = #{perpleNum,jdbcType=INTEGER},
+      </if>
+      <if test="seduction != null">
+        seduction = #{seduction,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="education != null">
+        education = #{education,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="isInternship != null">
+        is_internship = #{isInternship,jdbcType=INTEGER},
+      </if>
+      <if test="internshipTime != null">
+        internship_time = #{internshipTime,jdbcType=INTEGER},
+      </if>
+      <if test="perDiem != null">
+        per_diem = #{perDiem,jdbcType=DOUBLE},
+      </if>
+      <if test="workTime != null">
+        work_time = #{workTime,jdbcType=INTEGER},
+      </if>
+      <if test="correctionChance != null">
+        correction_chance = #{correctionChance,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="deadline != null">
+        deadline = #{deadline,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yzhh.backstage.api.entity.Position">
+    update position
+    set last_access = #{lastAccess,jdbcType=BIGINT},
+      company_id = #{companyId,jdbcType=BIGINT},
+      release_date = #{releaseDate,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      perple_num = #{perpleNum,jdbcType=INTEGER},
+      seduction = #{seduction,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      education = #{education,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      is_internship = #{isInternship,jdbcType=INTEGER},
+      internship_time = #{internshipTime,jdbcType=INTEGER},
+      per_diem = #{perDiem,jdbcType=DOUBLE},
+      work_time = #{workTime,jdbcType=INTEGER},
+      correction_chance = #{correctionChance,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      deadline = #{deadline,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

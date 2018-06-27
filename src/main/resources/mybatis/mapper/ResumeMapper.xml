@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzhh.backstage.api.dao.mapper.ResumeMapper">
+  <resultMap id="BaseResultMap" type="com.yzhh.backstage.api.entity.Resume">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
+    <result column="job_seeker_id" jdbcType="BIGINT" property="jobSeekerId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="is_default" jdbcType="INTEGER" property="isDefault" />
+    <result column="wish_position_name" jdbcType="VARCHAR" property="wishPositionName" />
+    <result column="wish_city" jdbcType="VARCHAR" property="wishCity" />
+    <result column="work_day" jdbcType="INTEGER" property="workDay" />
+    <result column="field_start" jdbcType="BIGINT" property="fieldStart" />
+    <result column="field_end" jdbcType="BIGINT" property="fieldEnd" />
+    <result column="per_diem" jdbcType="DOUBLE" property="perDiem" />
+    <result column="arrival_day" jdbcType="BIGINT" property="arrivalDay" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, last_access, job_seeker_id, name, is_default, wish_position_name, wish_city, 
+    work_day, field_start, field_end, per_diem, arrival_day
+  </sql>
+  <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.ResumeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from resume
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from resume
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from resume
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.yzhh.backstage.api.entity.ResumeExample">
+    delete from resume
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.yzhh.backstage.api.entity.Resume">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into resume (last_access, job_seeker_id, name, 
+      is_default, wish_position_name, wish_city, 
+      work_day, field_start, field_end, 
+      per_diem, arrival_day)
+    values (#{lastAccess,jdbcType=BIGINT}, #{jobSeekerId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+      #{isDefault,jdbcType=INTEGER}, #{wishPositionName,jdbcType=VARCHAR}, #{wishCity,jdbcType=VARCHAR}, 
+      #{workDay,jdbcType=INTEGER}, #{fieldStart,jdbcType=BIGINT}, #{fieldEnd,jdbcType=BIGINT}, 
+      #{perDiem,jdbcType=DOUBLE}, #{arrivalDay,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.Resume">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into resume
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="lastAccess != null">
+        last_access,
+      </if>
+      <if test="jobSeekerId != null">
+        job_seeker_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="isDefault != null">
+        is_default,
+      </if>
+      <if test="wishPositionName != null">
+        wish_position_name,
+      </if>
+      <if test="wishCity != null">
+        wish_city,
+      </if>
+      <if test="workDay != null">
+        work_day,
+      </if>
+      <if test="fieldStart != null">
+        field_start,
+      </if>
+      <if test="fieldEnd != null">
+        field_end,
+      </if>
+      <if test="perDiem != null">
+        per_diem,
+      </if>
+      <if test="arrivalDay != null">
+        arrival_day,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="lastAccess != null">
+        #{lastAccess,jdbcType=BIGINT},
+      </if>
+      <if test="jobSeekerId != null">
+        #{jobSeekerId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=INTEGER},
+      </if>
+      <if test="wishPositionName != null">
+        #{wishPositionName,jdbcType=VARCHAR},
+      </if>
+      <if test="wishCity != null">
+        #{wishCity,jdbcType=VARCHAR},
+      </if>
+      <if test="workDay != null">
+        #{workDay,jdbcType=INTEGER},
+      </if>
+      <if test="fieldStart != null">
+        #{fieldStart,jdbcType=BIGINT},
+      </if>
+      <if test="fieldEnd != null">
+        #{fieldEnd,jdbcType=BIGINT},
+      </if>
+      <if test="perDiem != null">
+        #{perDiem,jdbcType=DOUBLE},
+      </if>
+      <if test="arrivalDay != null">
+        #{arrivalDay,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.yzhh.backstage.api.entity.ResumeExample" resultType="java.lang.Long">
+    select count(*) from resume
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update resume
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.lastAccess != null">
+        last_access = #{record.lastAccess,jdbcType=BIGINT},
+      </if>
+      <if test="record.jobSeekerId != null">
+        job_seeker_id = #{record.jobSeekerId,jdbcType=BIGINT},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDefault != null">
+        is_default = #{record.isDefault,jdbcType=INTEGER},
+      </if>
+      <if test="record.wishPositionName != null">
+        wish_position_name = #{record.wishPositionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wishCity != null">
+        wish_city = #{record.wishCity,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workDay != null">
+        work_day = #{record.workDay,jdbcType=INTEGER},
+      </if>
+      <if test="record.fieldStart != null">
+        field_start = #{record.fieldStart,jdbcType=BIGINT},
+      </if>
+      <if test="record.fieldEnd != null">
+        field_end = #{record.fieldEnd,jdbcType=BIGINT},
+      </if>
+      <if test="record.perDiem != null">
+        per_diem = #{record.perDiem,jdbcType=DOUBLE},
+      </if>
+      <if test="record.arrivalDay != null">
+        arrival_day = #{record.arrivalDay,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update resume
+    set id = #{record.id,jdbcType=BIGINT},
+      last_access = #{record.lastAccess,jdbcType=BIGINT},
+      job_seeker_id = #{record.jobSeekerId,jdbcType=BIGINT},
+      name = #{record.name,jdbcType=VARCHAR},
+      is_default = #{record.isDefault,jdbcType=INTEGER},
+      wish_position_name = #{record.wishPositionName,jdbcType=VARCHAR},
+      wish_city = #{record.wishCity,jdbcType=VARCHAR},
+      work_day = #{record.workDay,jdbcType=INTEGER},
+      field_start = #{record.fieldStart,jdbcType=BIGINT},
+      field_end = #{record.fieldEnd,jdbcType=BIGINT},
+      per_diem = #{record.perDiem,jdbcType=DOUBLE},
+      arrival_day = #{record.arrivalDay,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yzhh.backstage.api.entity.Resume">
+    update resume
+    <set>
+      <if test="lastAccess != null">
+        last_access = #{lastAccess,jdbcType=BIGINT},
+      </if>
+      <if test="jobSeekerId != null">
+        job_seeker_id = #{jobSeekerId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null">
+        is_default = #{isDefault,jdbcType=INTEGER},
+      </if>
+      <if test="wishPositionName != null">
+        wish_position_name = #{wishPositionName,jdbcType=VARCHAR},
+      </if>
+      <if test="wishCity != null">
+        wish_city = #{wishCity,jdbcType=VARCHAR},
+      </if>
+      <if test="workDay != null">
+        work_day = #{workDay,jdbcType=INTEGER},
+      </if>
+      <if test="fieldStart != null">
+        field_start = #{fieldStart,jdbcType=BIGINT},
+      </if>
+      <if test="fieldEnd != null">
+        field_end = #{fieldEnd,jdbcType=BIGINT},
+      </if>
+      <if test="perDiem != null">
+        per_diem = #{perDiem,jdbcType=DOUBLE},
+      </if>
+      <if test="arrivalDay != null">
+        arrival_day = #{arrivalDay,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yzhh.backstage.api.entity.Resume">
+    update resume
+    set last_access = #{lastAccess,jdbcType=BIGINT},
+      job_seeker_id = #{jobSeekerId,jdbcType=BIGINT},
+      name = #{name,jdbcType=VARCHAR},
+      is_default = #{isDefault,jdbcType=INTEGER},
+      wish_position_name = #{wishPositionName,jdbcType=VARCHAR},
+      wish_city = #{wishCity,jdbcType=VARCHAR},
+      work_day = #{workDay,jdbcType=INTEGER},
+      field_start = #{fieldStart,jdbcType=BIGINT},
+      field_end = #{fieldEnd,jdbcType=BIGINT},
+      per_diem = #{perDiem,jdbcType=DOUBLE},
+      arrival_day = #{arrivalDay,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
