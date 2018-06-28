@@ -2,14 +2,11 @@ package com.yzhh.backstage.api.error;
 
 public enum CommonError implements ICommonError {
 
-    REQUEST_PARAMETER_ERROR(10000, "Request parameter error"),
-    // 用户错误
-    USER_AUTH_ERROR(10001, "User authentication failure"),
-    USER_LOGIN_ACCOUNTPWD_ERROR(10002, "ERROR Incorrect username or password"),
-  
-    SYSTEM_ERROR(11000,"System error"),
-    UPLOAD_FILE_ERROR(12000,"File upload error"),
-    EXCEL_ERROR(13000,"tile & value length is not the same length "),
+    REQUEST_PARAMETER_ERROR(10000, "请求参数错误"),
+    USER_AUTH_ERROR(10001, "用户或密码错误"),
+    SYSTEM_ERROR(11000,"系统错误"),
+    UPLOAD_FILE_ERROR(12000,"文件上传错误"),
+    EXCEL_ERROR(13000,"excel上传错误"),
     ;
 
     final private int id;

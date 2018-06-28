@@ -11,35 +11,35 @@ public class DAOImpl<T, Texample> implements IDAO<T, Texample> {
 	@Autowired
 	public BaseMapper<T, Texample> mapper;
 	
-	public int insert(T record) {
+	public Long insert(T record) {
 		return mapper.insert(record);
 	}
 
-	public int insertSelective(T record) {
+	public Long insertSelective(T record) {
 		return mapper.insertSelective(record);
 	}
 	
-	public int deleteByExample(Texample example) {
+	public Long deleteByExample(Texample example) {
 		return mapper.deleteByExample(example);
 	}
 
-	public int deleteByPrimaryKey(Integer id) {
+	public Long deleteByPrimaryKey(Long id) {
 		return mapper.deleteByPrimaryKey(id);
 	}
 
-	public int updateByExample(T record, Texample example) {
+	public Long updateByExample(T record, Texample example) {
 		return mapper.updateByExample(record, example);
 	}
 
-	public int updateByPrimaryKey(T record) {
+	public Long updateByPrimaryKey(T record) {
 		return mapper.updateByPrimaryKey(record);
 	}
 	
-	public int updateByExampleSelective(T record, Texample example) {
+	public Long updateByExampleSelective(T record, Texample example) {
 		return mapper.updateByExampleSelective(record, example);
 	}
 
-	public int updateByPrimaryKeySelective(T record) {
+	public Long updateByPrimaryKeySelective(T record) {
 		return mapper.updateByPrimaryKeySelective(record);
 	}
 
@@ -47,11 +47,11 @@ public class DAOImpl<T, Texample> implements IDAO<T, Texample> {
 		return mapper.selectByExample(example);
 	}
 
-	public long countByExample(Texample example) {
+	public Long countByExample(Texample example) {
 		return mapper.countByExample(example);
 	}
 
-	public T selectByPrimaryKey(Integer id) {
+	public T selectByPrimaryKey(Long id) {
 		return mapper.selectByPrimaryKey(id);
 	}
 	

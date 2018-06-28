@@ -11,6 +11,7 @@ package com.yzhh.backstage.api.entity;
 public class Admin extends BaseEntity{
 	
 	private static final long serialVersionUID = 1L;
+	private String name;			//
 	private String username;		//
     private String password;		//
     private String email;			//
@@ -74,4 +75,12 @@ public class Admin extends BaseEntity{
     public void setJurisdiction(String jurisdiction) {
         this.jurisdiction = jurisdiction == null ? null : jurisdiction.trim();
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

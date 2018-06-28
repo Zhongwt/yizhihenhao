@@ -15,6 +15,7 @@ public class Log extends BaseEntity{
     private Long operateTime;		//
     private String ip;						//
     private String note;					//
+    private Long operatorId;
 
     public String getOperator() {
         return operator;
@@ -47,4 +48,12 @@ public class Log extends BaseEntity{
     public void setNote(String note) {
         this.note = note == null ? null : note.trim();
     }
+
+	public Long getOperatorId() {
+		return operatorId;
+	}
+
+	public void setOperatorId(Long operatorId) {
+		this.operatorId = operatorId;
+	}
 }

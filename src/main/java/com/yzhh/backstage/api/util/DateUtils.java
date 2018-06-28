@@ -16,14 +16,13 @@ import java.util.Locale;
  */
 public class DateUtils {
 
-	//public final String format_1 = "";
-	public static final String mmddyyyy = "M	M/dd/YYYY";
-	public  static  final  String YYYYMMdd="yyyy-MM-dd";
-	public  static  final  String HHMMSS="HH:mm:ss";
-	public  static  final  String DDMMYY="dd-MM-yyyy";
-	public  static  final  String HHMM="HH:mm";
+	// public final String format_1 = "";
+	public static final String mmddyyyy = "MM/dd/YYYY";
+	public static final String YYYYMMdd = "yyyy-MM-dd";
+	public static final String HHMMSS = "HH:mm:ss";
+	public static final String DDMMYY = "dd-MM-yyyy";
+	public static final String HHMM = "HH:mm";
 	public static final String YYMMDD = "yyyy-MM-dd";
-	
 
 	/**
 	 * 
@@ -32,10 +31,10 @@ public class DateUtils {
 	 * @author:王涛
 	 * @createTime:2018年6月21日 下午5:01:28
 	 */
-	public static boolean isBeforeDate(Date startDate,Date endDate){
+	public static boolean isBeforeDate(Date startDate, Date endDate) {
 		return startDate.before(endDate);
 	}
-	
+
 	/**
 	 * 
 	 * @description:date类型转成String类型
@@ -44,13 +43,24 @@ public class DateUtils {
 	 * @author:王涛
 	 * @createTime:2018年6月21日 下午5:08:29
 	 */
-	public static String dateToString(Date startDate,String type){
-		if(type == null) {
-			type = DDMMYY;
+	public static String dateToString(Date startDate, String type) {
+		if (type == null) {
+			type = YYYYMMdd;
 		}
 		SimpleDateFormat df = new SimpleDateFormat(type);
 		return df.format(startDate);
+	}
+
+	public static String longToString(Long millis, String type) {
+		if (type == null) {
+			type = YYYYMMdd;
 		}
+		SimpleDateFormat df = new SimpleDateFormat(type);
+		Date date = new Date();
+		date.setTime(millis);
+		return df.format(date);
+	}
+
 
 	/**
 	 * 
@@ -59,29 +69,29 @@ public class DateUtils {
 	 * @param type
 	 * @return
 	 * @author:王涛
-	 * @throws ParseException 
+	 * @throws ParseException
 	 * @createTime:2018年6月21日 下午6:34:25
 	 */
-	public static Date stringToDate(String date,String type) throws ParseException{
-		Date strtodate=null;
-		
-		if(type == null) {
+	public static Date stringToDate(String date, String type) throws ParseException {
+		Date strtodate = null;
+
+		if (type == null) {
 			type = DateUtils.HHMMSS;
 			SimpleDateFormat df = new SimpleDateFormat(DateUtils.HHMMSS);
-			strtodate= df.parse(date);
+			strtodate = df.parse(date);
 		}
-		
-		if(type.equals(DateUtils.YYYYMMdd)){
+
+		if (type.equals(DateUtils.YYYYMMdd)) {
 			SimpleDateFormat df = new SimpleDateFormat(DateUtils.YYYYMMdd);
-			strtodate=df.parse(date);
+			strtodate = df.parse(date);
 		}
-		if(type.equals(DateUtils.HHMM)){
+		if (type.equals(DateUtils.HHMM)) {
 			SimpleDateFormat df = new SimpleDateFormat(DateUtils.HHMM);
-			strtodate=df.parse(date);
+			strtodate = df.parse(date);
 		}
 		return strtodate;
 	}
-	
+
 	/**
 	 * 
 	 * @description:date转化成String
@@ -90,12 +100,12 @@ public class DateUtils {
 	 * @author:王涛
 	 * @createTime:2018年6月21日 下午3:33:39
 	 */
-	public static String dateToStringHms(Date date){
-		 SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.HHMMSS);
-		 String dateString = formatter.format(date);
-		 return dateString;
+	public static String dateToStringHms(Date date) {
+		SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.HHMMSS);
+		String dateString = formatter.format(date);
+		return dateString;
 	}
-	
+
 	/**
 	 * @description:将时间转成国际时间格式
 	 * @param date
@@ -105,21 +115,21 @@ public class DateUtils {
 	 */
 	public static String dateToUK(Date date) {
 		String format = "d MMMMM yyyy";
-		SimpleDateFormat sdf=new SimpleDateFormat(format,Locale.UK);
+		SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.UK);
 		return sdf.format(date);
 	}
 
 	/**
 	 * @description: -- 日期扎转化mmddyyyy
 	 * @author:谭农春
-	 * @createTime: 2018/6/19 17:14 
+	 * @createTime: 2018/6/19 17:14
 	 */
-	
-	public  static String mmddyyy(Date date){
-		if(null == date){
+
+	public static String mmddyyy(Date date) {
+		if (null == date) {
 			return "";
 		}
-		SimpleDateFormat sdf=new SimpleDateFormat(mmddyyyy,Locale.UK);
+		SimpleDateFormat sdf = new SimpleDateFormat(mmddyyyy, Locale.UK);
 		return sdf.format(date);
 	}
 
@@ -133,77 +143,74 @@ public class DateUtils {
 	 */
 	public static boolean isSameDate(Date date1, Date date2) {
 		Calendar cal1 = Calendar.getInstance();
-	       cal1.setTime(date1);
+		cal1.setTime(date1);
 
-	       Calendar cal2 = Calendar.getInstance();
-	       cal2.setTime(date2);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(date2);
 
-	       boolean isSameYear = cal1.get(Calendar.YEAR) == cal2
-	               .get(Calendar.YEAR);
-	       boolean isSameMonth = isSameYear
-	               && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
-	       boolean isSameDate = isSameMonth
-	               && cal1.get(Calendar.DAY_OF_MONTH) == cal2
-	                       .get(Calendar.DAY_OF_MONTH);
+		boolean isSameYear = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+		boolean isSameMonth = isSameYear && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+		boolean isSameDate = isSameMonth && cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
 
-	       return isSameDate;
+		return isSameDate;
 	}
-	
+
 	/**
 	 * 
-	 * @description:根据时间去判断是星期几 
-	 * @param date 时间的格式 dd/MM/yyyy
+	 * @description:根据时间去判断是星期几
+	 * @param date
+	 *            时间的格式 dd/MM/yyyy
 	 * @return
 	 * @author:王涛
-	 * @throws Exception 
+	 * @throws Exception
 	 * @createTime:2018年6月27日 下午2:47:17
 	 */
-	public static Integer dateToWeek(String date) throws Exception{
-		Integer repeat=-1;
-		 SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-		 String[] weekDays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+	public static Integer dateToWeek(String date) throws Exception {
+		Integer repeat = -1;
+		SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+		String[] weekDays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
 		// 获得一个日历
-		 Calendar cal = Calendar.getInstance(); 
-		 Date datet = null;
-		 try {
-	         datet = f.parse(date);
-	         cal.setTime(datet);
-	        } catch (ParseException e) {
-	            e.printStackTrace();
-	        }
-		 int w = cal.get(Calendar.DAY_OF_WEEK) - 1; // 指示一个星期中的某天。
-	     if (w < 0){
-	         w = 0;
-	     }
-	     switch(weekDays[w]){
-	     case "星期日":
-	    	 repeat=6;
-	    	 break;
-	     case "星期一":
-	    	 repeat=0;
-	    	 break;
-	     case "星期二":
-	    	 repeat=1;
-	    	 break;
-	     case "星期三":
-	    	 repeat=2;
-	    	 break;
-	     case "星期四":
-	    	 repeat=3;
-	    	 break;
-	     case "星期五":
-	    	 repeat=4;
-	    	 break;
-	     case "星期六":
-	    	 repeat=5;
-	    	 break;
-	    default:
-	    		throw new Exception("根据时间去判断是星期错误");
-	     }
-	    return repeat;
+		Calendar cal = Calendar.getInstance();
+		Date datet = null;
+		try {
+			datet = f.parse(date);
+			cal.setTime(datet);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		int w = cal.get(Calendar.DAY_OF_WEEK) - 1; // 指示一个星期中的某天。
+		if (w < 0) {
+			w = 0;
+		}
+		switch (weekDays[w]) {
+		case "星期日":
+			repeat = 6;
+			break;
+		case "星期一":
+			repeat = 0;
+			break;
+		case "星期二":
+			repeat = 1;
+			break;
+		case "星期三":
+			repeat = 2;
+			break;
+		case "星期四":
+			repeat = 3;
+			break;
+		case "星期五":
+			repeat = 4;
+			break;
+		case "星期六":
+			repeat = 5;
+			break;
+		default:
+			throw new Exception("根据时间去判断是星期错误");
+		}
+		return repeat;
 	}
-	
+
 	public static void main(String[] args) throws Exception {
-	    System.out.println(DateUtils.dateToWeek("29/06/2018"));
-    }
+		System.out.println(DateUtils.dateToWeek("29/06/2018"));
+	}
 }

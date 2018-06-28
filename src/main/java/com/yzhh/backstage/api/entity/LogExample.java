@@ -223,7 +223,7 @@ public class LogExample {
             addCriterion("last_access not between", value1, value2, "lastAccess");
             return (Criteria) this;
         }
-
+        
         public Criteria andOperatorIsNull() {
             addCriterion("operator is null");
             return (Criteria) this;
@@ -491,6 +491,11 @@ public class LogExample {
 
         public Criteria andNoteNotBetween(String value1, String value2) {
             addCriterion("note not between", value1, value2, "note");
+            return (Criteria) this;
+        }
+        
+        public Criteria andOperatorIdEqualTo(Long value) {
+            addCriterion("operator_id =", value, "operatorId");
             return (Criteria) this;
         }
     }

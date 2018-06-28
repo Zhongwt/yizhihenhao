@@ -14,17 +14,17 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 @Configuration
-@MapperScan(basePackages = {"com.taidii.staffdevelopment.dao.mapper","com.taidii.staffdevelopment.hq.dao.mapper"}, sqlSessionFactoryRef = "sqlSessionFactory")
+@MapperScan(basePackages = {"com.yzhh.backstage.api.dao.mapper"}, sqlSessionFactoryRef = "sqlSessionFactory")
 public class MybatisDbConfig {
 	
 	@Autowired
-    @Qualifier("staffDevelopmentDataSource")
-    private DataSource staffDevelopmentDS;
+    @Qualifier("apiDataSource")
+    private DataSource apiDS;
 	
 	@Bean
     public SqlSessionFactory sqlSessionFactory() throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(staffDevelopmentDS); // 使用titan数据源, 连接titan库
+        factoryBean.setDataSource(apiDS); // 使用titan数据源, 连接titan库
         factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
                 .getResources("classpath:mybatis/mapper/**/*.xml"));
         return factoryBean.getObject();
@@ -39,6 +39,6 @@ public class MybatisDbConfig {
 
     @Bean(name = "transactionManager2")
     public DataSourceTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(staffDevelopmentDS);
+        return new DataSourceTransactionManager(apiDS);
     }
 }

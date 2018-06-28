@@ -20,7 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableWebMvc
 @EnableSwagger2
-@ComponentScan(basePackages = { "com.taidii.staffdevelopment.controller" })
+@ComponentScan(basePackages = { "com.yzhh.backstage.api.controller" })
 public class SwaggerConfig
 {
     public ApiInfo apiInfo() {
@@ -46,7 +46,7 @@ public class SwaggerConfig
     	
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.taidii.staffdevelopment.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.yzhh.backstage.api.controller"))
                 .build()
                 .globalOperationParameters(pars)  
                 .apiInfo(apiInfo());

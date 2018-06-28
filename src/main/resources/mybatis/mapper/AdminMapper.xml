@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.yzhh.backstage.api.entity.Admin">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="email" jdbcType="VARCHAR" property="email" />
@@ -71,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, last_access, username, password, email, join_date, last_login_date, role, jurisdiction
+    id, last_access, username, name,password, email, join_date, last_login_date, role, jurisdiction
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.AdminExample" resultMap="BaseResultMap">
     select
@@ -107,10 +108,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into admin (last_access, username, password, 
+    insert into admin (last_access, username, name,password, 
       email, join_date, last_login_date, 
       role, jurisdiction)
-    values (#{lastAccess,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{lastAccess,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{joinDate,jdbcType=BIGINT}, #{lastLoginDate,jdbcType=BIGINT}, 
       #{role,jdbcType=INTEGER}, #{jurisdiction,jdbcType=VARCHAR})
   </insert>
@@ -125,6 +126,9 @@
       </if>
       <if test="username != null">
         username,
+      </if>
+      <if test="name != null">
+        name,
       </if>
       <if test="password != null">
         password,
@@ -151,6 +155,9 @@
       </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
@@ -190,6 +197,9 @@
       <if test="record.username != null">
         username = #{record.username,jdbcType=VARCHAR},
       </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
       <if test="record.password != null">
         password = #{record.password,jdbcType=VARCHAR},
       </if>
@@ -218,6 +228,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       last_access = #{record.lastAccess,jdbcType=BIGINT},
       username = #{record.username,jdbcType=VARCHAR},
+       name = #{record.name,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
       join_date = #{record.joinDate,jdbcType=BIGINT},
@@ -236,6 +247,9 @@
       </if>
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
@@ -262,6 +276,7 @@
     update admin
     set last_access = #{lastAccess,jdbcType=BIGINT},
       username = #{username,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       join_date = #{joinDate,jdbcType=BIGINT},

@@ -3,25 +3,25 @@ package com.yzhh.backstage.api.dao;
 import java.util.List;
 
 public interface IDAO<T, Texample> {
-	long countByExample(Texample example);
+	Long countByExample(Texample example);
 
-    int deleteByExample(Texample example);
+	Long deleteByExample(Texample example);
 
-    int deleteByPrimaryKey(Integer id);
+	Long deleteByPrimaryKey(Long id);
 
     List<T> selectByExample(Texample example);
 
-    int updateByExample(T record, Texample example);
+    Long updateByExample(T record, Texample example);
 
-    int updateByPrimaryKey(T record);
+    Long updateByPrimaryKey(T record);
     
-    int insert(T record);
+    Long insert(T record);
 
-    int insertSelective(T record);
+    Long insertSelective(T record);
 
-    T selectByPrimaryKey(Integer id);
+    T selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(T record, Texample example);
+    Long updateByExampleSelective(T record, Texample example);
 
-    int updateByPrimaryKeySelective(T record);
+    Long updateByPrimaryKeySelective(T record);
 }

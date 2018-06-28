@@ -13,6 +13,11 @@ public class BizException extends RuntimeException {
 
 	public BizException() {
 	}
+	
+	public BizException(String msg) {
+		this.code = 20000;
+		this.msg = msg;
+	}
 
 	public BizException(int code, String msg) {
 		this.code = code;

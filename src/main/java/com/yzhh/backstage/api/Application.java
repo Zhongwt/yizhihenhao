@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan("com.taidii.staffdevelopment")
+@ComponentScan("com.yzhh.backstage.api")
 @EnableScheduling
 public class Application 
 {
