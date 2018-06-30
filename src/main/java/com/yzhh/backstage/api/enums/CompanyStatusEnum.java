@@ -2,9 +2,9 @@ package com.yzhh.backstage.api.enums;
 
 public enum CompanyStatusEnum {
 
-	remove(0, "企业审核"),
-	pending(1, "查看日志"),
-	audited(2,"企业添加"),
+	remove(0, "已移除"),
+	pending(1, "未审核"),
+	audited(2,"已审核"),
     ;
     
     private int id;

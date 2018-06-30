@@ -15,9 +15,9 @@ import sun.misc.BASE64Encoder;
 /**
  * Created by garychen on 18/1/16.
  */
+@SuppressWarnings("restriction")
 public class RandomImageUtil {
 
-    @SuppressWarnings("restriction")
 	public String createRandomNumberImage(String number)
             throws Exception {
 
@@ -44,7 +44,8 @@ public class RandomImageUtil {
         BufferedImage image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB);
         //得到画笔
         Graphics g = image.getGraphics();
-        Random r = new Random();
+        @SuppressWarnings("unused")
+		Random r = new Random();
         //设置画笔的颜色
         //g.setColor(new Color(r.nextInt(255),r.nextInt(255),r.nextInt(255)));
         g.setColor(new Color(230,230,230));

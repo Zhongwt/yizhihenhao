@@ -714,52 +714,62 @@ public class JobSeekerExample {
             return (Criteria) this;
         }
 
-        public Criteria andEducationEqualTo(Integer value) {
+        public Criteria andEducationEqualTo(String value) {
             addCriterion("education =", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationNotEqualTo(Integer value) {
+        public Criteria andEducationNotEqualTo(String value) {
             addCriterion("education <>", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationGreaterThan(Integer value) {
+        public Criteria andEducationGreaterThan(String value) {
             addCriterion("education >", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationGreaterThanOrEqualTo(Integer value) {
+        public Criteria andEducationGreaterThanOrEqualTo(String value) {
             addCriterion("education >=", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationLessThan(Integer value) {
+        public Criteria andEducationLessThan(String value) {
             addCriterion("education <", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationLessThanOrEqualTo(Integer value) {
+        public Criteria andEducationLessThanOrEqualTo(String value) {
             addCriterion("education <=", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationIn(List<Integer> values) {
+        public Criteria andEducationLike(String value) {
+            addCriterion("education like", value, "education");
+            return (Criteria) this;
+        }
+
+        public Criteria andEducationNotLike(String value) {
+            addCriterion("education not like", value, "education");
+            return (Criteria) this;
+        }
+
+        public Criteria andEducationIn(List<String> values) {
             addCriterion("education in", values, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationNotIn(List<Integer> values) {
+        public Criteria andEducationNotIn(List<String> values) {
             addCriterion("education not in", values, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationBetween(Integer value1, Integer value2) {
+        public Criteria andEducationBetween(String value1, String value2) {
             addCriterion("education between", value1, value2, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationNotBetween(Integer value1, Integer value2) {
+        public Criteria andEducationNotBetween(String value1, String value2) {
             addCriterion("education not between", value1, value2, "education");
             return (Criteria) this;
         }
@@ -984,52 +994,62 @@ public class JobSeekerExample {
             return (Criteria) this;
         }
 
-        public Criteria andMajorTypeEqualTo(Integer value) {
+        public Criteria andMajorTypeEqualTo(String value) {
             addCriterion("major_type =", value, "majorType");
             return (Criteria) this;
         }
 
-        public Criteria andMajorTypeNotEqualTo(Integer value) {
+        public Criteria andMajorTypeNotEqualTo(String value) {
             addCriterion("major_type <>", value, "majorType");
             return (Criteria) this;
         }
 
-        public Criteria andMajorTypeGreaterThan(Integer value) {
+        public Criteria andMajorTypeGreaterThan(String value) {
             addCriterion("major_type >", value, "majorType");
             return (Criteria) this;
         }
 
-        public Criteria andMajorTypeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andMajorTypeGreaterThanOrEqualTo(String value) {
             addCriterion("major_type >=", value, "majorType");
             return (Criteria) this;
         }
 
-        public Criteria andMajorTypeLessThan(Integer value) {
+        public Criteria andMajorTypeLessThan(String value) {
             addCriterion("major_type <", value, "majorType");
             return (Criteria) this;
         }
 
-        public Criteria andMajorTypeLessThanOrEqualTo(Integer value) {
+        public Criteria andMajorTypeLessThanOrEqualTo(String value) {
             addCriterion("major_type <=", value, "majorType");
             return (Criteria) this;
         }
 
-        public Criteria andMajorTypeIn(List<Integer> values) {
+        public Criteria andMajorTypeLike(String value) {
+            addCriterion("major_type like", value, "majorType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMajorTypeNotLike(String value) {
+            addCriterion("major_type not like", value, "majorType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMajorTypeIn(List<String> values) {
             addCriterion("major_type in", values, "majorType");
             return (Criteria) this;
         }
 
-        public Criteria andMajorTypeNotIn(List<Integer> values) {
+        public Criteria andMajorTypeNotIn(List<String> values) {
             addCriterion("major_type not in", values, "majorType");
             return (Criteria) this;
         }
 
-        public Criteria andMajorTypeBetween(Integer value1, Integer value2) {
+        public Criteria andMajorTypeBetween(String value1, String value2) {
             addCriterion("major_type between", value1, value2, "majorType");
             return (Criteria) this;
         }
 
-        public Criteria andMajorTypeNotBetween(Integer value1, Integer value2) {
+        public Criteria andMajorTypeNotBetween(String value1, String value2) {
             addCriterion("major_type not between", value1, value2, "majorType");
             return (Criteria) this;
         }

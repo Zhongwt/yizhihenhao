@@ -23,5 +23,10 @@ public class LogDAOImpl extends DAOImpl<Log, LogExample> implements ILogDAO {
 		return mapper2.queryByPage(params);
 	}
 
+	@Override
+	public Long countByPage(Map<String, Object> params) {
+		return mapper2.countByPage(params);
+	}
+
 
 }

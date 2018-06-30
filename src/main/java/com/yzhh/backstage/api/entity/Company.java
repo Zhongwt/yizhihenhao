@@ -24,6 +24,8 @@ public class Company extends BaseEntity{
     private String email;				//
     private String attachment;		//
     private Integer identification;	//
+    private String phone;				//
+    private String password;			//
 
     
     public String getName() {
@@ -137,4 +139,20 @@ public class Company extends BaseEntity{
     public void setIdentification(Integer identification) {
         this.identification = identification;
     }
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }

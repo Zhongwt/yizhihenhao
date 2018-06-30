@@ -15,12 +15,15 @@ import com.yzhh.backstage.api.dao.IAdminDAO;
 import com.yzhh.backstage.api.dao.ILogDAO;
 import com.yzhh.backstage.api.dto.LoginDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
+import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.admin.AdminDTO;
+import com.yzhh.backstage.api.dto.admin.AdminPoorDTO;
 import com.yzhh.backstage.api.dto.admin.EditJurisdictionDTO;
 import com.yzhh.backstage.api.dto.admin.LogDTO;
 import com.yzhh.backstage.api.entity.Admin;
 import com.yzhh.backstage.api.entity.AdminExample;
 import com.yzhh.backstage.api.entity.LogExample;
+import com.yzhh.backstage.api.enums.RoleEnum;
 import com.yzhh.backstage.api.error.CommonError;
 import com.yzhh.backstage.api.service.IAdminService;
 import com.yzhh.backstage.api.util.CollectionUtils;
@@ -36,7 +39,7 @@ public class AdminServiceImpl implements IAdminService{
 	private ILogDAO logDAO;
 
 	@Override
-	public AdminDTO login(LoginDTO loginDTO) {
+	public UserDTO login(LoginDTO loginDTO) {
 		
 		Long date = new Date().getTime();
 		String password = loginDTO.getPassword();
@@ -49,20 +52,18 @@ public class AdminServiceImpl implements IAdminService{
 		if(CollectionUtils.isNotEmpty(list)) {
 			if(password.equals(list.get(0).getPassword())) {
 				
-				AdminDTO adminDTO = new AdminDTO();
-				adminDTO.setId(list.get(0).getId());
-				adminDTO.setName(list.get(0).getName());
-				adminDTO.setJurisdiction(list.get(0).getJurisdiction());
-				adminDTO.setRole(list.get(0).getRole());
-				adminDTO.setEmail(list.get(0).getEmail());
-				adminDTO.setJoinDate(DateUtils.longToString(list.get(0).getJoinDate(), null));
-				adminDTO.setLastLoginDate(list.get(0).getLastLoginDate() == null ? "" : DateUtils.longToString(list.get(0).getLastLoginDate(), null) );
-				
 				Admin admin = new Admin();
 				admin.setId(list.get(0).getId());
 				admin.setLastAccess(date);
 				admin.setLastLoginDate(date);
 				adminDAO.updateByPrimaryKeySelective(admin);
+				
+				UserDTO adminDTO = new UserDTO();
+				adminDTO.setId(list.get(0).getId());
+				adminDTO.setName(list.get(0).getName());
+				adminDTO.setJurisdiction(list.get(0).getJurisdiction());
+				adminDTO.setRole(RoleEnum.admin.getId());
+				adminDTO.setEmail(list.get(0).getEmail());
 				
 				return adminDTO;
 			}
@@ -104,10 +105,7 @@ public class AdminServiceImpl implements IAdminService{
 		
 		
 		if(adminDTO.getId() != null) {
-			Admin admin = adminDAO.selectByPrimaryKey(adminDTO.getId());
-			if(admin == null) {
-				throw new BizException("未找到用户，请刷新页面");
-			}
+			Admin admin = checkAdmin(adminDTO.getId());
 			
 			if(CollectionUtils.isNotEmpty(list)) {
 				if(list.get(0).getId().longValue() != admin.getId().longValue()) {
@@ -140,14 +138,19 @@ public class AdminServiceImpl implements IAdminService{
 			adminDAO.insertSelective(admin);
 		}
 	}
+	
+	private Admin checkAdmin(Long id) {
+		Admin admin = adminDAO.selectByPrimaryKey(id);
+		if(admin == null) {
+			throw new BizException("未找到用户，请刷新页面");
+		}
+		return admin;
+	}
 
 	@Override
 	public void updateJurisdiction(EditJurisdictionDTO editJurisdictionDTO) {
 		
-		Admin admin = adminDAO.selectByPrimaryKey(editJurisdictionDTO.getId());
-		if(admin == null) {
-			throw new BizException("未找到用户，请刷新页面");
-		}
+		Admin admin = checkAdmin(editJurisdictionDTO.getId());
 		Admin newAdmin = new Admin();
 		newAdmin.setId(editJurisdictionDTO.getId());
 		newAdmin.setLastAccess(new Date().getTime());
@@ -157,10 +160,7 @@ public class AdminServiceImpl implements IAdminService{
 
 	@Override
 	public void delete(Long id) {
-		Admin admin = adminDAO.selectByPrimaryKey(id);
-		if(admin == null) {
-			throw new BizException("未找到用户，请刷新页面");
-		}
+		checkAdmin(id);
 		adminDAO.deleteByPrimaryKey(id);
 	}
 
@@ -202,4 +202,17 @@ public class AdminServiceImpl implements IAdminService{
 		logDAO.deleteByExample(example);
 	}
 
+	@Override
+	public AdminPoorDTO findByID(Long id) {
+		
+		Admin admin = checkAdmin(id);
+		
+		AdminPoorDTO adminPoor = new AdminPoorDTO();
+		
+		adminPoor.setId(admin.getId());
+		adminPoor.setName(admin.getName());
+		
+		return adminPoor;
+	}
+	
 }

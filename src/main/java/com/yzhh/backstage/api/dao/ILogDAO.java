@@ -12,4 +12,6 @@ public interface ILogDAO extends IDAO<Log, LogExample>{
 	//分页查询日志
 	public List<LogDTO> queryByPage(Map<String,Object> params);
 	
+	// 分页查询日志
+	public Long countByPage(Map<String, Object> params);
 }

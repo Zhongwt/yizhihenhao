@@ -353,6 +353,11 @@ public class ResumeExample {
             addCriterion("name not between", value1, value2, "name");
             return (Criteria) this;
         }
+        
+        public Criteria andIsDeleteEqualTo(Integer value) {
+            addCriterion("is_delete =", value, "isDelete");
+            return (Criteria) this;
+        }
 
         public Criteria andIsDefaultIsNull() {
             addCriterion("is_default is null");
@@ -614,123 +619,143 @@ public class ResumeExample {
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartIsNull() {
-            addCriterion("field_start is null");
+        public Criteria andWorkTypeIsNull() {
+            addCriterion("work_type is null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartIsNotNull() {
-            addCriterion("field_start is not null");
+        public Criteria andWorkTypeIsNotNull() {
+            addCriterion("work_type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartEqualTo(Long value) {
-            addCriterion("field_start =", value, "fieldStart");
+        public Criteria andWorkTypeEqualTo(String value) {
+            addCriterion("work_type =", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartNotEqualTo(Long value) {
-            addCriterion("field_start <>", value, "fieldStart");
+        public Criteria andWorkTypeNotEqualTo(String value) {
+            addCriterion("work_type <>", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartGreaterThan(Long value) {
-            addCriterion("field_start >", value, "fieldStart");
+        public Criteria andWorkTypeGreaterThan(String value) {
+            addCriterion("work_type >", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartGreaterThanOrEqualTo(Long value) {
-            addCriterion("field_start >=", value, "fieldStart");
+        public Criteria andWorkTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("work_type >=", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartLessThan(Long value) {
-            addCriterion("field_start <", value, "fieldStart");
+        public Criteria andWorkTypeLessThan(String value) {
+            addCriterion("work_type <", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartLessThanOrEqualTo(Long value) {
-            addCriterion("field_start <=", value, "fieldStart");
+        public Criteria andWorkTypeLessThanOrEqualTo(String value) {
+            addCriterion("work_type <=", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartIn(List<Long> values) {
-            addCriterion("field_start in", values, "fieldStart");
+        public Criteria andWorkTypeLike(String value) {
+            addCriterion("work_type like", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartNotIn(List<Long> values) {
-            addCriterion("field_start not in", values, "fieldStart");
+        public Criteria andWorkTypeNotLike(String value) {
+            addCriterion("work_type not like", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartBetween(Long value1, Long value2) {
-            addCriterion("field_start between", value1, value2, "fieldStart");
+        public Criteria andWorkTypeIn(List<String> values) {
+            addCriterion("work_type in", values, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldStartNotBetween(Long value1, Long value2) {
-            addCriterion("field_start not between", value1, value2, "fieldStart");
+        public Criteria andWorkTypeNotIn(List<String> values) {
+            addCriterion("work_type not in", values, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndIsNull() {
-            addCriterion("field_end is null");
+        public Criteria andWorkTypeBetween(String value1, String value2) {
+            addCriterion("work_type between", value1, value2, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndIsNotNull() {
-            addCriterion("field_end is not null");
+        public Criteria andWorkTypeNotBetween(String value1, String value2) {
+            addCriterion("work_type not between", value1, value2, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndEqualTo(Long value) {
-            addCriterion("field_end =", value, "fieldEnd");
+        public Criteria andInternshipTimeIsNull() {
+            addCriterion("internship_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndNotEqualTo(Long value) {
-            addCriterion("field_end <>", value, "fieldEnd");
+        public Criteria andInternshipTimeIsNotNull() {
+            addCriterion("internship_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndGreaterThan(Long value) {
-            addCriterion("field_end >", value, "fieldEnd");
+        public Criteria andInternshipTimeEqualTo(String value) {
+            addCriterion("internship_time =", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndGreaterThanOrEqualTo(Long value) {
-            addCriterion("field_end >=", value, "fieldEnd");
+        public Criteria andInternshipTimeNotEqualTo(String value) {
+            addCriterion("internship_time <>", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndLessThan(Long value) {
-            addCriterion("field_end <", value, "fieldEnd");
+        public Criteria andInternshipTimeGreaterThan(String value) {
+            addCriterion("internship_time >", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndLessThanOrEqualTo(Long value) {
-            addCriterion("field_end <=", value, "fieldEnd");
+        public Criteria andInternshipTimeGreaterThanOrEqualTo(String value) {
+            addCriterion("internship_time >=", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndIn(List<Long> values) {
-            addCriterion("field_end in", values, "fieldEnd");
+        public Criteria andInternshipTimeLessThan(String value) {
+            addCriterion("internship_time <", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndNotIn(List<Long> values) {
-            addCriterion("field_end not in", values, "fieldEnd");
+        public Criteria andInternshipTimeLessThanOrEqualTo(String value) {
+            addCriterion("internship_time <=", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndBetween(Long value1, Long value2) {
-            addCriterion("field_end between", value1, value2, "fieldEnd");
+        public Criteria andInternshipTimeLike(String value) {
+            addCriterion("internship_time like", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andFieldEndNotBetween(Long value1, Long value2) {
-            addCriterion("field_end not between", value1, value2, "fieldEnd");
+        public Criteria andInternshipTimeNotLike(String value) {
+            addCriterion("internship_time not like", value, "internshipTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInternshipTimeIn(List<String> values) {
+            addCriterion("internship_time in", values, "internshipTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInternshipTimeNotIn(List<String> values) {
+            addCriterion("internship_time not in", values, "internshipTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInternshipTimeBetween(String value1, String value2) {
+            addCriterion("internship_time between", value1, value2, "internshipTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInternshipTimeNotBetween(String value1, String value2) {
+            addCriterion("internship_time not between", value1, value2, "internshipTime");
             return (Criteria) this;
         }
 

@@ -223,6 +223,11 @@ public class CompanyExample {
             addCriterion("last_access not between", value1, value2, "lastAccess");
             return (Criteria) this;
         }
+        
+        public Criteria andPhoneEqualTo(String value) {
+            addCriterion("phone =", value, "phone");
+            return (Criteria) this;
+        }
 
         public Criteria andNameIsNull() {
             addCriterion("name is null");

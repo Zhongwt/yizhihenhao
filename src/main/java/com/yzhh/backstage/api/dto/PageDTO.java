@@ -8,6 +8,15 @@ public class PageDTO<T> {
 	private Integer size;
 	private List<T> list;
 	private Long count;
+	
+	public PageDTO(){};
+	public PageDTO(Long count,List<T> list ,Long page,Integer size){
+		this.page = page;
+		this.size = size;
+		this.count = count;
+		this.list = list;
+	}
+	
 	public Long getPage() {
 		return page;
 	}

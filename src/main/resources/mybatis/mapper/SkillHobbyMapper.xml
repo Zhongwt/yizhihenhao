@@ -6,7 +6,7 @@
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
     <result column="resume_id" jdbcType="BIGINT" property="resumeId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="level" jdbcType="VARCHAR" property="level" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -106,7 +106,7 @@
     insert into skill_hobby (last_access, resume_id, name, 
       level)
     values (#{lastAccess,jdbcType=BIGINT}, #{resumeId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{level,jdbcType=INTEGER})
+      #{level,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.SkillHobby">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -138,7 +138,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="level != null">
-        #{level,jdbcType=INTEGER},
+        #{level,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -164,7 +164,7 @@
         name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.level != null">
-        level = #{record.level,jdbcType=INTEGER},
+        level = #{record.level,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -177,7 +177,7 @@
       last_access = #{record.lastAccess,jdbcType=BIGINT},
       resume_id = #{record.resumeId,jdbcType=BIGINT},
       name = #{record.name,jdbcType=VARCHAR},
-      level = #{record.level,jdbcType=INTEGER}
+      level = #{record.level,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -195,7 +195,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="level != null">
-        level = #{level,jdbcType=INTEGER},
+        level = #{level,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -205,7 +205,7 @@
     set last_access = #{lastAccess,jdbcType=BIGINT},
       resume_id = #{resumeId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
-      level = #{level,jdbcType=INTEGER}
+      level = #{level,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

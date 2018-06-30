@@ -7,6 +7,13 @@ public class CompanyDTO {
 	private String city;
 	private String joinDate;
 	private String status;
+	private String address;
+	private String field;				//领域
+	private String scale;				//规模
+	private String website;			//公司网站
+	private String email;			//
+	private String note;				//
+	private String description;	//
 	
 	public Long getId() {
 		return id;
@@ -37,6 +44,48 @@ public class CompanyDTO {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getField() {
+		return field;
+	}
+	public void setField(String field) {
+		this.field = field;
+	}
+	public String getScale() {
+		return scale;
+	}
+	public void setScale(String scale) {
+		this.scale = scale;
+	}
+	public String getWebsite() {
+		return website;
+	}
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }

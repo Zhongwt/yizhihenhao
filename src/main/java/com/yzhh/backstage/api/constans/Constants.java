@@ -10,9 +10,9 @@ package com.yzhh.backstage.api.constans;
  */
 public class Constants
 {
-	public final static String ADMIN_LOGIN = "admin_login";
+	public final static String USER_LOGIN = "user_login";
 	
-	public final static String USER_LOGIN_ = "user_login_";
+	public final static String IP = "ip";
 	
 	public final static int TEN_MINUTES = 60 * 10;		//10分钟
 	

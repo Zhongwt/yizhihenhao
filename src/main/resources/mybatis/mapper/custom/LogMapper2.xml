@@ -23,5 +23,16 @@
 		order by id desc 
 		LIMIT #{starNum},#{size}
  	</select>
+ 	
+ 	<!-- 分页查询日志 -->
+ 	<select id="countByPage" resultType="Long">
+ 		SELECT
+			count(id)
+		FROM
+			log
+		<where>
+			<include refid="condition_sql"></include>
+		</where>
+ 	</select>
  
 </mapper>

@@ -4,14 +4,16 @@ import java.util.List;
 
 import com.yzhh.backstage.api.dto.LoginDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
+import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.admin.AdminDTO;
+import com.yzhh.backstage.api.dto.admin.AdminPoorDTO;
 import com.yzhh.backstage.api.dto.admin.EditJurisdictionDTO;
 import com.yzhh.backstage.api.dto.admin.LogDTO;
 
 public interface IAdminService {
 
 	//登录
-	public AdminDTO login(LoginDTO loginDTO);
+	public UserDTO login(LoginDTO loginDTO);
 	//管理员列表
 	public List<AdminDTO> list();
 	//新增或修改管理原
@@ -24,5 +26,7 @@ public interface IAdminService {
 	public PageDTO<LogDTO>  queryByPageLog(Long id,Long page,Integer size);
 	//删除用户日志
 	public void deleteByOpratorId(Long id);
+	//获取管理员信息
+	public AdminPoorDTO findByID(Long id);
 	
 }

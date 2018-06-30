@@ -17,12 +17,8 @@ import java.util.Locale;
 public class DateUtils {
 
 	// public final String format_1 = "";
-	public static final String mmddyyyy = "MM/dd/YYYY";
 	public static final String YYYYMMdd = "yyyy-MM-dd";
-	public static final String HHMMSS = "HH:mm:ss";
-	public static final String DDMMYY = "dd-MM-yyyy";
-	public static final String HHMM = "HH:mm";
-	public static final String YYMMDD = "yyyy-MM-dd";
+	public static final String yymmddhhmmss = "yyyy-MM-dd HH:mm:ss";
 
 	/**
 	 * 
@@ -76,21 +72,30 @@ public class DateUtils {
 		Date strtodate = null;
 
 		if (type == null) {
-			type = DateUtils.HHMMSS;
-			SimpleDateFormat df = new SimpleDateFormat(DateUtils.HHMMSS);
-			strtodate = df.parse(date);
+			type = DateUtils.YYYYMMdd;
 		}
-
-		if (type.equals(DateUtils.YYYYMMdd)) {
-			SimpleDateFormat df = new SimpleDateFormat(DateUtils.YYYYMMdd);
-			strtodate = df.parse(date);
-		}
-		if (type.equals(DateUtils.HHMM)) {
-			SimpleDateFormat df = new SimpleDateFormat(DateUtils.HHMM);
-			strtodate = df.parse(date);
-		}
+		SimpleDateFormat df = new SimpleDateFormat(type);
+		strtodate = df.parse(date);
+		
 		return strtodate;
 	}
+	
+	public static Long stringToLong(String date, String type)  {
+		Long strtodate = null;
+
+		if (type == null) {
+			type = DateUtils.YYYYMMdd;
+		}
+		SimpleDateFormat df = new SimpleDateFormat(type);
+		try {
+			strtodate = df.parse(date).getTime();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return strtodate;
+	}
+	
 
 	/**
 	 * 
@@ -101,7 +106,7 @@ public class DateUtils {
 	 * @createTime:2018年6月21日 下午3:33:39
 	 */
 	public static String dateToStringHms(Date date) {
-		SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.HHMMSS);
+		SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.YYYYMMdd);
 		String dateString = formatter.format(date);
 		return dateString;
 	}
@@ -129,7 +134,7 @@ public class DateUtils {
 		if (null == date) {
 			return "";
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat(mmddyyyy, Locale.UK);
+		SimpleDateFormat sdf = new SimpleDateFormat(YYYYMMdd, Locale.UK);
 		return sdf.format(date);
 	}
 

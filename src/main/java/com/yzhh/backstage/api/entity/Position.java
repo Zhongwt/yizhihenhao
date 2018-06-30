@@ -1,33 +1,25 @@
 package com.yzhh.backstage.api.entity;
 
-/**
- * @description:发布的职务表
- * @projectName:backstage-api
- * @className:Position.java
- * @author:wentao
- * @createTime:2018年6月27日 下午9:15:55
- * @version 1.0.1
- */
 public class Position extends BaseEntity{
 
 	private static final long serialVersionUID = 1L;
-	private Long companyId;					//
-    private Long releaseDate;				//
-    private Integer type;						//
-    private String name;						//
-    private String city;							//
-    private Integer perpleNum;				//
-    private String seduction;					//
-    private String description;				//
-    private Integer education;				//
-    private String address;						//
-    private Integer isInternship;				//
-    private Integer internshipTime;		//
-    private Double perDiem;					//
-    private Integer workTime;				//
-    private Integer correctionChance;	//
-    private Integer status;						//
-    private Long deadline;						//
+	private Long companyId;				//	公司id
+    private Long releaseDate;			//发布日期
+    private String type;						//职务类型
+    private String name;					//职位名称
+    private String city;						//城市
+    private Integer perpleNum;			//招聘人数
+    private String seduction;				//职业诱惑
+    private String description;			//描述
+    private String education;				//学历要求
+    private String address;					//地址
+    private String workType;				//工作类型（周末兼职，暑期工，寒假工）
+    private String internshipTime;		//实习时长
+    private Double perDiem;				//日薪
+    private Integer workTime;			//工作时间
+    private String correctionChance;	//转正机会
+    private Integer status;					//状态
+    private Long deadline;					//截止时间
 
     public Long getCompanyId() {
         return companyId;
@@ -45,12 +37,12 @@ public class Position extends BaseEntity{
         this.releaseDate = releaseDate;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setType(String type) {
+        this.type = type == null ? null : type.trim();
     }
 
     public String getName() {
@@ -93,12 +85,12 @@ public class Position extends BaseEntity{
         this.description = description == null ? null : description.trim();
     }
 
-    public Integer getEducation() {
+    public String getEducation() {
         return education;
     }
 
-    public void setEducation(Integer education) {
-        this.education = education;
+    public void setEducation(String education) {
+        this.education = education == null ? null : education.trim();
     }
 
     public String getAddress() {
@@ -109,20 +101,20 @@ public class Position extends BaseEntity{
         this.address = address == null ? null : address.trim();
     }
 
-    public Integer getIsInternship() {
-        return isInternship;
+    public String getWorkType() {
+        return workType;
     }
 
-    public void setIsInternship(Integer isInternship) {
-        this.isInternship = isInternship;
+    public void setWorkType(String workType) {
+        this.workType = workType == null ? null : workType.trim();
     }
 
-    public Integer getInternshipTime() {
+    public String getInternshipTime() {
         return internshipTime;
     }
 
-    public void setInternshipTime(Integer internshipTime) {
-        this.internshipTime = internshipTime;
+    public void setInternshipTime(String internshipTime) {
+        this.internshipTime = internshipTime == null ? null : internshipTime.trim();
     }
 
     public Double getPerDiem() {
@@ -141,12 +133,12 @@ public class Position extends BaseEntity{
         this.workTime = workTime;
     }
 
-    public Integer getCorrectionChance() {
+    public String getCorrectionChance() {
         return correctionChance;
     }
 
-    public void setCorrectionChance(Integer correctionChance) {
-        this.correctionChance = correctionChance;
+    public void setCorrectionChance(String correctionChance) {
+        this.correctionChance = correctionChance == null ? null : correctionChance.trim();
     }
 
     public Integer getStatus() {

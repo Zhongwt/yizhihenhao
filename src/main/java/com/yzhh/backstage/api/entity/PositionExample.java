@@ -354,52 +354,62 @@ public class PositionExample {
             return (Criteria) this;
         }
 
-        public Criteria andTypeEqualTo(Integer value) {
+        public Criteria andTypeEqualTo(String value) {
             addCriterion("type =", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotEqualTo(Integer value) {
+        public Criteria andTypeNotEqualTo(String value) {
             addCriterion("type <>", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThan(Integer value) {
+        public Criteria andTypeGreaterThan(String value) {
             addCriterion("type >", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andTypeGreaterThanOrEqualTo(String value) {
             addCriterion("type >=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThan(Integer value) {
+        public Criteria andTypeLessThan(String value) {
             addCriterion("type <", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThanOrEqualTo(Integer value) {
+        public Criteria andTypeLessThanOrEqualTo(String value) {
             addCriterion("type <=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIn(List<Integer> values) {
+        public Criteria andTypeLike(String value) {
+            addCriterion("type like", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotLike(String value) {
+            addCriterion("type not like", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIn(List<String> values) {
             addCriterion("type in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotIn(List<Integer> values) {
+        public Criteria andTypeNotIn(List<String> values) {
             addCriterion("type not in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeBetween(Integer value1, Integer value2) {
+        public Criteria andTypeBetween(String value1, String value2) {
             addCriterion("type between", value1, value2, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotBetween(Integer value1, Integer value2) {
+        public Criteria andTypeNotBetween(String value1, String value2) {
             addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
@@ -754,52 +764,62 @@ public class PositionExample {
             return (Criteria) this;
         }
 
-        public Criteria andEducationEqualTo(Integer value) {
+        public Criteria andEducationEqualTo(String value) {
             addCriterion("education =", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationNotEqualTo(Integer value) {
+        public Criteria andEducationNotEqualTo(String value) {
             addCriterion("education <>", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationGreaterThan(Integer value) {
+        public Criteria andEducationGreaterThan(String value) {
             addCriterion("education >", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationGreaterThanOrEqualTo(Integer value) {
+        public Criteria andEducationGreaterThanOrEqualTo(String value) {
             addCriterion("education >=", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationLessThan(Integer value) {
+        public Criteria andEducationLessThan(String value) {
             addCriterion("education <", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationLessThanOrEqualTo(Integer value) {
+        public Criteria andEducationLessThanOrEqualTo(String value) {
             addCriterion("education <=", value, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationIn(List<Integer> values) {
+        public Criteria andEducationLike(String value) {
+            addCriterion("education like", value, "education");
+            return (Criteria) this;
+        }
+
+        public Criteria andEducationNotLike(String value) {
+            addCriterion("education not like", value, "education");
+            return (Criteria) this;
+        }
+
+        public Criteria andEducationIn(List<String> values) {
             addCriterion("education in", values, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationNotIn(List<Integer> values) {
+        public Criteria andEducationNotIn(List<String> values) {
             addCriterion("education not in", values, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationBetween(Integer value1, Integer value2) {
+        public Criteria andEducationBetween(String value1, String value2) {
             addCriterion("education between", value1, value2, "education");
             return (Criteria) this;
         }
 
-        public Criteria andEducationNotBetween(Integer value1, Integer value2) {
+        public Criteria andEducationNotBetween(String value1, String value2) {
             addCriterion("education not between", value1, value2, "education");
             return (Criteria) this;
         }
@@ -874,63 +894,73 @@ public class PositionExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipIsNull() {
-            addCriterion("is_internship is null");
+        public Criteria andWorkTypeIsNull() {
+            addCriterion("work_type is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipIsNotNull() {
-            addCriterion("is_internship is not null");
+        public Criteria andWorkTypeIsNotNull() {
+            addCriterion("work_type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipEqualTo(Integer value) {
-            addCriterion("is_internship =", value, "isInternship");
+        public Criteria andWorkTypeEqualTo(String value) {
+            addCriterion("work_type =", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipNotEqualTo(Integer value) {
-            addCriterion("is_internship <>", value, "isInternship");
+        public Criteria andWorkTypeNotEqualTo(String value) {
+            addCriterion("work_type <>", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipGreaterThan(Integer value) {
-            addCriterion("is_internship >", value, "isInternship");
+        public Criteria andWorkTypeGreaterThan(String value) {
+            addCriterion("work_type >", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipGreaterThanOrEqualTo(Integer value) {
-            addCriterion("is_internship >=", value, "isInternship");
+        public Criteria andWorkTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("work_type >=", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipLessThan(Integer value) {
-            addCriterion("is_internship <", value, "isInternship");
+        public Criteria andWorkTypeLessThan(String value) {
+            addCriterion("work_type <", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipLessThanOrEqualTo(Integer value) {
-            addCriterion("is_internship <=", value, "isInternship");
+        public Criteria andWorkTypeLessThanOrEqualTo(String value) {
+            addCriterion("work_type <=", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipIn(List<Integer> values) {
-            addCriterion("is_internship in", values, "isInternship");
+        public Criteria andWorkTypeLike(String value) {
+            addCriterion("work_type like", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipNotIn(List<Integer> values) {
-            addCriterion("is_internship not in", values, "isInternship");
+        public Criteria andWorkTypeNotLike(String value) {
+            addCriterion("work_type not like", value, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipBetween(Integer value1, Integer value2) {
-            addCriterion("is_internship between", value1, value2, "isInternship");
+        public Criteria andWorkTypeIn(List<String> values) {
+            addCriterion("work_type in", values, "workType");
             return (Criteria) this;
         }
 
-        public Criteria andIsInternshipNotBetween(Integer value1, Integer value2) {
-            addCriterion("is_internship not between", value1, value2, "isInternship");
+        public Criteria andWorkTypeNotIn(List<String> values) {
+            addCriterion("work_type not in", values, "workType");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkTypeBetween(String value1, String value2) {
+            addCriterion("work_type between", value1, value2, "workType");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkTypeNotBetween(String value1, String value2) {
+            addCriterion("work_type not between", value1, value2, "workType");
             return (Criteria) this;
         }
 
@@ -944,52 +974,62 @@ public class PositionExample {
             return (Criteria) this;
         }
 
-        public Criteria andInternshipTimeEqualTo(Integer value) {
+        public Criteria andInternshipTimeEqualTo(String value) {
             addCriterion("internship_time =", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andInternshipTimeNotEqualTo(Integer value) {
+        public Criteria andInternshipTimeNotEqualTo(String value) {
             addCriterion("internship_time <>", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andInternshipTimeGreaterThan(Integer value) {
+        public Criteria andInternshipTimeGreaterThan(String value) {
             addCriterion("internship_time >", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andInternshipTimeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andInternshipTimeGreaterThanOrEqualTo(String value) {
             addCriterion("internship_time >=", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andInternshipTimeLessThan(Integer value) {
+        public Criteria andInternshipTimeLessThan(String value) {
             addCriterion("internship_time <", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andInternshipTimeLessThanOrEqualTo(Integer value) {
+        public Criteria andInternshipTimeLessThanOrEqualTo(String value) {
             addCriterion("internship_time <=", value, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andInternshipTimeIn(List<Integer> values) {
+        public Criteria andInternshipTimeLike(String value) {
+            addCriterion("internship_time like", value, "internshipTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInternshipTimeNotLike(String value) {
+            addCriterion("internship_time not like", value, "internshipTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInternshipTimeIn(List<String> values) {
             addCriterion("internship_time in", values, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andInternshipTimeNotIn(List<Integer> values) {
+        public Criteria andInternshipTimeNotIn(List<String> values) {
             addCriterion("internship_time not in", values, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andInternshipTimeBetween(Integer value1, Integer value2) {
+        public Criteria andInternshipTimeBetween(String value1, String value2) {
             addCriterion("internship_time between", value1, value2, "internshipTime");
             return (Criteria) this;
         }
 
-        public Criteria andInternshipTimeNotBetween(Integer value1, Integer value2) {
+        public Criteria andInternshipTimeNotBetween(String value1, String value2) {
             addCriterion("internship_time not between", value1, value2, "internshipTime");
             return (Criteria) this;
         }
@@ -1124,52 +1164,62 @@ public class PositionExample {
             return (Criteria) this;
         }
 
-        public Criteria andCorrectionChanceEqualTo(Integer value) {
+        public Criteria andCorrectionChanceEqualTo(String value) {
             addCriterion("correction_chance =", value, "correctionChance");
             return (Criteria) this;
         }
 
-        public Criteria andCorrectionChanceNotEqualTo(Integer value) {
+        public Criteria andCorrectionChanceNotEqualTo(String value) {
             addCriterion("correction_chance <>", value, "correctionChance");
             return (Criteria) this;
         }
 
-        public Criteria andCorrectionChanceGreaterThan(Integer value) {
+        public Criteria andCorrectionChanceGreaterThan(String value) {
             addCriterion("correction_chance >", value, "correctionChance");
             return (Criteria) this;
         }
 
-        public Criteria andCorrectionChanceGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCorrectionChanceGreaterThanOrEqualTo(String value) {
             addCriterion("correction_chance >=", value, "correctionChance");
             return (Criteria) this;
         }
 
-        public Criteria andCorrectionChanceLessThan(Integer value) {
+        public Criteria andCorrectionChanceLessThan(String value) {
             addCriterion("correction_chance <", value, "correctionChance");
             return (Criteria) this;
         }
 
-        public Criteria andCorrectionChanceLessThanOrEqualTo(Integer value) {
+        public Criteria andCorrectionChanceLessThanOrEqualTo(String value) {
             addCriterion("correction_chance <=", value, "correctionChance");
             return (Criteria) this;
         }
 
-        public Criteria andCorrectionChanceIn(List<Integer> values) {
+        public Criteria andCorrectionChanceLike(String value) {
+            addCriterion("correction_chance like", value, "correctionChance");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorrectionChanceNotLike(String value) {
+            addCriterion("correction_chance not like", value, "correctionChance");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorrectionChanceIn(List<String> values) {
             addCriterion("correction_chance in", values, "correctionChance");
             return (Criteria) this;
         }
 
-        public Criteria andCorrectionChanceNotIn(List<Integer> values) {
+        public Criteria andCorrectionChanceNotIn(List<String> values) {
             addCriterion("correction_chance not in", values, "correctionChance");
             return (Criteria) this;
         }
 
-        public Criteria andCorrectionChanceBetween(Integer value1, Integer value2) {
+        public Criteria andCorrectionChanceBetween(String value1, String value2) {
             addCriterion("correction_chance between", value1, value2, "correctionChance");
             return (Criteria) this;
         }
 
-        public Criteria andCorrectionChanceNotBetween(Integer value1, Integer value2) {
+        public Criteria andCorrectionChanceNotBetween(String value1, String value2) {
             addCriterion("correction_chance not between", value1, value2, "correctionChance");
             return (Criteria) this;
         }

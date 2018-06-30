@@ -1,30 +1,21 @@
 package com.yzhh.backstage.api.entity;
 
-/**
- * @description:求职者
- * @projectName:backstage-api
- * @className:JobSeeker.java
- * @author:wentao
- * @createTime:2018年6月27日 下午9:13:56
- * @version 1.0.1
- */
 public class JobSeeker extends BaseEntity{
-
 	private static final long serialVersionUID = 1L;
-	private String name;					//
-    private String openId;					//
-    private String imageUrl;				//
-    private Integer isAuth;					//
-    private String sex;						//
-    private String city;						//
-    private String birthday;				//
-    private Integer education;			//
-    private String graduationTime;	//
-    private String graduationSchool;	//
-    private String major;					//
-    private Integer majorType;			//
-    private String phone;					//
-    private String email;					//
+	private String name;
+    private String openId;
+    private String imageUrl;
+    private Integer isAuth;
+    private String sex;
+    private String city;
+    private String birthday;
+    private String education;
+    private String graduationTime;
+    private String graduationSchool;
+    private String major;
+    private String majorType;
+    private String phone;
+    private String email;
 
     public String getName() {
         return name;
@@ -82,12 +73,12 @@ public class JobSeeker extends BaseEntity{
         this.birthday = birthday == null ? null : birthday.trim();
     }
 
-    public Integer getEducation() {
+    public String getEducation() {
         return education;
     }
 
-    public void setEducation(Integer education) {
-        this.education = education;
+    public void setEducation(String education) {
+        this.education = education == null ? null : education.trim();
     }
 
     public String getGraduationTime() {
@@ -114,12 +105,12 @@ public class JobSeeker extends BaseEntity{
         this.major = major == null ? null : major.trim();
     }
 
-    public Integer getMajorType() {
+    public String getMajorType() {
         return majorType;
     }
 
-    public void setMajorType(Integer majorType) {
-        this.majorType = majorType;
+    public void setMajorType(String majorType) {
+        this.majorType = majorType == null ? null : majorType.trim();
     }
 
     public String getPhone() {

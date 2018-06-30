@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzhh.backstage.api.dao.mapper.custom.PositionMapper2">
+  <resultMap id="BaseResultMap" type="com.yzhh.backstage.api.entity.Position">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="release_date" jdbcType="BIGINT" property="releaseDate" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="perple_num" jdbcType="INTEGER" property="perpleNum" />
+    <result column="seduction" jdbcType="VARCHAR" property="seduction" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="education" jdbcType="VARCHAR" property="education" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="work_type" jdbcType="VARCHAR" property="workType" />
+    <result column="internship_time" jdbcType="VARCHAR" property="internshipTime" />
+    <result column="per_diem" jdbcType="DOUBLE" property="perDiem" />
+    <result column="work_time" jdbcType="INTEGER" property="workTime" />
+    <result column="correction_chance" jdbcType="VARCHAR" property="correctionChance" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="deadline" jdbcType="BIGINT" property="deadline" />
+  </resultMap>
+	<sql id="condition_sql">
+		<if test="searchKey">
+			AND name like CONCAT(CONCAT('%',#{searchKey},'%'))
+		</if>
+		<if test="status">
+			AND status = #{status}
+		</if>
+		<if test="deadLineStar != null">
+			AND  deadline  &gt; #{deadLineTime}
+		</if>
+		<if test="deadLineEnd != null">
+			AND  deadline  &lt; #{deadLineTime}
+		</if>
+	</sql>
+	
+	<!-- 分页查询日志 -->
+ 	<select id="queryByPage" resultMap="BaseResultMap">
+ 		SELECT
+			*
+		FROM
+			position
+		<where>
+			<include refid="condition_sql"></include>
+		</where>
+		order by last_access desc 
+		LIMIT #{starNum},#{size}
+ 	</select>
+ 	
+ 	<!-- 分页查询日志 -->
+ 	<select id="countByPage" resultType="Long">
+ 		SELECT
+			count(id)
+		FROM
+			position
+		<where>
+			<include refid="condition_sql"></include>
+		</where>
+ 	</select>
+ 
+</mapper>

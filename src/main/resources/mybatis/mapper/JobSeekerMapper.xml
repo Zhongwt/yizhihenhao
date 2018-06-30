@@ -11,11 +11,11 @@
     <result column="sex" jdbcType="VARCHAR" property="sex" />
     <result column="city" jdbcType="VARCHAR" property="city" />
     <result column="birthday" jdbcType="VARCHAR" property="birthday" />
-    <result column="education" jdbcType="INTEGER" property="education" />
+    <result column="education" jdbcType="VARCHAR" property="education" />
     <result column="graduation_time" jdbcType="VARCHAR" property="graduationTime" />
     <result column="graduation_school" jdbcType="VARCHAR" property="graduationSchool" />
     <result column="major" jdbcType="VARCHAR" property="major" />
-    <result column="major_type" jdbcType="INTEGER" property="majorType" />
+    <result column="major_type" jdbcType="VARCHAR" property="majorType" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="email" jdbcType="VARCHAR" property="email" />
   </resultMap>
@@ -123,9 +123,9 @@
       )
     values (#{lastAccess,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR}, 
       #{imageUrl,jdbcType=VARCHAR}, #{isAuth,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, 
-      #{city,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{education,jdbcType=INTEGER}, 
+      #{city,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, 
       #{graduationTime,jdbcType=VARCHAR}, #{graduationSchool,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, 
-      #{majorType,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}
+      #{majorType,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.JobSeeker">
@@ -206,7 +206,7 @@
         #{birthday,jdbcType=VARCHAR},
       </if>
       <if test="education != null">
-        #{education,jdbcType=INTEGER},
+        #{education,jdbcType=VARCHAR},
       </if>
       <if test="graduationTime != null">
         #{graduationTime,jdbcType=VARCHAR},
@@ -218,7 +218,7 @@
         #{major,jdbcType=VARCHAR},
       </if>
       <if test="majorType != null">
-        #{majorType,jdbcType=INTEGER},
+        #{majorType,jdbcType=VARCHAR},
       </if>
       <if test="phone != null">
         #{phone,jdbcType=VARCHAR},
@@ -265,7 +265,7 @@
         birthday = #{record.birthday,jdbcType=VARCHAR},
       </if>
       <if test="record.education != null">
-        education = #{record.education,jdbcType=INTEGER},
+        education = #{record.education,jdbcType=VARCHAR},
       </if>
       <if test="record.graduationTime != null">
         graduation_time = #{record.graduationTime,jdbcType=VARCHAR},
@@ -277,7 +277,7 @@
         major = #{record.major,jdbcType=VARCHAR},
       </if>
       <if test="record.majorType != null">
-        major_type = #{record.majorType,jdbcType=INTEGER},
+        major_type = #{record.majorType,jdbcType=VARCHAR},
       </if>
       <if test="record.phone != null">
         phone = #{record.phone,jdbcType=VARCHAR},
@@ -301,11 +301,11 @@
       sex = #{record.sex,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
       birthday = #{record.birthday,jdbcType=VARCHAR},
-      education = #{record.education,jdbcType=INTEGER},
+      education = #{record.education,jdbcType=VARCHAR},
       graduation_time = #{record.graduationTime,jdbcType=VARCHAR},
       graduation_school = #{record.graduationSchool,jdbcType=VARCHAR},
       major = #{record.major,jdbcType=VARCHAR},
-      major_type = #{record.majorType,jdbcType=INTEGER},
+      major_type = #{record.majorType,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -340,7 +340,7 @@
         birthday = #{birthday,jdbcType=VARCHAR},
       </if>
       <if test="education != null">
-        education = #{education,jdbcType=INTEGER},
+        education = #{education,jdbcType=VARCHAR},
       </if>
       <if test="graduationTime != null">
         graduation_time = #{graduationTime,jdbcType=VARCHAR},
@@ -352,7 +352,7 @@
         major = #{major,jdbcType=VARCHAR},
       </if>
       <if test="majorType != null">
-        major_type = #{majorType,jdbcType=INTEGER},
+        major_type = #{majorType,jdbcType=VARCHAR},
       </if>
       <if test="phone != null">
         phone = #{phone,jdbcType=VARCHAR},
@@ -373,11 +373,11 @@
       sex = #{sex,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
       birthday = #{birthday,jdbcType=VARCHAR},
-      education = #{education,jdbcType=INTEGER},
+      education = #{education,jdbcType=VARCHAR},
       graduation_time = #{graduationTime,jdbcType=VARCHAR},
       graduation_school = #{graduationSchool,jdbcType=VARCHAR},
       major = #{major,jdbcType=VARCHAR},
-      major_type = #{majorType,jdbcType=INTEGER},
+      major_type = #{majorType,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

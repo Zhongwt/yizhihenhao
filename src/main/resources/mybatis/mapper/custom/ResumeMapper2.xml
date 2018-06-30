@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzhh.backstage.api.dao.mapper.ResumeMapper">
+  <sql id="condition_sql">
+ 		<if test="type != null">
+				AND p.type = #{type}
+ 		</if>
+ 		<if test="searchKey != null">
+ 			AND ( js.name like CONCAT(CONCAT('%',#{searchKey},'%')) OR js.graduation_school like CONCAT(CONCAT('%',#{searchKey},'%')) )
+ 		</if>
+ 		<if test="city != null">
+ 			AND js.city = #{city}
+ 		</if>
+ 		<if test="workDay != null">
+ 			AND r.work_day = #{workDay}
+ 		</if>
+ 		<if test="internshipTime != null">
+ 			AND r.internship_time = #{internshipTime}
+ 		</if>
+ 		<if test="arrivalDay != null">
+ 			AND r.arrival_day &gt;= #{arrivalDay}
+ 		</if>
+ 		<if test="education != null">
+ 			AND js.education = #{education}
+ 		</if>
+ 		<if test="graduationTime != null">
+ 			AND js.graduation_time = #{graduationTime}
+ 		</if>
+ 		<if test="sex != null">
+ 			AND js.sex = #{sex}
+ 		</if>
+ 		<if test="status != null">
+ 			AND dr.status = #{status}
+ 		</if>
+ 	</sql>
+ 	
+ 	<!-- 分页查询日志 -->
+ 	<select id="queryByPage" resultType="com.yzhh.backstage.api.dto.resume.PageResumeDTO">
+ 		SELECT
+			r.deliveryResumeId,
+			r. NAME,
+			r.jobSeekerName,
+			r.sex,
+			r.city,
+			r.workDay,
+			r.internshipTime,
+			r.arrivalDay,
+			r.graduationSchool,
+			r.education,
+			r.major,
+			r.graduationTime,
+			i.interview_time interviewTime,
+			r.status status
+		FROM
+			(
+				SELECT
+					dr.id deliveryResumeId,
+					r.name name,
+					js.name jobSeekerName,
+					js.sex sex,
+					js.city city,
+					r.work_day workDay,
+					r.internship_time internshipTime,
+					r.arrival_day arrivalDay,
+					js.graduation_school graduationSchool,
+					js.education education,
+					js.major major,
+					js.graduation_time graduationTime,
+					dr.status
+				FROM
+					job_seeker js,
+					delivery_resume dr,
+					resume r,
+					position p
+				WHERE
+					r.job_seeker_id = js.id
+				AND dr.position_id = p.id
+				AND dr.resume_id = r.id
+				<include refid="condition_sql"></include>
+			) r
+		LEFT JOIN interview i ON r.deliveryResumeId = i.delivery_resume_id
+		<where>
+			<include refid="condition_sql"></include>
+		</where>
+		order by last_access desc 
+		LIMIT #{starNum},#{size}
+ 	</select>
+ 	
+ 	<!-- 分页查询日志 -->
+ 	<select id="countByPage" resultType="Long">
+ 		SELECT
+			count(r.deliveryResumeId)
+		FROM
+			(
+				SELECT
+					dr.id deliveryResumeId,
+					r.name name,
+					js.name jobSeekerName,
+					js.sex sex,
+					js.city city,
+					r.work_day workDay,
+					r.internship_time internshipTime,
+					r.arrival_day arrivalDay,
+					js.graduation_school graduationSchool,
+					js.education education,
+					js.major major,
+					js.graduation_time graduationTime,
+					dr.status
+				FROM
+					job_seeker js,
+					delivery_resume dr,
+					resume r,
+					position p
+				WHERE
+					r.job_seeker_id = js.id
+				AND dr.position_id = p.id
+				AND dr.resume_id = r.id
+				<include refid="condition_sql"></include>
+			) r
+		LEFT JOIN interview i ON r.deliveryResumeId = i.delivery_resume_id
+ 	</select>
+ 	
+ 	<!-- 通过deliveryResumeid批量获取简历名字 -->
+ 	<select id="getName" resultType="String">
+ 		select 
+		 		r.NAME
+		FROM
+			resume r,
+			delivery_resume dr
+		WHERE
+			dr.resume_id = r.id
+ 		<if test="ids!=null and ids.size>0">
+			<foreach collection="ids" open=" AND dr.id in ("
+				close=")" item="id" separator=",">
+				#{id}
+			</foreach>
+		</if>
+ 	</select>
+</mapper>

@@ -19,6 +19,8 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="attachment" jdbcType="VARCHAR" property="attachment" />
     <result column="identification" jdbcType="INTEGER" property="identification" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
   </resultMap>
   
   <sql id="condition_sql">

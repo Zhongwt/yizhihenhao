@@ -1,27 +1,19 @@
 package com.yzhh.backstage.api.entity;
 
-/**
- * @description:简历表
- * @projectName:backstage-api
- * @className:Resume.java
- * @author:wentao
- * @createTime:2018年6月27日 下午9:17:43
- * @version 1.0.1
- */
 public class Resume extends BaseEntity{
 
 	private static final long serialVersionUID = 1L;
-
-	private Long jobSeekerId;				//
-    private String name;						//
-    private Integer isDefault;					//
-    private String wishPositionName;	//
-    private String wishCity;					//
-    private Integer workDay;					//
-    private Long fieldStart;					//
-    private Long fieldEnd;						//
-    private Double perDiem;					//
-    private Long arrivalDay;					//
+	private Long jobSeekerId;
+    private String name;
+    private Integer isDefault;
+    private String wishPositionName;
+    private String wishCity;
+    private Integer workDay;
+    private String workType;
+    private String internshipTime;
+    private Double perDiem;
+    private Long arrivalDay;
+    private Integer isDelete;
 
     public Long getJobSeekerId() {
         return jobSeekerId;
@@ -71,20 +63,20 @@ public class Resume extends BaseEntity{
         this.workDay = workDay;
     }
 
-    public Long getFieldStart() {
-        return fieldStart;
+    public String getWorkType() {
+        return workType;
     }
 
-    public void setFieldStart(Long fieldStart) {
-        this.fieldStart = fieldStart;
+    public void setWorkType(String workType) {
+        this.workType = workType == null ? null : workType.trim();
     }
 
-    public Long getFieldEnd() {
-        return fieldEnd;
+    public String getInternshipTime() {
+        return internshipTime;
     }
 
-    public void setFieldEnd(Long fieldEnd) {
-        this.fieldEnd = fieldEnd;
+    public void setInternshipTime(String internshipTime) {
+        this.internshipTime = internshipTime == null ? null : internshipTime.trim();
     }
 
     public Double getPerDiem() {
@@ -102,4 +94,12 @@ public class Resume extends BaseEntity{
     public void setArrivalDay(Long arrivalDay) {
         this.arrivalDay = arrivalDay;
     }
+
+	public Integer getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(Integer isDelete) {
+		this.isDelete = isDelete;
+	}
 }

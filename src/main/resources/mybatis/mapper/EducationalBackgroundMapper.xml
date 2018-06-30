@@ -7,13 +7,13 @@
     <result column="resume_id" jdbcType="BIGINT" property="resumeId" />
     <result column="start_time" jdbcType="BIGINT" property="startTime" />
     <result column="end_time" jdbcType="BIGINT" property="endTime" />
-    <result column="eduation" jdbcType="INTEGER" property="eduation" />
+    <result column="eduation" jdbcType="VARCHAR" property="eduation" />
     <result column="city" jdbcType="VARCHAR" property="city" />
     <result column="school" jdbcType="VARCHAR" property="school" />
-    <result column="major_type" jdbcType="INTEGER" property="majorType" />
+    <result column="major_type" jdbcType="VARCHAR" property="majorType" />
     <result column="major" jdbcType="VARCHAR" property="major" />
     <result column="major_courses" jdbcType="VARCHAR" property="majorCourses" />
-    <result column="ranking" jdbcType="INTEGER" property="ranking" />
+    <result column="ranking" jdbcType="VARCHAR" property="ranking" />
     <result column="honor" jdbcType="VARCHAR" property="honor" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -118,9 +118,9 @@
       major_courses, ranking, honor
       )
     values (#{lastAccess,jdbcType=BIGINT}, #{resumeId,jdbcType=BIGINT}, #{startTime,jdbcType=BIGINT}, 
-      #{endTime,jdbcType=BIGINT}, #{eduation,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, 
-      #{school,jdbcType=VARCHAR}, #{majorType,jdbcType=INTEGER}, #{major,jdbcType=VARCHAR}, 
-      #{majorCourses,jdbcType=VARCHAR}, #{ranking,jdbcType=INTEGER}, #{honor,jdbcType=VARCHAR}
+      #{endTime,jdbcType=BIGINT}, #{eduation,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{school,jdbcType=VARCHAR}, #{majorType,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, 
+      #{majorCourses,jdbcType=VARCHAR}, #{ranking,jdbcType=VARCHAR}, #{honor,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.EducationalBackground">
@@ -180,7 +180,7 @@
         #{endTime,jdbcType=BIGINT},
       </if>
       <if test="eduation != null">
-        #{eduation,jdbcType=INTEGER},
+        #{eduation,jdbcType=VARCHAR},
       </if>
       <if test="city != null">
         #{city,jdbcType=VARCHAR},
@@ -189,7 +189,7 @@
         #{school,jdbcType=VARCHAR},
       </if>
       <if test="majorType != null">
-        #{majorType,jdbcType=INTEGER},
+        #{majorType,jdbcType=VARCHAR},
       </if>
       <if test="major != null">
         #{major,jdbcType=VARCHAR},
@@ -198,7 +198,7 @@
         #{majorCourses,jdbcType=VARCHAR},
       </if>
       <if test="ranking != null">
-        #{ranking,jdbcType=INTEGER},
+        #{ranking,jdbcType=VARCHAR},
       </if>
       <if test="honor != null">
         #{honor,jdbcType=VARCHAR},
@@ -230,7 +230,7 @@
         end_time = #{record.endTime,jdbcType=BIGINT},
       </if>
       <if test="record.eduation != null">
-        eduation = #{record.eduation,jdbcType=INTEGER},
+        eduation = #{record.eduation,jdbcType=VARCHAR},
       </if>
       <if test="record.city != null">
         city = #{record.city,jdbcType=VARCHAR},
@@ -239,7 +239,7 @@
         school = #{record.school,jdbcType=VARCHAR},
       </if>
       <if test="record.majorType != null">
-        major_type = #{record.majorType,jdbcType=INTEGER},
+        major_type = #{record.majorType,jdbcType=VARCHAR},
       </if>
       <if test="record.major != null">
         major = #{record.major,jdbcType=VARCHAR},
@@ -248,7 +248,7 @@
         major_courses = #{record.majorCourses,jdbcType=VARCHAR},
       </if>
       <if test="record.ranking != null">
-        ranking = #{record.ranking,jdbcType=INTEGER},
+        ranking = #{record.ranking,jdbcType=VARCHAR},
       </if>
       <if test="record.honor != null">
         honor = #{record.honor,jdbcType=VARCHAR},
@@ -265,13 +265,13 @@
       resume_id = #{record.resumeId,jdbcType=BIGINT},
       start_time = #{record.startTime,jdbcType=BIGINT},
       end_time = #{record.endTime,jdbcType=BIGINT},
-      eduation = #{record.eduation,jdbcType=INTEGER},
+      eduation = #{record.eduation,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
       school = #{record.school,jdbcType=VARCHAR},
-      major_type = #{record.majorType,jdbcType=INTEGER},
+      major_type = #{record.majorType,jdbcType=VARCHAR},
       major = #{record.major,jdbcType=VARCHAR},
       major_courses = #{record.majorCourses,jdbcType=VARCHAR},
-      ranking = #{record.ranking,jdbcType=INTEGER},
+      ranking = #{record.ranking,jdbcType=VARCHAR},
       honor = #{record.honor,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -293,7 +293,7 @@
         end_time = #{endTime,jdbcType=BIGINT},
       </if>
       <if test="eduation != null">
-        eduation = #{eduation,jdbcType=INTEGER},
+        eduation = #{eduation,jdbcType=VARCHAR},
       </if>
       <if test="city != null">
         city = #{city,jdbcType=VARCHAR},
@@ -302,7 +302,7 @@
         school = #{school,jdbcType=VARCHAR},
       </if>
       <if test="majorType != null">
-        major_type = #{majorType,jdbcType=INTEGER},
+        major_type = #{majorType,jdbcType=VARCHAR},
       </if>
       <if test="major != null">
         major = #{major,jdbcType=VARCHAR},
@@ -311,7 +311,7 @@
         major_courses = #{majorCourses,jdbcType=VARCHAR},
       </if>
       <if test="ranking != null">
-        ranking = #{ranking,jdbcType=INTEGER},
+        ranking = #{ranking,jdbcType=VARCHAR},
       </if>
       <if test="honor != null">
         honor = #{honor,jdbcType=VARCHAR},
@@ -325,13 +325,13 @@
       resume_id = #{resumeId,jdbcType=BIGINT},
       start_time = #{startTime,jdbcType=BIGINT},
       end_time = #{endTime,jdbcType=BIGINT},
-      eduation = #{eduation,jdbcType=INTEGER},
+      eduation = #{eduation,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
       school = #{school,jdbcType=VARCHAR},
-      major_type = #{majorType,jdbcType=INTEGER},
+      major_type = #{majorType,jdbcType=VARCHAR},
       major = #{major,jdbcType=VARCHAR},
       major_courses = #{majorCourses,jdbcType=VARCHAR},
-      ranking = #{ranking,jdbcType=INTEGER},
+      ranking = #{ranking,jdbcType=VARCHAR},
       honor = #{honor,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>

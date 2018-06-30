@@ -1,28 +1,18 @@
 package com.yzhh.backstage.api.entity;
 
-/**
- * @description:教育背景
- * @projectName:backstage-api
- * @className:EducationalBackground.java
- * @author:wentao
- * @createTime:2018年6月27日 下午9:11:03
- * @version 1.0.1
- */
 public class EducationalBackground extends BaseEntity{
-
 	private static final long serialVersionUID = 1L;
-	private Long resumeId;			//
-    private Long startTime;			//
-    private Long endTime;				//
-    private Integer eduation;			//
-    private String city;					//
-    private String school;				//
-    private Integer majorType;		//
-    private String major;				//
-    private String majorCourses;	//
-    private Integer ranking;			//
-    private String honor;				//
-
+	private Long resumeId;
+    private Long startTime;
+    private Long endTime;
+    private String eduation;
+    private String city;
+    private String school;
+    private String majorType;
+    private String major;
+    private String majorCourses;
+    private String ranking;
+    private String honor;
 
     public Long getResumeId() {
         return resumeId;
@@ -48,12 +38,12 @@ public class EducationalBackground extends BaseEntity{
         this.endTime = endTime;
     }
 
-    public Integer getEduation() {
+    public String getEduation() {
         return eduation;
     }
 
-    public void setEduation(Integer eduation) {
-        this.eduation = eduation;
+    public void setEduation(String eduation) {
+        this.eduation = eduation == null ? null : eduation.trim();
     }
 
     public String getCity() {
@@ -72,12 +62,12 @@ public class EducationalBackground extends BaseEntity{
         this.school = school == null ? null : school.trim();
     }
 
-    public Integer getMajorType() {
+    public String getMajorType() {
         return majorType;
     }
 
-    public void setMajorType(Integer majorType) {
-        this.majorType = majorType;
+    public void setMajorType(String majorType) {
+        this.majorType = majorType == null ? null : majorType.trim();
     }
 
     public String getMajor() {
@@ -96,12 +86,12 @@ public class EducationalBackground extends BaseEntity{
         this.majorCourses = majorCourses == null ? null : majorCourses.trim();
     }
 
-    public Integer getRanking() {
+    public String getRanking() {
         return ranking;
     }
 
-    public void setRanking(Integer ranking) {
-        this.ranking = ranking;
+    public void setRanking(String ranking) {
+        this.ranking = ranking == null ? null : ranking.trim();
     }
 
     public String getHonor() {

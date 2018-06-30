@@ -18,6 +18,8 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="attachment" jdbcType="VARCHAR" property="attachment" />
     <result column="identification" jdbcType="INTEGER" property="identification" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -79,7 +81,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, last_access, name, city, address, join_date, status, is_number, description, 
-    field, scale, website, note, email, attachment, identification
+    field, scale, website, note, email, attachment, identification,phone,password
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.CompanyExample" resultMap="BaseResultMap">
     select
@@ -119,13 +121,13 @@
       address, join_date, status, 
       is_number, description, field, 
       scale, website, note, 
-      email, attachment, identification
+      email, attachment, identification,phone,password
       )
     values (#{lastAccess,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{joinDate,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, 
       #{isNumber,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{field,jdbcType=VARCHAR}, 
       #{scale,jdbcType=VARCHAR}, #{website,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{attachment,jdbcType=VARCHAR}, #{identification,jdbcType=INTEGER}
+      #{email,jdbcType=VARCHAR}, #{attachment,jdbcType=VARCHAR}, #{identification,jdbcType=INTEGER},#{phone,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.Company">
@@ -179,6 +181,12 @@
       <if test="identification != null">
         identification,
       </if>
+       <if test="phone != null">
+        phone,
+      </if>
+       <if test="password != null">
+        password,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="lastAccess != null">
@@ -225,6 +233,12 @@
       </if>
       <if test="identification != null">
         #{identification,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -285,6 +299,12 @@
       <if test="record.identification != null">
         identification = #{record.identification,jdbcType=INTEGER},
       </if>
+       <if test="record.phone != null">
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+       <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -307,7 +327,9 @@
       note = #{record.note,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
       attachment = #{record.attachment,jdbcType=VARCHAR},
-      identification = #{record.identification,jdbcType=INTEGER}
+      identification = #{record.identification,jdbcType=INTEGER},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -360,6 +382,12 @@
       <if test="identification != null">
         identification = #{identification,jdbcType=INTEGER},
       </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -379,7 +407,9 @@
       note = #{note,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       attachment = #{attachment,jdbcType=VARCHAR},
-      identification = #{identification,jdbcType=INTEGER}
+      identification = #{identification,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

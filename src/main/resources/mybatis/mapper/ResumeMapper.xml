@@ -7,11 +7,12 @@
     <result column="job_seeker_id" jdbcType="BIGINT" property="jobSeekerId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="is_default" jdbcType="INTEGER" property="isDefault" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
     <result column="wish_position_name" jdbcType="VARCHAR" property="wishPositionName" />
     <result column="wish_city" jdbcType="VARCHAR" property="wishCity" />
     <result column="work_day" jdbcType="INTEGER" property="workDay" />
-    <result column="field_start" jdbcType="BIGINT" property="fieldStart" />
-    <result column="field_end" jdbcType="BIGINT" property="fieldEnd" />
+    <result column="work_type" jdbcType="VARCHAR" property="workType" />
+    <result column="internship_time" jdbcType="VARCHAR" property="internshipTime" />
     <result column="per_diem" jdbcType="DOUBLE" property="perDiem" />
     <result column="arrival_day" jdbcType="BIGINT" property="arrivalDay" />
   </resultMap>
@@ -74,8 +75,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, last_access, job_seeker_id, name, is_default, wish_position_name, wish_city, 
-    work_day, field_start, field_end, per_diem, arrival_day
+    id, last_access, job_seeker_id, name, is_default,is_delete, wish_position_name, wish_city, 
+    work_day, work_type, internship_time, per_diem, arrival_day
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.ResumeExample" resultMap="BaseResultMap">
     select
@@ -112,12 +113,12 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into resume (last_access, job_seeker_id, name, 
-      is_default, wish_position_name, wish_city, 
-      work_day, field_start, field_end, 
+      is_default,is_delete, wish_position_name, wish_city, 
+      work_day, work_type, internship_time, 
       per_diem, arrival_day)
     values (#{lastAccess,jdbcType=BIGINT}, #{jobSeekerId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{isDefault,jdbcType=INTEGER}, #{wishPositionName,jdbcType=VARCHAR}, #{wishCity,jdbcType=VARCHAR}, 
-      #{workDay,jdbcType=INTEGER}, #{fieldStart,jdbcType=BIGINT}, #{fieldEnd,jdbcType=BIGINT}, 
+      #{isDefault,jdbcType=INTEGER}, #{isDelete,jdbcType=INTEGER}, #{wishPositionName,jdbcType=VARCHAR}, #{wishCity,jdbcType=VARCHAR}, 
+      #{workDay,jdbcType=INTEGER}, #{workType,jdbcType=VARCHAR}, #{internshipTime,jdbcType=VARCHAR}, 
       #{perDiem,jdbcType=DOUBLE}, #{arrivalDay,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.Resume">
@@ -138,6 +139,9 @@
       <if test="isDefault != null">
         is_default,
       </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
       <if test="wishPositionName != null">
         wish_position_name,
       </if>
@@ -147,11 +151,11 @@
       <if test="workDay != null">
         work_day,
       </if>
-      <if test="fieldStart != null">
-        field_start,
+      <if test="workType != null">
+        work_type,
       </if>
-      <if test="fieldEnd != null">
-        field_end,
+      <if test="internshipTime != null">
+        internship_time,
       </if>
       <if test="perDiem != null">
         per_diem,
@@ -173,6 +177,9 @@
       <if test="isDefault != null">
         #{isDefault,jdbcType=INTEGER},
       </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=INTEGER},
+      </if>
       <if test="wishPositionName != null">
         #{wishPositionName,jdbcType=VARCHAR},
       </if>
@@ -182,11 +189,11 @@
       <if test="workDay != null">
         #{workDay,jdbcType=INTEGER},
       </if>
-      <if test="fieldStart != null">
-        #{fieldStart,jdbcType=BIGINT},
+      <if test="workType != null">
+        #{workType,jdbcType=VARCHAR},
       </if>
-      <if test="fieldEnd != null">
-        #{fieldEnd,jdbcType=BIGINT},
+      <if test="internshipTime != null">
+        #{internshipTime,jdbcType=VARCHAR},
       </if>
       <if test="perDiem != null">
         #{perDiem,jdbcType=DOUBLE},
@@ -220,6 +227,9 @@
       <if test="record.isDefault != null">
         is_default = #{record.isDefault,jdbcType=INTEGER},
       </if>
+       <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=INTEGER},
+      </if>
       <if test="record.wishPositionName != null">
         wish_position_name = #{record.wishPositionName,jdbcType=VARCHAR},
       </if>
@@ -229,11 +239,11 @@
       <if test="record.workDay != null">
         work_day = #{record.workDay,jdbcType=INTEGER},
       </if>
-      <if test="record.fieldStart != null">
-        field_start = #{record.fieldStart,jdbcType=BIGINT},
+      <if test="record.workType != null">
+        work_type = #{record.workType,jdbcType=VARCHAR},
       </if>
-      <if test="record.fieldEnd != null">
-        field_end = #{record.fieldEnd,jdbcType=BIGINT},
+      <if test="record.internshipTime != null">
+        internship_time = #{record.internshipTime,jdbcType=VARCHAR},
       </if>
       <if test="record.perDiem != null">
         per_diem = #{record.perDiem,jdbcType=DOUBLE},
@@ -253,11 +263,12 @@
       job_seeker_id = #{record.jobSeekerId,jdbcType=BIGINT},
       name = #{record.name,jdbcType=VARCHAR},
       is_default = #{record.isDefault,jdbcType=INTEGER},
+      is_delete = #{record.isDelete,jdbcType=INTEGER},
       wish_position_name = #{record.wishPositionName,jdbcType=VARCHAR},
       wish_city = #{record.wishCity,jdbcType=VARCHAR},
       work_day = #{record.workDay,jdbcType=INTEGER},
-      field_start = #{record.fieldStart,jdbcType=BIGINT},
-      field_end = #{record.fieldEnd,jdbcType=BIGINT},
+      work_type = #{record.workType,jdbcType=VARCHAR},
+      internship_time = #{record.internshipTime,jdbcType=VARCHAR},
       per_diem = #{record.perDiem,jdbcType=DOUBLE},
       arrival_day = #{record.arrivalDay,jdbcType=BIGINT}
     <if test="_parameter != null">
@@ -279,6 +290,9 @@
       <if test="isDefault != null">
         is_default = #{isDefault,jdbcType=INTEGER},
       </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=INTEGER},
+      </if>
       <if test="wishPositionName != null">
         wish_position_name = #{wishPositionName,jdbcType=VARCHAR},
       </if>
@@ -288,11 +302,11 @@
       <if test="workDay != null">
         work_day = #{workDay,jdbcType=INTEGER},
       </if>
-      <if test="fieldStart != null">
-        field_start = #{fieldStart,jdbcType=BIGINT},
+      <if test="workType != null">
+        work_type = #{workType,jdbcType=VARCHAR},
       </if>
-      <if test="fieldEnd != null">
-        field_end = #{fieldEnd,jdbcType=BIGINT},
+      <if test="internshipTime != null">
+        internship_time = #{internshipTime,jdbcType=VARCHAR},
       </if>
       <if test="perDiem != null">
         per_diem = #{perDiem,jdbcType=DOUBLE},
@@ -309,11 +323,12 @@
       job_seeker_id = #{jobSeekerId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
       is_default = #{isDefault,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=INTEGER},
       wish_position_name = #{wishPositionName,jdbcType=VARCHAR},
       wish_city = #{wishCity,jdbcType=VARCHAR},
       work_day = #{workDay,jdbcType=INTEGER},
-      field_start = #{fieldStart,jdbcType=BIGINT},
-      field_end = #{fieldEnd,jdbcType=BIGINT},
+      work_type = #{workType,jdbcType=VARCHAR},
+      internship_time = #{internshipTime,jdbcType=VARCHAR},
       per_diem = #{perDiem,jdbcType=DOUBLE},
       arrival_day = #{arrivalDay,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
