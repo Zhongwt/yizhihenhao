@@ -8,7 +8,7 @@ public class AdminDTO {
 	@NotNull
 	private String name;
 	@NotNull
-	private String userName;
+	private String username;
 	@NotNull
 	private String password;
 	private String jurisdiction;
@@ -59,11 +59,11 @@ public class AdminDTO {
 	public void setLastLoginDate(String lastLoginDate) {
 		this.lastLoginDate = lastLoginDate;
 	}
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public String getPassword() {
 		return password;

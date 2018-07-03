@@ -10,7 +10,7 @@ package com.yzhh.backstage.api.constans;
  */
 public class Constants
 {
-	public final static String USER_LOGIN = "user_login";
+	public final static String USER_LOGIN = "user_login_";
 	
 	public final static String IP = "ip";
 	

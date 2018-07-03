@@ -18,8 +18,8 @@ public interface IPositionService {
 	public PositionDTO findById(Long id);
 	//通过职位
 	public void passPosition(Long id);
-	
 	//用于获取职位名字
 	public String getName(List<Long> ids);
-	
+	//删除
+	public void delete(List<Long> ids);
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,7 @@ import com.yzhh.backstage.api.service.ICompanyService;
 import com.yzhh.backstage.api.service.ILogService;
 import com.yzhh.backstage.api.service.IPositionService;
 import com.yzhh.backstage.api.service.IResumeService;
+import com.yzhh.backstage.api.util.RedisUtil;
 import com.yzhh.backstage.api.util.ValidateUtil;
 
 import io.swagger.annotations.ApiOperation;
@@ -51,6 +53,7 @@ import io.swagger.annotations.ApiOperation;
 @Validated
 @RestController
 @RequestMapping("/api/admin")
+@CrossOrigin
 public class AdminController {
 
 	@Autowired
@@ -63,6 +66,8 @@ public class AdminController {
 	private IResumeService resumeService;
 	@Autowired
 	private ILogService logService;
+	@Autowired
+	private RedisUtil redisUtil;
 	
 	@ApiOperation(value = "登录", notes = "", tags = { "管理员部分api" })
 	@PostMapping("/login")
@@ -77,7 +82,7 @@ public class AdminController {
 		
 		logService.addLog(a.getId(), a.getName(), ip, a.getName()+"登录系统");
 		
-		request.getSession().setAttribute(Constants.USER_LOGIN, a);
+		redisUtil.set(Constants.USER_LOGIN+a.getId(), a);
 		
 		return new ApiResponse(a);
 	}
@@ -325,7 +330,7 @@ public class AdminController {
 	}
 	
 	@ApiOperation(value = "下线职位", notes = "", tags = { "管理员部分api" })
-	@PostMapping("/position/remove")
+	@PutMapping("/position/downline")
 	public ApiResponse downLinePosition(HttpServletRequest request,@RequestBody List<Long> ids) {
 		
 		positionService.downLine(ids);
@@ -334,6 +339,22 @@ public class AdminController {
 		UserDTO user = (UserDTO)request.getSession().getAttribute(Constants.USER_LOGIN);
 		String ip = (String)request.getSession().getAttribute(Constants.IP);
 		logService.addLog(user.getId(), user.getName(), ip, user.getName()+"下线职位"+name+"");
+		
+		return new ApiResponse();
+	}
+	
+	@ApiOperation(value = "删除职位", notes = "", tags = { "管理员部分api" })
+	@PutMapping("/position/remove")
+	public ApiResponse deletePosition(HttpServletRequest request,@RequestBody List<Long> ids) {
+		
+		UserDTO user = (UserDTO)request.getSession().getAttribute(Constants.USER_LOGIN);
+		checkRole(JurisdictionEnum.delete_position.getId(), user.getJurisdiction());
+		
+		positionService.downLine(ids);
+		
+		String name = positionService.getName(ids);
+		String ip = (String)request.getSession().getAttribute(Constants.IP);
+		logService.addLog(user.getId(), user.getName(), ip, user.getName()+"删除职位"+name+"");
 		
 		return new ApiResponse();
 	}

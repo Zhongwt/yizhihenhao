@@ -75,16 +75,20 @@ public class AdminServiceImpl implements IAdminService{
 	public List<AdminDTO> list() {
 		
 		List<AdminDTO> list = new ArrayList<>();
+		AdminExample example = new AdminExample();
+		example.createCriteria().andIdNotEqualTo(1L);
 		
-		List<Admin> adminList = adminDAO.selectByExample(new AdminExample());
+		List<Admin> adminList = adminDAO.selectByExample(example);
 		
 		if(CollectionUtils.isNotEmpty(adminList)) {
 			for(Admin admin : adminList) {
 				AdminDTO adminDTO = new AdminDTO();
 				adminDTO.setId(admin.getId());
 				adminDTO.setName(admin.getName());
+				adminDTO.setUsername(admin.getUsername());
 				adminDTO.setJurisdiction(admin.getJurisdiction());
 				adminDTO.setRole(admin.getRole());
+				adminDTO.setPassword("123456");
 				adminDTO.setEmail(admin.getEmail());
 				adminDTO.setJoinDate(DateUtils.longToString(admin.getJoinDate(), null));
 				adminDTO.setLastLoginDate(admin.getLastLoginDate() == null ? "" : DateUtils.longToString(admin.getLastLoginDate(), null) );
@@ -100,7 +104,7 @@ public class AdminServiceImpl implements IAdminService{
 		
 		long date = new Date().getTime();
 		AdminExample example = new AdminExample();
-		example.createCriteria().andUsernameEqualTo(adminDTO.getUserName());
+		example.createCriteria().andUsernameEqualTo(adminDTO.getUsername());
 		List<Admin> list = adminDAO.selectByExample(example);
 		
 		

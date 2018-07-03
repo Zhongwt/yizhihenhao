@@ -259,4 +259,20 @@ public class PositionServiceImpl implements IPositionService{
 		}
 		return str.toString().substring(0,str.length() -1);
 	}
+
+	@Override
+	public void delete(List<Long> ids) {
+		Position position = new Position();
+		position.setLastAccess(new Date().getTime());
+		if(CollectionUtils.isNotEmpty(ids)) {
+			for(Long id : ids) {
+				checkPosition(id);
+			}
+			for(Long id : ids) {
+				position.setId(id);
+				position.setStatus(PositionStatusEnum.delete.getId());
+				positionDAO.updateByPrimaryKeySelective(position);
+			}
+		}
+	}
 }

@@ -3,7 +3,7 @@ package com.yzhh.backstage.api.dto.admin;
 public class LogDTO {
 
 	private String operator;
-	private String operatorTime;
+	private String operateTime;
 	private String ip;
 	private String note;
 	
@@ -13,11 +13,12 @@ public class LogDTO {
 	public void setOperator(String operator) {
 		this.operator = operator;
 	}
-	public String getOperatorTime() {
-		return operatorTime;
+	
+	public String getOperateTime() {
+		return operateTime;
 	}
-	public void setOperatorTime(String operatorTime) {
-		this.operatorTime = operatorTime;
+	public void setOperateTime(String operateTime) {
+		this.operateTime = operateTime;
 	}
 	public String getIp() {
 		return ip;

@@ -1,6 +1,7 @@
 package com.yzhh.backstage.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import com.yzhh.backstage.api.util.RandomImageUtil;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class CommonController {
 	
 	@Autowired
