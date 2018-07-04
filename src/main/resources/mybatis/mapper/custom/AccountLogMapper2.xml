@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzhh.backstage.api.dao.mapper.custom.AccountLogMapper2">
+  <resultMap id="BaseResultMap" type="com.yzhh.backstage.api.entity.AccountLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
+    <result column="account_id" jdbcType="BIGINT" property="accountId" />
+    <result column="steam" jdbcType="DOUBLE" property="steam" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+  </resultMap>
+  
+  <sql id="condition_sql">
+ 		<if test="accountId != null">
+ 			AND account_id = #{accountId}
+ 		</if>
+ 	</sql>
+ 	
+ 	<!-- 分页查询日志 -->
+ 	<select id="queryByPage" resultMap="BaseResultMap">
+ 		SELECT
+			*
+		FROM
+			account_log
+		<where>
+			<include refid="condition_sql"></include>
+		</where>
+		order by last_access desc 
+		LIMIT #{starNum},#{size}
+ 	</select>
+ 	
+ 	<!-- 分页查询日志 -->
+ 	<select id="countByPage" resultType="Long">
+ 		SELECT
+			count(id)
+		FROM
+			account_log
+		<where>
+			<include refid="condition_sql"></include>
+		</where>
+ 	</select>
+  
+</mapper>

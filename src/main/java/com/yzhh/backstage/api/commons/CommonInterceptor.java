@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -86,14 +85,9 @@ public class CommonInterceptor implements HandlerInterceptor {
         	return true;
         }
         
-//        UserDTO user = (UserDTO)request.getSession().getAttribute(Constants.USER_LOGIN);
-//        if(user != null && user.getRole().intValue() == RoleEnum.admin.getId()) {
-//        	//checkRole()
-//        }
-       
         UserDTO user = null;
         
-        String token = getToken(request, TOKEN);
+        String token = request.getHeader(TOKEN);
         if(token != null) {
         	user = (UserDTO)redisUtil.get(Constants.USER_LOGIN+token);
         	request.getSession().setAttribute(Constants.USER_LOGIN, user);
@@ -117,6 +111,7 @@ public class CommonInterceptor implements HandlerInterceptor {
 			throws Exception {
 	}
 
+	@SuppressWarnings("unused")
 	private String getToken(HttpServletRequest request, String str) {
 		Cookie[] cookies = request.getCookies();
 		if(cookies != null) {
@@ -174,6 +169,7 @@ public class CommonInterceptor implements HandlerInterceptor {
 	 * @throws IOException 
 	 * @createTime:2018年3月7日 上午10:47:34
 	 */
+	@SuppressWarnings("unused")
 	private void writeOutResponse(int status,ApiResponse apiResponse,HttpServletResponse response) throws IOException {
 		response.setStatus(status);
      	response.setCharacterEncoding("UTF-8");

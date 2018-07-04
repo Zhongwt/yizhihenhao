@@ -38,10 +38,10 @@
       <property name="enableSubPackages" value="true"/>
    </javaClientGenerator>
 
-      <table schema="DB2ADMIN" tableName="educational_background">
+      <table schema="DB2ADMIN" tableName="account">
           <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
       </table>
-      <table schema="DB2ADMIN" tableName="skill_hobby">
+      <table schema="DB2ADMIN" tableName="account_log">
           <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
       </table>
 

@@ -130,7 +130,7 @@ public class PositionServiceImpl implements IPositionService{
 				params.put("status", PositionStatusEnum.audited.getId());
 				params.put("deadLineStar", DateUtils.dateToString(date, null));
 			}
-			if(searchPositionDTO.getStatus().equals("审核中")) {
+			if(searchPositionDTO.getStatus().equals("未审核")) {
 				//审核中
 				params.put("status", PositionStatusEnum.pending.getId());
 			}

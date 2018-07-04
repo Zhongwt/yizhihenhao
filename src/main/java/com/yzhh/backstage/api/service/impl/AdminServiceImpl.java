@@ -118,8 +118,7 @@ public class AdminServiceImpl implements IAdminService{
 			}
 			admin.setLastAccess(date);
 			admin.setName(adminDTO.getName());
-			admin.setName(adminDTO.getName());
-			admin.setUsername(admin.getUsername());
+			admin.setUsername(adminDTO.getUsername());
 			admin.setPassword(MD5.getMD5(adminDTO.getPassword()));
 			admin.setEmail(adminDTO.getEmail());
 			admin.setJurisdiction(adminDTO.getJurisdiction());
@@ -132,7 +131,7 @@ public class AdminServiceImpl implements IAdminService{
 			Admin admin = new Admin();
 			admin.setLastAccess(date);
 			admin.setName(adminDTO.getName());
-			admin.setUsername(admin.getUsername());
+			admin.setUsername(adminDTO.getUsername());
 			admin.setPassword(MD5.getMD5(adminDTO.getPassword()));
 			admin.setEmail(adminDTO.getEmail());
 			admin.setJoinDate(date);
