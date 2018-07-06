@@ -39,7 +39,7 @@ public class MD5 {
      *      * @return 
      *      
      */
-    public static String bytesToHex(byte[] bytes) {
+    private static String bytesToHex(byte[] bytes) {
         StringBuffer md5str = new StringBuffer();
         // 把数组每一字节换成16进制连成md5字符串  
         int digital;

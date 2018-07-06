@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzhh.backstage.api.dao.mapper.custom.CompanyNoticeMapper2">
+  <resultMap id="BaseResultMap" type="com.yzhh.backstage.api.entity.CompanyNotice">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
+    <result column="message" jdbcType="VARCHAR" property="message" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="is_read" jdbcType="INTEGER" property="isRead" />
+  </resultMap>
+  
+  <sql id="condition_sql">
+ 		<if test="companyId != null">
+ 			AND company_id = #{companyId}
+ 		</if>
+ 	</sql>
+ 	
+ 	<!-- 分页查询日志 -->
+ 	<select id="queryByPage" resultMap="BaseResultMap">
+ 		SELECT
+			*
+		FROM
+			company_notice
+		<where>
+			<include refid="condition_sql"></include>
+		</where>
+		order by last_access desc 
+		LIMIT #{starNum},#{size}
+ 	</select>
+ 	
+ 	<!-- 分页查询日志 -->
+ 	<select id="countByPage" resultType="Long">
+ 		SELECT
+			count(id)
+		FROM
+			company_notice
+		<where>
+			<include refid="condition_sql"></include>
+		</where>
+ 	</select>
+</mapper>

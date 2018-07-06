@@ -1,15 +1,15 @@
 package com.yzhh.backstage.api.enums;
 
-public enum AccountTypeEnum {
+public enum IsReadEnum {
 
-	company(1, "Company"),
-	job_seeker(2, "JobSeeker"),
+	read(1, "已读"),
+	not_read(0, "未读"),
     ;
     
     private int id;
     private String name;
     
-    AccountTypeEnum(int id, String name){
+    IsReadEnum(int id, String name){
         this.id =  id;
         this.name = name;
     }
@@ -24,9 +24,9 @@ public enum AccountTypeEnum {
     
     public static String getValueById(int id)
 	{
-    	AccountTypeEnum[] enumArray = AccountTypeEnum.values();
+    	IsReadEnum[] enumArray = IsReadEnum.values();
 
-		for (AccountTypeEnum enums : enumArray)
+		for (IsReadEnum enums : enumArray)
 		{
 			if (id == enums.getId())
 			{
@@ -36,4 +36,5 @@ public enum AccountTypeEnum {
 
 		return null;
 	}
+    
 }

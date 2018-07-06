@@ -11,6 +11,7 @@ public class ResumeSearchDTO {
 	private String graduationTime;
 	private String sex;
 	private String status;
+	private Long companyId;
 	public String getType() {
 		return type;
 	}
@@ -64,5 +65,11 @@ public class ResumeSearchDTO {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public Long getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 }

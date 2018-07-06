@@ -11,12 +11,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.yzhh.backstage.api.commons.BizException;
+import com.yzhh.backstage.api.dao.ICompanyNoticeDAO;
 import com.yzhh.backstage.api.dao.IDeliveryResumeDAO;
 import com.yzhh.backstage.api.dao.IPositionDAO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.position.PositionDTO;
 import com.yzhh.backstage.api.dto.position.SearchPositionDTO;
+import com.yzhh.backstage.api.entity.CompanyNotice;
 import com.yzhh.backstage.api.entity.Position;
+import com.yzhh.backstage.api.enums.IsReadEnum;
 import com.yzhh.backstage.api.enums.PositionStatusEnum;
 import com.yzhh.backstage.api.service.IPositionService;
 import com.yzhh.backstage.api.util.CollectionUtils;
@@ -29,6 +32,8 @@ public class PositionServiceImpl implements IPositionService{
 	private IPositionDAO positionDAO;
 	@Autowired
 	private IDeliveryResumeDAO deliveryResumeDAO;
+	@Autowired
+	private ICompanyNoticeDAO companyNoticeDAO;
 	
 	@Override
 	public void saveOrUpdatePosition(PositionDTO positionDTO) {
@@ -111,6 +116,9 @@ public class PositionServiceImpl implements IPositionService{
 		
 		if(!StringUtils.isEmpty(searchPositionDTO.getSearchKey())) {
 			params.put("searchKey", searchPositionDTO.getSearchKey());
+		}
+		if(searchPositionDTO.getCompanyId() != null) {
+			params.put("companyId", searchPositionDTO.getCompanyId());
 		}
 		
 		Date date = new Date();
@@ -239,13 +247,22 @@ public class PositionServiceImpl implements IPositionService{
 
 	@Override
 	public void passPosition(Long id) {
-		checkPosition(id);
+		
+		Long lastAccess = new Date().getTime();
+		Position position = checkPosition(id);
 		Position newPosition = new Position(); 
 		newPosition.setId(id);
-		newPosition.setLastAccess(new Date().getTime());
+		newPosition.setLastAccess(lastAccess);
 		newPosition.setStatus(PositionStatusEnum.remove.getId());
 		
 		positionDAO.updateByPrimaryKeySelective(newPosition);
+		
+		CompanyNotice companyNotice = new CompanyNotice();
+		companyNotice.setCompanyId(position.getCompanyId());
+		companyNotice.setIsRead(IsReadEnum.not_read.getId());
+		companyNotice.setLastAccess(lastAccess);
+		companyNotice.setMessage("审核消息:您发布的职位【"+position.getName()+"】审核通过啦!");
+		companyNoticeDAO.insertSelective(companyNotice);
 	}
 
 	@Override

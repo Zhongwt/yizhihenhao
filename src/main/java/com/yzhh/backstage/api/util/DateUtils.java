@@ -19,6 +19,8 @@ public class DateUtils {
 	// public final String format_1 = "";
 	public static final String YYYYMMdd = "yyyy-MM-dd";
 	public static final String yymmddhhmmss = "yyyy-MM-dd HH:mm:ss";
+	
+	public static final Long one_hour = 1000L * 60 * 60; 
 
 	/**
 	 * 

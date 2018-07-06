@@ -17,4 +17,7 @@ public interface IResumeDAO extends IDAO<Resume, ResumeExample> {
 
 	// 通过简历id获取简历名称
 	public List<String> getName(Map<String, Object> params);
+	
+	//根据条件获取简历数量
+	public Long countResume(Map<String,Object> params);
 }

@@ -32,4 +32,9 @@ public class ResumeDAOImpl extends DAOImpl<Resume, ResumeExample> implements IRe
 	public List<String> getName(Map<String, Object> params) {
 		return mapper2.getName(params);
 	}
+
+	@Override
+	public Long countResume(Map<String, Object> params) {
+		return mapper2.countResume(params);
+	}
 }

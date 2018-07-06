@@ -1,19 +1,31 @@
 package com.yzhh.backstage.api.dto.company;
 
+import javax.validation.constraints.NotNull;
+
 public class CompanyDTO {
 
 	private Long id;
+	@NotNull
 	private String name;
+	@NotNull
 	private String city;
 	private String joinDate;
 	private String status;
+	@NotNull
 	private String address;
+	@NotNull
 	private String field;				//领域
+	@NotNull
 	private String scale;				//规模
+	
 	private String website;			//公司网站
+	@NotNull
 	private String email;			//
 	private String note;				//
 	private String description;	//
+	private String phone;			//
+	private String attachent;		//
+	
 	
 	public Long getId() {
 		return id;
@@ -86,6 +98,18 @@ public class CompanyDTO {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getAttachent() {
+		return attachent;
+	}
+	public void setAttachent(String attachent) {
+		this.attachent = attachent;
 	}
 	
 }

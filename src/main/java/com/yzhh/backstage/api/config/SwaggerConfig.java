@@ -26,7 +26,7 @@ public class SwaggerConfig
 {
     public ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-            .title("员工发展接口文档")
+            .title("一职很好接口文档")
             .description("这是一个给app端人员调用server端接口的测试文档与平台")
             .license("")
             .licenseUrl("")

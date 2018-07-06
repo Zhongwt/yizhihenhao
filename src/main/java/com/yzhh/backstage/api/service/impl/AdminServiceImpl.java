@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.yzhh.backstage.api.commons.BizException;
 import com.yzhh.backstage.api.dao.IAdminDAO;
@@ -107,6 +108,9 @@ public class AdminServiceImpl implements IAdminService{
 		example.createCriteria().andUsernameEqualTo(adminDTO.getUsername());
 		List<Admin> list = adminDAO.selectByExample(example);
 		
+		if(StringUtils.isEmpty(adminDTO.getJurisdiction())) {
+			adminDTO.setJurisdiction("1,2,3,4,5,6,7,8,9,10");
+		}
 		
 		if(adminDTO.getId() != null) {
 			Admin admin = checkAdmin(adminDTO.getId());

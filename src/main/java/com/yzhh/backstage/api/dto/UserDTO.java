@@ -4,6 +4,7 @@ public class UserDTO {
 
 	private Long id;
 	private String name;
+	private String phone;
 	private Integer role;			//权限（1,管理原，2，公司，3用户）
 	private String jurisdiction;
 	private String email;
@@ -37,5 +38,11 @@ public class UserDTO {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 }

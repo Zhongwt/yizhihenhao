@@ -19,4 +19,6 @@ public interface ResumeMapper2 {
 	//通过简历id获取简历名称
 	public List<String> getName(Map<String,Object> params);
 
+	//获取简历数量
+	public Long countResume(Map<String,Object> params);
 }

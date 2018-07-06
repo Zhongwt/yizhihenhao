@@ -40,6 +40,10 @@ public class CommonInterceptor implements HandlerInterceptor {
 	{
 		exceptionUrl.add("/api/admin/login");
 		exceptionUrl.add("/api/login/verify/code");
+		exceptionUrl.add("/api/mobile/verify/code");
+		exceptionUrl.add("/ap/email/verify/code");
+		exceptionUrl.add("/api/company/add/company");
+		
 	}
 
 	/**

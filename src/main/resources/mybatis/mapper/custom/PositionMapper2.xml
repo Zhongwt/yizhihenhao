@@ -30,10 +30,13 @@
 			AND status = #{status}
 		</if>
 		<if test="deadLineStar != null">
-			AND  deadline  &gt; #{deadLineTime}
+			AND  deadline  &gt; #{deadLineStar}
 		</if>
 		<if test="deadLineEnd != null">
-			AND  deadline  &lt; #{deadLineTime}
+			AND  deadline  &lt; #{deadLineEnd}
+		</if>
+		<if test="companyId != null">
+			AND  company_id  = #{companyId}
 		</if>
 	</sql>
 	

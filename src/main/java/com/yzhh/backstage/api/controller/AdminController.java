@@ -95,7 +95,7 @@ public class AdminController {
 	}
 
 	@ApiOperation(value = "登出", notes = "", tags = { "管理员部分api" })
-	@PostMapping("/login/out")
+	@GetMapping("/login/out")
 	public ApiResponse adminLoginOut(HttpServletRequest request) {
 
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
@@ -105,13 +105,6 @@ public class AdminController {
 		request.getSession().setAttribute(Constants.USER_LOGIN, null);
 
 		return new ApiResponse();
-	}
-
-	@ApiOperation(value = "当前登录人信息", notes = "", tags = { "管理员部分api" })
-	@PostMapping("/login/info")
-	public ApiResponse adminLoginInfo(HttpServletRequest request) {
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
-		return new ApiResponse(user);
 	}
 
 	@ApiOperation(value = "管理员列表", notes = "", tags = { "管理员部分api" })

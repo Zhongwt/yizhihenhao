@@ -77,6 +77,9 @@ public class ResumeServiceImpl implements IResumeService {
 		if(!StringUtils.isEmpty(resumeSearchDTO.getStatus())) {
 			params.put("status", resumeSearchDTO.getStatus());
 		}
+		if(resumeSearchDTO.getCompanyId() != null) {
+			params.put("companyId", resumeSearchDTO.getCompanyId());
+		}
 		
 		List<PageResumeDTO> list = resumeDAO.queryByPage(params);
 		Long count = resumeDAO.countByPage(params);
