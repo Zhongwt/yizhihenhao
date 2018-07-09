@@ -38,11 +38,18 @@ public class CommonInterceptor implements HandlerInterceptor {
 	private Set<String> exceptionUrl = new HashSet<String>();
 	
 	{
-		exceptionUrl.add("/api/admin/login");
 		exceptionUrl.add("/api/login/verify/code");
 		exceptionUrl.add("/api/mobile/verify/code");
 		exceptionUrl.add("/ap/email/verify/code");
+		exceptionUrl.add("/api/upload/file");
+		
+		exceptionUrl.add("/api/admin/login");
+		
+		exceptionUrl.add("/api/company/add");
+		exceptionUrl.add("/api/company/forget/password");
+		exceptionUrl.add("/api/company/login");
 		exceptionUrl.add("/api/company/add/company");
+		
 		
 	}
 
@@ -94,6 +101,8 @@ public class CommonInterceptor implements HandlerInterceptor {
         String token = request.getHeader(TOKEN);
         if(token != null) {
         	user = (UserDTO)redisUtil.get(Constants.USER_LOGIN+token);
+        	//刷新缓存
+        	redisUtil.set(Constants.USER_LOGIN +user.getId(), user,Constants.TWO_HOUR);
         	request.getSession().setAttribute(Constants.USER_LOGIN, user);
         }
         

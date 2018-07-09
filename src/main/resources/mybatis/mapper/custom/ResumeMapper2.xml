@@ -35,6 +35,9 @@
  		<if test="companyId != null">
  			AND p.company_id = #{companyId}
  		</if>
+ 		<if test="positionId != null">
+ 			AND p.id = #{positionId}
+ 		</if>
  	</sql>
  	
  	<!-- 分页查询日志 -->

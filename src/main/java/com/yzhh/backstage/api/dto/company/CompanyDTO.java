@@ -9,6 +9,8 @@ public class CompanyDTO {
 	private String name;
 	@NotNull
 	private String city;
+	private String province;
+	private String area;
 	private String joinDate;
 	private String status;
 	@NotNull
@@ -25,8 +27,26 @@ public class CompanyDTO {
 	private String description;	//
 	private String phone;			//
 	private String attachent;		//
+	private String logo;				
+	private String companyType;				//公司类型
+	private String registrationNumber;		//注册号
+	private String establishTime;				//成立时间
+	private String registeredCapital;			//注册资本
+	private Double balance;						//公司余额
 	
 	
+	public String getProvince() {
+		return province;
+	}
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	public String getArea() {
+		return area;
+	}
+	public void setArea(String area) {
+		this.area = area;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -110,6 +130,42 @@ public class CompanyDTO {
 	}
 	public void setAttachent(String attachent) {
 		this.attachent = attachent;
+	}
+	public String getLogo() {
+		return logo;
+	}
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+	public String getCompanyType() {
+		return companyType;
+	}
+	public void setCompanyType(String companyType) {
+		this.companyType = companyType;
+	}
+	public String getRegistrationNumber() {
+		return registrationNumber;
+	}
+	public void setRegistrationNumber(String registrationNumber) {
+		this.registrationNumber = registrationNumber;
+	}
+	public String getEstablishTime() {
+		return establishTime;
+	}
+	public void setEstablishTime(String establishTime) {
+		this.establishTime = establishTime;
+	}
+	public String getRegisteredCapital() {
+		return registeredCapital;
+	}
+	public void setRegisteredCapital(String registeredCapital) {
+		this.registeredCapital = registeredCapital;
+	}
+	public Double getBalance() {
+		return balance;
+	}
+	public void setBalance(Double balance) {
+		this.balance = balance;
 	}
 	
 }

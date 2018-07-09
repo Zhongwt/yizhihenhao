@@ -1,20 +1,27 @@
 package com.yzhh.backstage.api.controller;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yzhh.backstage.api.commons.ApiResponse;
 import com.yzhh.backstage.api.constans.Constants;
 import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.VerifyCodeDTO;
+import com.yzhh.backstage.api.service.IAttachmentService;
 import com.yzhh.backstage.api.util.RandomImageUtil;
+import com.yzhh.backstage.api.util.RedisUtil;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -26,6 +33,10 @@ public class CommonController {
 	
 	@Autowired
 	private RandomImageUtil randomImageUtil;
+	@Autowired
+	private IAttachmentService attachmentService;
+	@Autowired
+	private RedisUtil redisUtil;
 
 	@ApiOperation(value = "登录验证码", notes = "", tags = { "通用部分api" })
 	@GetMapping("/login/verify/code")
@@ -51,7 +62,7 @@ public class CommonController {
 	@GetMapping("/mobile/verify/code")
 	public ApiResponse getPhoneVerificationCode(@RequestParam String phone) {
 		
-		
+		redisUtil.set(Constants.phone_verification_code+phone, "3233",Constants.TEN_MINUTES);
 		
 		return new ApiResponse("3233");
 	}
@@ -60,10 +71,27 @@ public class CommonController {
 	@GetMapping("/email/verify/code")
 	public ApiResponse getEmailVerificationCode(@RequestParam String email) {
 		
-		
+		redisUtil.set(Constants.email_verification_code+email, "3233",Constants.TEN_MINUTES);
 		
 		return new ApiResponse("3233");
 	}
+	
+	
+	@PostMapping(value = "/upload/file")
+    public ApiResponse updateStudentStatus(MultipartFile file,HttpServletRequest request) {
+		
+		Long id = 0L;
+        try {
+           id = attachmentService.addAttachment(file.getOriginalFilename());
+           String path="/home/yzhh/file/"+id;
+           File newFile=new File(path);
+           file.transferTo(newFile);
+        } catch ( IOException e) {
+            e.printStackTrace();
+        }
+		
+		return new ApiResponse(id);
+    }
 }
 
 

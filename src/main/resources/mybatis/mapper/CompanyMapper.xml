@@ -5,7 +5,9 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
     <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="join_date" jdbcType="BIGINT" property="joinDate" />
     <result column="status" jdbcType="INTEGER" property="status" />
@@ -20,6 +22,12 @@
     <result column="identification" jdbcType="INTEGER" property="identification" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="logo" jdbcType="VARCHAR" property="logo" />
+    <result column="company_type" jdbcType="VARCHAR" property="companyType" />
+    <result column="registration_number" jdbcType="VARCHAR" property="registrationNumber" />
+    <result column="establish_time" jdbcType="VARCHAR" property="establishTime" />
+    <result column="registered_capital" jdbcType="VARCHAR" property="registeredCapital" />
+    <result column="option" jdbcType="VARCHAR" property="option" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,8 +88,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, last_access, name, city, address, join_date, status, is_number, description, 
-    field, scale, website, note, email, attachment, identification,phone,password
+    id, last_access, name, province, city, area, address, join_date, status, is_number, 
+    description, field, scale, website, note, email, attachment, identification, phone, 
+    password, logo, company_type, registration_number, establish_time, registered_capital,option
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.CompanyExample" resultMap="BaseResultMap">
     select
@@ -117,17 +126,23 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into company (last_access, name, city, 
-      address, join_date, status, 
-      is_number, description, field, 
-      scale, website, note, 
-      email, attachment, identification,phone,password
+    insert into company (last_access, name, province, 
+      city, area, address, 
+      join_date, status, is_number, 
+      description, field, scale, 
+      website, note, email, 
+      attachment, identification, phone, 
+      password, logo, company_type, 
+      registration_number, establish_time, registered_capital,option
       )
-    values (#{lastAccess,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{joinDate,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, 
-      #{isNumber,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{field,jdbcType=VARCHAR}, 
-      #{scale,jdbcType=VARCHAR}, #{website,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{attachment,jdbcType=VARCHAR}, #{identification,jdbcType=INTEGER},#{phone,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR}
+    values (#{lastAccess,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{joinDate,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{isNumber,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{field,jdbcType=VARCHAR}, #{scale,jdbcType=VARCHAR}, 
+      #{website,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{attachment,jdbcType=VARCHAR}, #{identification,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, #{companyType,jdbcType=VARCHAR}, 
+      #{registrationNumber,jdbcType=VARCHAR}, #{establishTime,jdbcType=VARCHAR}, #{registeredCapital,jdbcType=VARCHAR},#{option,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.Company">
@@ -142,8 +157,14 @@
       <if test="name != null">
         name,
       </if>
+      <if test="province != null">
+        province,
+      </if>
       <if test="city != null">
         city,
+      </if>
+      <if test="area != null">
+        area,
       </if>
       <if test="address != null">
         address,
@@ -181,11 +202,29 @@
       <if test="identification != null">
         identification,
       </if>
-       <if test="phone != null">
+      <if test="phone != null">
         phone,
       </if>
-       <if test="password != null">
+      <if test="password != null">
         password,
+      </if>
+      <if test="logo != null">
+        logo,
+      </if>
+      <if test="companyType != null">
+        company_type,
+      </if>
+      <if test="registrationNumber != null">
+        registration_number,
+      </if>
+      <if test="establishTime != null">
+        establish_time,
+      </if>
+      <if test="registeredCapital != null">
+        registered_capital,
+      </if>
+       <if test="option != null">
+        option,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -195,8 +234,14 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
       <if test="city != null">
         #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
       </if>
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
@@ -240,6 +285,24 @@
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
       </if>
+      <if test="logo != null">
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="companyType != null">
+        #{companyType,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationNumber != null">
+        #{registrationNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="establishTime != null">
+        #{establishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredCapital != null">
+        #{registeredCapital,jdbcType=VARCHAR},
+      </if>
+      <if test="option != null">
+        #{option,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.yzhh.backstage.api.entity.CompanyExample" resultType="java.lang.Long">
@@ -260,8 +323,14 @@
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
       </if>
+      <if test="record.province != null">
+        province = #{record.province,jdbcType=VARCHAR},
+      </if>
       <if test="record.city != null">
         city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.area != null">
+        area = #{record.area,jdbcType=VARCHAR},
       </if>
       <if test="record.address != null">
         address = #{record.address,jdbcType=VARCHAR},
@@ -299,11 +368,29 @@
       <if test="record.identification != null">
         identification = #{record.identification,jdbcType=INTEGER},
       </if>
-       <if test="record.phone != null">
+      <if test="record.phone != null">
         phone = #{record.phone,jdbcType=VARCHAR},
       </if>
-       <if test="record.password != null">
+      <if test="record.password != null">
         password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logo != null">
+        logo = #{record.logo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyType != null">
+        company_type = #{record.companyType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationNumber != null">
+        registration_number = #{record.registrationNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.establishTime != null">
+        establish_time = #{record.establishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registeredCapital != null">
+        registered_capital = #{record.registeredCapital,jdbcType=VARCHAR},
+      </if>
+      <if test="record.option != null">
+        option = #{record.option,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -315,7 +402,9 @@
     set id = #{record.id,jdbcType=BIGINT},
       last_access = #{record.lastAccess,jdbcType=BIGINT},
       name = #{record.name,jdbcType=VARCHAR},
+      province = #{record.province,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=VARCHAR},
       address = #{record.address,jdbcType=VARCHAR},
       join_date = #{record.joinDate,jdbcType=BIGINT},
       status = #{record.status,jdbcType=INTEGER},
@@ -329,7 +418,13 @@
       attachment = #{record.attachment,jdbcType=VARCHAR},
       identification = #{record.identification,jdbcType=INTEGER},
       phone = #{record.phone,jdbcType=VARCHAR},
-      password = #{record.password,jdbcType=VARCHAR}
+      password = #{record.password,jdbcType=VARCHAR},
+      logo = #{record.logo,jdbcType=VARCHAR},
+      company_type = #{record.companyType,jdbcType=VARCHAR},
+      registration_number = #{record.registrationNumber,jdbcType=VARCHAR},
+      establish_time = #{record.establishTime,jdbcType=VARCHAR},
+      registered_capital = #{record.registeredCapital,jdbcType=VARCHAR},
+      option = #{record.option,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -343,8 +438,14 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
       <if test="city != null">
         city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        area = #{area,jdbcType=VARCHAR},
       </if>
       <if test="address != null">
         address = #{address,jdbcType=VARCHAR},
@@ -388,6 +489,24 @@
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
       </if>
+      <if test="logo != null">
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="companyType != null">
+        company_type = #{companyType,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationNumber != null">
+        registration_number = #{registrationNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="establishTime != null">
+        establish_time = #{establishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredCapital != null">
+        registered_capital = #{registeredCapital,jdbcType=VARCHAR},
+      </if>
+      <if test="option != null">
+        option = #{option,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -395,7 +514,9 @@
     update company
     set last_access = #{lastAccess,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       join_date = #{joinDate,jdbcType=BIGINT},
       status = #{status,jdbcType=INTEGER},
@@ -409,7 +530,13 @@
       attachment = #{attachment,jdbcType=VARCHAR},
       identification = #{identification,jdbcType=INTEGER},
       phone = #{phone,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR}
+      password = #{password,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      company_type = #{companyType,jdbcType=VARCHAR},
+      registration_number = #{registrationNumber,jdbcType=VARCHAR},
+      establish_time = #{establishTime,jdbcType=VARCHAR},
+      registered_capital = #{registeredCapital,jdbcType=VARCHAR},
+      option = #{option,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

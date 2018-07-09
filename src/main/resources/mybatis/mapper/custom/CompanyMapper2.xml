@@ -21,6 +21,11 @@
     <result column="identification" jdbcType="INTEGER" property="identification" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="logo" jdbcType="VARCHAR" property="logo" />
+    <result column="company_type" jdbcType="VARCHAR" property="companyType" />
+    <result column="registration_number" jdbcType="VARCHAR" property="registrationNumber" />
+    <result column="establish_time" jdbcType="VARCHAR" property="establishTime" />
+    <result column="registered_capital" jdbcType="VARCHAR" property="registeredCapital" />
   </resultMap>
   
   <sql id="condition_sql">

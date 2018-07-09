@@ -1,20 +1,39 @@
 package com.yzhh.backstage.api.entity;
 
 public class JobSeeker extends BaseEntity{
+
 	private static final long serialVersionUID = 1L;
+
 	private String name;
+
     private String openId;
+
     private String imageUrl;
+
     private Integer isAuth;
+
     private String sex;
+
+    private String province;
+
     private String city;
+
+    private String area;
+
     private String birthday;
+
     private String education;
+
     private String graduationTime;
+
     private String graduationSchool;
+
     private String major;
+
     private String majorType;
+
     private String phone;
+
     private String email;
 
     public String getName() {
@@ -57,12 +76,28 @@ public class JobSeeker extends BaseEntity{
         this.sex = sex == null ? null : sex.trim();
     }
 
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province == null ? null : province.trim();
+    }
+
     public String getCity() {
         return city;
     }
 
     public void setCity(String city) {
         this.city = city == null ? null : city.trim();
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area == null ? null : area.trim();
     }
 
     public String getBirthday() {

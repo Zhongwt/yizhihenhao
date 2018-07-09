@@ -1,5 +1,6 @@
 package com.yzhh.backstage.api.service;
 
+import com.yzhh.backstage.api.dto.ForgetPasswordDTO;
 import com.yzhh.backstage.api.dto.LoginDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.UpdatePasswordDTO;
@@ -37,4 +38,6 @@ public interface ICompanyService {
 	public PageDTO<CompanyNoticeDTO> getNoticeList(Long companyId,Long page,Integer size);
 	//获取公司为读取通知数量
 	public Long getCompanyNoticeCount(Long companyId);
+	//忘记密码
+	public void forgetPassword(ForgetPasswordDTO forgetPasswordDTO);
 }

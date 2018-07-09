@@ -80,6 +80,9 @@ public class ResumeServiceImpl implements IResumeService {
 		if(resumeSearchDTO.getCompanyId() != null) {
 			params.put("companyId", resumeSearchDTO.getCompanyId());
 		}
+		if(resumeSearchDTO.getPositionId() != null) {
+			params.put("positionId", resumeSearchDTO.getPositionId());
+		}
 		
 		List<PageResumeDTO> list = resumeDAO.queryByPage(params);
 		Long count = resumeDAO.countByPage(params);

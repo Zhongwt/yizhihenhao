@@ -5,6 +5,7 @@ public enum PositionStatusEnum {
 	pending(1, "未审核"),
 	audited(2,"已审核"),
 	delete(3,"已删除"),
+	reject(4, "已驳回"),
     ;
     
     private int id;

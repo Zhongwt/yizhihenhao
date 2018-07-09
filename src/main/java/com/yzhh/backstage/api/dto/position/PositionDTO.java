@@ -24,18 +24,20 @@ public class PositionDTO {
 	@NotNull
 	private String internshipTime;	//实习时间
 	@NotNull
-	private Double perDiem;			//日薪
+	private String perDiem;			//日薪
 	@NotNull
-	private Integer workTime;		//周工作时间
+	private String workTime;		//周工作时间
 	@NotNull
 	private String correctionChance;	//转正机会
 	@NotNull
 	private String deadline;				//截止日期
+	private Boolean isPressing;			//急招？
 	private String description;			//描述
 	private String releaseDate;			//发布时间
 	private String status;					//
 	private String updateTime;			//
 	private String deliveryNum;			//
+	private String workDate;				//工作时长
 	
 	public String getUpdateTime() {
 		return updateTime;
@@ -109,18 +111,7 @@ public class PositionDTO {
 	public void setInternshipTime(String internshipTime) {
 		this.internshipTime = internshipTime;
 	}
-	public Double getPerDiem() {
-		return perDiem;
-	}
-	public void setPerDiem(Double perDiem) {
-		this.perDiem = perDiem;
-	}
-	public Integer getWorkTime() {
-		return workTime;
-	}
-	public void setWorkTime(Integer workTime) {
-		this.workTime = workTime;
-	}
+	
 	public String getCorrectionChance() {
 		return correctionChance;
 	}
@@ -156,6 +147,30 @@ public class PositionDTO {
 	}
 	public void setDeliveryNum(String deliveryNum) {
 		this.deliveryNum = deliveryNum;
+	}
+	public String getPerDiem() {
+		return perDiem;
+	}
+	public void setPerDiem(String perDiem) {
+		this.perDiem = perDiem;
+	}
+	public String getWorkTime() {
+		return workTime;
+	}
+	public void setWorkTime(String workTime) {
+		this.workTime = workTime;
+	}
+	public Boolean getIsPressing() {
+		return isPressing;
+	}
+	public void setIsPressing(Boolean isPressing) {
+		this.isPressing = isPressing;
+	}
+	public String getWorkDate() {
+		return workDate;
+	}
+	public void setWorkDate(String workDate) {
+		this.workDate = workDate;
 	}
 	
 }

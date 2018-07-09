@@ -38,13 +38,17 @@
       <property name="enableSubPackages" value="true"/>
    </javaClientGenerator>
 
-      <table schema="DB2ADMIN" tableName="account">
-          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
-      </table>
-      <table schema="DB2ADMIN" tableName="account_log">
-          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
-      </table>
 
+
+      <table schema="DB2ADMIN" tableName="position">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="job_seeker">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
+      <table schema="DB2ADMIN" tableName="company">
+          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
+      </table>
 
   </context>
 </generatorConfiguration>

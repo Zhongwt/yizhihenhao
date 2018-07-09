@@ -3,23 +3,50 @@ package com.yzhh.backstage.api.entity;
 public class Position extends BaseEntity{
 
 	private static final long serialVersionUID = 1L;
-	private Long companyId;				//	公司id
-    private Long releaseDate;			//发布日期
-    private String type;						//职务类型
-    private String name;					//职位名称
-    private String city;						//城市
-    private Integer perpleNum;			//招聘人数
-    private String seduction;				//职业诱惑
-    private String description;			//描述
-    private String education;				//学历要求
-    private String address;					//地址
-    private String workType;				//工作类型（周末兼职，暑期工，寒假工）
-    private String internshipTime;		//实习时长
-    private Double perDiem;				//日薪
-    private Integer workTime;			//工作时间
-    private String correctionChance;	//转正机会
-    private Integer status;					//状态
-    private Long deadline;					//截止时间
+
+	private Long companyId;
+
+    private Long releaseDate;
+
+    private String type;
+
+    private String name;
+
+    private String province;
+
+    private String city;
+
+    private String area;
+
+    private Integer perpleNum;
+
+    private String seduction;
+
+    private String description;
+
+    private String education;
+
+    private String address;
+
+    private String workType;
+
+    private String internshipTime;
+
+    private String workTime;
+
+    private String correctionChance;
+
+    private Integer status;
+
+    private Long deadline;
+
+    private String perDiem;
+
+    private Boolean isPressing;
+
+    private String workDate;
+    
+    private String option;
 
     public Long getCompanyId() {
         return companyId;
@@ -53,12 +80,28 @@ public class Position extends BaseEntity{
         this.name = name == null ? null : name.trim();
     }
 
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province == null ? null : province.trim();
+    }
+
     public String getCity() {
         return city;
     }
 
     public void setCity(String city) {
         this.city = city == null ? null : city.trim();
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area == null ? null : area.trim();
     }
 
     public Integer getPerpleNum() {
@@ -117,27 +160,27 @@ public class Position extends BaseEntity{
         this.internshipTime = internshipTime == null ? null : internshipTime.trim();
     }
 
-    public Double getPerDiem() {
-        return perDiem;
-    }
-
-    public void setPerDiem(Double perDiem) {
-        this.perDiem = perDiem;
-    }
-
-    public Integer getWorkTime() {
+    public String getWorkTime() {
         return workTime;
     }
 
-    public void setWorkTime(Integer workTime) {
-        this.workTime = workTime;
+    public void setWorkTime(String workTime) {
+        this.workTime = workTime == null ? null : workTime.trim();
     }
 
     public String getCorrectionChance() {
         return correctionChance;
     }
 
-    public void setCorrectionChance(String correctionChance) {
+    public String getOption() {
+		return option;
+	}
+
+	public void setOption(String option) {
+		this.option = option;
+	}
+
+	public void setCorrectionChance(String correctionChance) {
         this.correctionChance = correctionChance == null ? null : correctionChance.trim();
     }
 
@@ -155,5 +198,29 @@ public class Position extends BaseEntity{
 
     public void setDeadline(Long deadline) {
         this.deadline = deadline;
+    }
+
+    public String getPerDiem() {
+        return perDiem;
+    }
+
+    public void setPerDiem(String perDiem) {
+        this.perDiem = perDiem == null ? null : perDiem.trim();
+    }
+
+    public Boolean getIsPressing() {
+        return isPressing;
+    }
+
+    public void setIsPressing(Boolean isPressing) {
+        this.isPressing = isPressing;
+    }
+
+    public String getWorkDate() {
+        return workDate;
+    }
+
+    public void setWorkDate(String workDate) {
+        this.workDate = workDate == null ? null : workDate.trim();
     }
 }

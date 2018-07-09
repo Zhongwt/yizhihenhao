@@ -2,6 +2,7 @@ package com.yzhh.backstage.api.service;
 
 import java.util.List;
 
+import com.yzhh.backstage.api.dto.AuditDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.position.PositionDTO;
 import com.yzhh.backstage.api.dto.position.SearchPositionDTO;
@@ -16,8 +17,8 @@ public interface IPositionService {
 	public void downLine(List<Long> ids);
 	//职位详情
 	public PositionDTO findById(Long id);
-	//通过职位
-	public void passPosition(Long id);
+	//审批职位
+	public void passPosition(AuditDTO auditDTO);
 	//用于获取职位名字
 	public String getName(List<Long> ids);
 	//删除

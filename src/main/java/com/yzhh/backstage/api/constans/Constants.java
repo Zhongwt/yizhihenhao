@@ -14,26 +14,21 @@ public class Constants
 	
 	public final static String IP = "ip";
 	
-	public final static int TEN_MINUTES = 60 * 10;		//10分钟
+	public final static String phone_verification_code = "phone_verification_code_";
+	
+	public final static String email_verification_code = "email_verification_code_";
+	
+	public final static Long TEN_MINUTES = 60 * 10 * 1000L;		//10分钟
 	
 	public final static int HALF_HOUR = 60 * 30;		// 半小时
 	
-	public final static int TWO_HOUR = 60 * 60 * 2;	//两小时
+	public final static int TWO_HOUR = 60 * 60 * 2 * 1000;	//两小时
 	
 	public final static int ONE_DAY = 60 * 60 * 24;	//一天
 	
 	public final static int ONE_MONTH = 60 * 60 * 24 * 30;	//一月
-	/**
-	 *  删除的pdf 临时存放地址
-	 */
-	public final static  String  UPLOAD_PDF="uploadfile/pdf";
+	
+	
 
 
-	public final static  String PRE_TITLE =" Appraisal" ;
-	public final static  String PRE_NAME="Name：";
-	public  final static String  PRE_LEVEL ="Job Level: ";
-	// 最后评估时间
-	public final static  String  PRE_LASTAPPRAISAL ="Period of Appraial: ";
- // 升职
-	public final  static String PROMOTION="promoted to %s on %s";
 }

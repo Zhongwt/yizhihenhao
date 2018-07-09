@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yzhh.backstage.api.commons.ApiResponse;
 import com.yzhh.backstage.api.constans.Constants;
+import com.yzhh.backstage.api.dto.AuditDTO;
 import com.yzhh.backstage.api.dto.LoginDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.UserDTO;
@@ -29,6 +30,7 @@ import com.yzhh.backstage.api.dto.account.AccountDTO;
 import com.yzhh.backstage.api.dto.account.AccountLogDTO;
 import com.yzhh.backstage.api.dto.admin.AdminDTO;
 import com.yzhh.backstage.api.dto.admin.AdminPoorDTO;
+import com.yzhh.backstage.api.dto.admin.AmountSettingDTO;
 import com.yzhh.backstage.api.dto.admin.EditJurisdictionDTO;
 import com.yzhh.backstage.api.dto.admin.LogDTO;
 import com.yzhh.backstage.api.dto.company.AddCompanyDTO;
@@ -49,7 +51,6 @@ import com.yzhh.backstage.api.service.ICompanyService;
 import com.yzhh.backstage.api.service.ILogService;
 import com.yzhh.backstage.api.service.IPositionService;
 import com.yzhh.backstage.api.service.IResumeService;
-import com.yzhh.backstage.api.util.RedisUtil;
 import com.yzhh.backstage.api.util.ValidateUtil;
 
 import io.swagger.annotations.ApiOperation;
@@ -72,8 +73,7 @@ public class AdminController {
 	private ILogService logService;
 	@Autowired
 	private IAccountService accountService;
-	@Autowired
-	private RedisUtil redisUtil;
+	
 
 	@ApiOperation(value = "登录", notes = "", tags = { "管理员部分api" })
 	@PostMapping("/login")
@@ -88,8 +88,6 @@ public class AdminController {
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
 
 		logService.addLog(a.getId(), a.getName(), ip, a.getName() + "登录系统");
-
-		redisUtil.set(Constants.USER_LOGIN + a.getId(), a);
 
 		return new ApiResponse(a);
 	}
@@ -325,18 +323,22 @@ public class AdminController {
 		return new ApiResponse(positionDTO);
 	}
 
-	@ApiOperation(value = "审核通过职位", notes = "", tags = { "管理员部分api" })
-	@PutMapping("/position/pass/{id}")
-	public ApiResponse passPosition(HttpServletRequest request, @PathVariable Long id) {
+	@ApiOperation(value = "审核职位", notes = "", tags = { "管理员部分api" })
+	@PutMapping("/position/audit/{id}")
+	public ApiResponse passPosition(HttpServletRequest request, @RequestBody @Valid AuditDTO auditDTO,BindingResult result) {
+		
+		if (result.hasErrors()) {
+			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
+		}
 
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
 		checkRole(JurisdictionEnum.audit_position.getId(), user.getJurisdiction());
 
-		positionService.passPosition(id);
+		positionService.passPosition(auditDTO);
 
-		PositionDTO positionDTO = positionService.findById(id);
+		PositionDTO positionDTO = positionService.findById(auditDTO.getId());
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
-		logService.addLog(user.getId(), user.getName(), ip, user.getName() + "审核通过职位" + positionDTO.getName() + "");
+		logService.addLog(user.getId(), user.getName(), ip, user.getName() + "审核"+auditDTO.getStatus()+"职位" + positionDTO.getName() + "");
 
 		return new ApiResponse();
 	}
@@ -469,6 +471,25 @@ public class AdminController {
 
 		return new ApiResponse(pageDTO);
 	}
+	
+	@ApiOperation(value = "金额配置列表", notes = "", tags = { "管理员部分api" })
+	@GetMapping("/amount/setting/list")
+	public ApiResponse amountSettingList() {
+
+		List<AmountSettingDTO> list = adminService.getAmountSettingList();
+
+		return new ApiResponse(list);
+	}
+	
+	@ApiOperation(value = "配置金额", notes = "", tags = { "管理员部分api" })
+	@PutMapping("/amount/setting")
+	public ApiResponse amountSetting(HttpServletRequest request,@RequestBody @Valid AmountSettingDTO amountSettingDTO) {
+
+		adminService.updateAmountSetting(amountSettingDTO);
+
+		return new ApiResponse();
+	}
+	
 
 	private boolean checkRole(int j, String jurisdictionStr) {
 		if (StringUtils.isEmpty(jurisdictionStr)) {

@@ -12,17 +12,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.yzhh.backstage.api.commons.BizException;
+import com.yzhh.backstage.api.constans.Constants;
 import com.yzhh.backstage.api.dao.IAdminDAO;
+import com.yzhh.backstage.api.dao.IAmountSettingDAO;
 import com.yzhh.backstage.api.dao.ILogDAO;
 import com.yzhh.backstage.api.dto.LoginDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.admin.AdminDTO;
 import com.yzhh.backstage.api.dto.admin.AdminPoorDTO;
+import com.yzhh.backstage.api.dto.admin.AmountSettingDTO;
 import com.yzhh.backstage.api.dto.admin.EditJurisdictionDTO;
 import com.yzhh.backstage.api.dto.admin.LogDTO;
 import com.yzhh.backstage.api.entity.Admin;
 import com.yzhh.backstage.api.entity.AdminExample;
+import com.yzhh.backstage.api.entity.AmountSetting;
+import com.yzhh.backstage.api.entity.AmountSettingExample;
 import com.yzhh.backstage.api.entity.LogExample;
 import com.yzhh.backstage.api.enums.RoleEnum;
 import com.yzhh.backstage.api.error.CommonError;
@@ -30,6 +35,7 @@ import com.yzhh.backstage.api.service.IAdminService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
 import com.yzhh.backstage.api.util.MD5;
+import com.yzhh.backstage.api.util.RedisUtil;
 
 @Service
 public class AdminServiceImpl implements IAdminService{
@@ -38,6 +44,10 @@ public class AdminServiceImpl implements IAdminService{
 	private IAdminDAO adminDAO;
 	@Autowired
 	private ILogDAO logDAO;
+	@Autowired
+	private IAmountSettingDAO amountSettingDAO;
+	@Autowired
+	private RedisUtil redisUtil;
 
 	@Override
 	public UserDTO login(LoginDTO loginDTO) {
@@ -65,6 +75,8 @@ public class AdminServiceImpl implements IAdminService{
 				adminDTO.setJurisdiction(list.get(0).getJurisdiction());
 				adminDTO.setRole(RoleEnum.admin.getId());
 				adminDTO.setEmail(list.get(0).getEmail());
+				
+				redisUtil.set(Constants.USER_LOGIN +adminDTO.getId(), adminDTO,Constants.TWO_HOUR);
 				
 				return adminDTO;
 			}
@@ -221,5 +233,63 @@ public class AdminServiceImpl implements IAdminService{
 		
 		return adminPoor;
 	}
+
+	@Override
+	public List<AmountSettingDTO> getAmountSettingList() {
+		List<AmountSettingDTO> list = new ArrayList<>();
+		List<AmountSetting> amountSettings = amountSettingDAO.selectByExample(new AmountSettingExample());
+		if(CollectionUtils.isNotEmpty(amountSettings)) {
+			for(AmountSetting amountSetting : amountSettings) {
+				AmountSettingDTO e = new AmountSettingDTO();
+				e.setId(amountSetting.getId());
+				e.setType(amountSetting.getType());
+				e.setAmount(amountSetting.getAmount());
+				list.add(e);
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public void updateAmountSetting(AmountSettingDTO amountSettingDTO) {
+		if(amountSettingDTO.getAmount() < 0) {
+			throw new BizException("设置金额必须大于0");
+		}
+		AmountSetting amountSetting = amountSettingDAO.selectByPrimaryKey(amountSettingDTO.getId());
+		if(amountSetting == null) {
+			throw new BizException("未找到金额设置");
+		}
+		amountSetting.setLastAccess(new Date().getTime());
+		amountSetting.setAmount(amountSettingDTO.getAmount());
+		
+		amountSettingDAO.updateByPrimaryKeySelective(amountSetting);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

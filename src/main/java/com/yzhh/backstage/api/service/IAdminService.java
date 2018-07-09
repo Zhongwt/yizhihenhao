@@ -7,6 +7,7 @@ import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.admin.AdminDTO;
 import com.yzhh.backstage.api.dto.admin.AdminPoorDTO;
+import com.yzhh.backstage.api.dto.admin.AmountSettingDTO;
 import com.yzhh.backstage.api.dto.admin.EditJurisdictionDTO;
 import com.yzhh.backstage.api.dto.admin.LogDTO;
 
@@ -28,5 +29,8 @@ public interface IAdminService {
 	public void deleteByOpratorId(Long id);
 	//获取管理员信息
 	public AdminPoorDTO findByID(Long id);
-	
+	//价格设置
+	public List<AmountSettingDTO> getAmountSettingList();
+	//设置价格
+	public void updateAmountSetting(AmountSettingDTO amountSettingDTO);
 }

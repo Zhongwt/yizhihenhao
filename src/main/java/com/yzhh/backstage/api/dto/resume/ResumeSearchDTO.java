@@ -12,6 +12,7 @@ public class ResumeSearchDTO {
 	private String sex;
 	private String status;
 	private Long companyId;
+	private Long positionId;
 	public String getType() {
 		return type;
 	}
@@ -71,5 +72,11 @@ public class ResumeSearchDTO {
 	}
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
+	}
+	public Long getPositionId() {
+		return positionId;
+	}
+	public void setPositionId(Long positionId) {
+		this.positionId = positionId;
 	}
 }

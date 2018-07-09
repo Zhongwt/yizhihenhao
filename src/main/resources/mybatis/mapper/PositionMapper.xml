@@ -8,7 +8,9 @@
     <result column="release_date" jdbcType="BIGINT" property="releaseDate" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
     <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
     <result column="perple_num" jdbcType="INTEGER" property="perpleNum" />
     <result column="seduction" jdbcType="VARCHAR" property="seduction" />
     <result column="description" jdbcType="VARCHAR" property="description" />
@@ -16,11 +18,14 @@
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="work_type" jdbcType="VARCHAR" property="workType" />
     <result column="internship_time" jdbcType="VARCHAR" property="internshipTime" />
-    <result column="per_diem" jdbcType="DOUBLE" property="perDiem" />
-    <result column="work_time" jdbcType="INTEGER" property="workTime" />
+    <result column="work_time" jdbcType="VARCHAR" property="workTime" />
     <result column="correction_chance" jdbcType="VARCHAR" property="correctionChance" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="deadline" jdbcType="BIGINT" property="deadline" />
+    <result column="per_diem" jdbcType="VARCHAR" property="perDiem" />
+    <result column="is_pressing" jdbcType="BIT" property="isPressing" />
+    <result column="work_date" jdbcType="VARCHAR" property="workDate" />
+    <result column="option" jdbcType="VARCHAR" property="option" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -81,9 +86,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, last_access, company_id, release_date, type, name, city, perple_num, seduction, 
-    description, education, address, work_type, internship_time, per_diem, work_time, 
-    correction_chance, status, deadline
+    id, last_access, company_id, release_date, type, name, province, city, area, perple_num, 
+    seduction, description, education, address, work_type, internship_time, work_time, 
+    correction_chance, status, deadline, per_diem, is_pressing, work_date,option
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.PositionExample" resultMap="BaseResultMap">
     select
@@ -120,17 +125,21 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into position (last_access, company_id, release_date, 
-      type, name, city, perple_num, 
+      type, name, province, 
+      city, area, perple_num, 
       seduction, description, education, 
       address, work_type, internship_time, 
-      per_diem, work_time, correction_chance, 
-      status, deadline)
+      work_time, correction_chance, status, 
+      deadline, per_diem, is_pressing, 
+      work_date,option)
     values (#{lastAccess,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT}, #{releaseDate,jdbcType=BIGINT}, 
-      #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{perpleNum,jdbcType=INTEGER}, 
+      #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{perpleNum,jdbcType=INTEGER}, 
       #{seduction,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{workType,jdbcType=VARCHAR}, #{internshipTime,jdbcType=VARCHAR}, 
-      #{perDiem,jdbcType=DOUBLE}, #{workTime,jdbcType=INTEGER}, #{correctionChance,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{deadline,jdbcType=BIGINT})
+      #{workTime,jdbcType=VARCHAR}, #{correctionChance,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{deadline,jdbcType=BIGINT}, #{perDiem,jdbcType=VARCHAR}, #{isPressing,jdbcType=BIT}, 
+      #{workDate,jdbcType=VARCHAR}, #{option,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.Position">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -153,8 +162,14 @@
       <if test="name != null">
         name,
       </if>
+      <if test="province != null">
+        province,
+      </if>
       <if test="city != null">
         city,
+      </if>
+      <if test="area != null">
+        area,
       </if>
       <if test="perpleNum != null">
         perple_num,
@@ -177,9 +192,6 @@
       <if test="internshipTime != null">
         internship_time,
       </if>
-      <if test="perDiem != null">
-        per_diem,
-      </if>
       <if test="workTime != null">
         work_time,
       </if>
@@ -191,6 +203,18 @@
       </if>
       <if test="deadline != null">
         deadline,
+      </if>
+      <if test="perDiem != null">
+        per_diem,
+      </if>
+      <if test="isPressing != null">
+        is_pressing,
+      </if>
+      <if test="workDate != null">
+        work_date,
+      </if>
+      <if test="option != null">
+        option,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -209,8 +233,14 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
       <if test="city != null">
         #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
       </if>
       <if test="perpleNum != null">
         #{perpleNum,jdbcType=INTEGER},
@@ -233,11 +263,8 @@
       <if test="internshipTime != null">
         #{internshipTime,jdbcType=VARCHAR},
       </if>
-      <if test="perDiem != null">
-        #{perDiem,jdbcType=DOUBLE},
-      </if>
       <if test="workTime != null">
-        #{workTime,jdbcType=INTEGER},
+        #{workTime,jdbcType=VARCHAR},
       </if>
       <if test="correctionChance != null">
         #{correctionChance,jdbcType=VARCHAR},
@@ -247,6 +274,18 @@
       </if>
       <if test="deadline != null">
         #{deadline,jdbcType=BIGINT},
+      </if>
+      <if test="perDiem != null">
+        #{perDiem,jdbcType=VARCHAR},
+      </if>
+      <if test="isPressing != null">
+        #{isPressing,jdbcType=BIT},
+      </if>
+      <if test="workDate != null">
+        #{workDate,jdbcType=VARCHAR},
+      </if>
+      <if test="option != null">
+        #{option,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -277,8 +316,14 @@
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
       </if>
+      <if test="record.province != null">
+        province = #{record.province,jdbcType=VARCHAR},
+      </if>
       <if test="record.city != null">
         city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.area != null">
+        area = #{record.area,jdbcType=VARCHAR},
       </if>
       <if test="record.perpleNum != null">
         perple_num = #{record.perpleNum,jdbcType=INTEGER},
@@ -301,11 +346,8 @@
       <if test="record.internshipTime != null">
         internship_time = #{record.internshipTime,jdbcType=VARCHAR},
       </if>
-      <if test="record.perDiem != null">
-        per_diem = #{record.perDiem,jdbcType=DOUBLE},
-      </if>
       <if test="record.workTime != null">
-        work_time = #{record.workTime,jdbcType=INTEGER},
+        work_time = #{record.workTime,jdbcType=VARCHAR},
       </if>
       <if test="record.correctionChance != null">
         correction_chance = #{record.correctionChance,jdbcType=VARCHAR},
@@ -315,6 +357,18 @@
       </if>
       <if test="record.deadline != null">
         deadline = #{record.deadline,jdbcType=BIGINT},
+      </if>
+      <if test="record.perDiem != null">
+        per_diem = #{record.perDiem,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isPressing != null">
+        is_pressing = #{record.isPressing,jdbcType=BIT},
+      </if>
+      <if test="record.workDate != null">
+        work_date = #{record.workDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.option != null">
+        option = #{record.option,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -329,7 +383,9 @@
       release_date = #{record.releaseDate,jdbcType=BIGINT},
       type = #{record.type,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
+      province = #{record.province,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=VARCHAR},
       perple_num = #{record.perpleNum,jdbcType=INTEGER},
       seduction = #{record.seduction,jdbcType=VARCHAR},
       description = #{record.description,jdbcType=VARCHAR},
@@ -337,11 +393,14 @@
       address = #{record.address,jdbcType=VARCHAR},
       work_type = #{record.workType,jdbcType=VARCHAR},
       internship_time = #{record.internshipTime,jdbcType=VARCHAR},
-      per_diem = #{record.perDiem,jdbcType=DOUBLE},
-      work_time = #{record.workTime,jdbcType=INTEGER},
+      work_time = #{record.workTime,jdbcType=VARCHAR},
       correction_chance = #{record.correctionChance,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=INTEGER},
-      deadline = #{record.deadline,jdbcType=BIGINT}
+      deadline = #{record.deadline,jdbcType=BIGINT},
+      per_diem = #{record.perDiem,jdbcType=VARCHAR},
+      is_pressing = #{record.isPressing,jdbcType=BIT},
+      work_date = #{record.workDate,jdbcType=VARCHAR},
+      option = #{record.option,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -364,8 +423,14 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
       <if test="city != null">
         city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        area = #{area,jdbcType=VARCHAR},
       </if>
       <if test="perpleNum != null">
         perple_num = #{perpleNum,jdbcType=INTEGER},
@@ -388,11 +453,8 @@
       <if test="internshipTime != null">
         internship_time = #{internshipTime,jdbcType=VARCHAR},
       </if>
-      <if test="perDiem != null">
-        per_diem = #{perDiem,jdbcType=DOUBLE},
-      </if>
       <if test="workTime != null">
-        work_time = #{workTime,jdbcType=INTEGER},
+        work_time = #{workTime,jdbcType=VARCHAR},
       </if>
       <if test="correctionChance != null">
         correction_chance = #{correctionChance,jdbcType=VARCHAR},
@@ -402,6 +464,18 @@
       </if>
       <if test="deadline != null">
         deadline = #{deadline,jdbcType=BIGINT},
+      </if>
+      <if test="perDiem != null">
+        per_diem = #{perDiem,jdbcType=VARCHAR},
+      </if>
+      <if test="isPressing != null">
+        is_pressing = #{isPressing,jdbcType=BIT},
+      </if>
+      <if test="workDate != null">
+        work_date = #{workDate,jdbcType=VARCHAR},
+      </if>
+      <if test="option != null">
+        option = #{option,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -413,7 +487,9 @@
       release_date = #{releaseDate,jdbcType=BIGINT},
       type = #{type,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
       perple_num = #{perpleNum,jdbcType=INTEGER},
       seduction = #{seduction,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
@@ -421,11 +497,14 @@
       address = #{address,jdbcType=VARCHAR},
       work_type = #{workType,jdbcType=VARCHAR},
       internship_time = #{internshipTime,jdbcType=VARCHAR},
-      per_diem = #{perDiem,jdbcType=DOUBLE},
-      work_time = #{workTime,jdbcType=INTEGER},
+      work_time = #{workTime,jdbcType=VARCHAR},
       correction_chance = #{correctionChance,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
-      deadline = #{deadline,jdbcType=BIGINT}
+      deadline = #{deadline,jdbcType=BIGINT},
+      per_diem = #{perDiem,jdbcType=VARCHAR},
+      is_pressing = #{isPressing,jdbcType=BIT},
+      work_date = #{workDate,jdbcType=VARCHAR},
+      option = #{option,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

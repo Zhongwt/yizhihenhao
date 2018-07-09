@@ -484,6 +484,76 @@ public class PositionExample {
             return (Criteria) this;
         }
 
+        public Criteria andProvinceIsNull() {
+            addCriterion("province is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceIsNotNull() {
+            addCriterion("province is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceEqualTo(String value) {
+            addCriterion("province =", value, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceNotEqualTo(String value) {
+            addCriterion("province <>", value, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceGreaterThan(String value) {
+            addCriterion("province >", value, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceGreaterThanOrEqualTo(String value) {
+            addCriterion("province >=", value, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceLessThan(String value) {
+            addCriterion("province <", value, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceLessThanOrEqualTo(String value) {
+            addCriterion("province <=", value, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceLike(String value) {
+            addCriterion("province like", value, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceNotLike(String value) {
+            addCriterion("province not like", value, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceIn(List<String> values) {
+            addCriterion("province in", values, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceNotIn(List<String> values) {
+            addCriterion("province not in", values, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceBetween(String value1, String value2) {
+            addCriterion("province between", value1, value2, "province");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceNotBetween(String value1, String value2) {
+            addCriterion("province not between", value1, value2, "province");
+            return (Criteria) this;
+        }
+
         public Criteria andCityIsNull() {
             addCriterion("city is null");
             return (Criteria) this;
@@ -551,6 +621,76 @@ public class PositionExample {
 
         public Criteria andCityNotBetween(String value1, String value2) {
             addCriterion("city not between", value1, value2, "city");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaIsNull() {
+            addCriterion("area is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaIsNotNull() {
+            addCriterion("area is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaEqualTo(String value) {
+            addCriterion("area =", value, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaNotEqualTo(String value) {
+            addCriterion("area <>", value, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaGreaterThan(String value) {
+            addCriterion("area >", value, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaGreaterThanOrEqualTo(String value) {
+            addCriterion("area >=", value, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaLessThan(String value) {
+            addCriterion("area <", value, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaLessThanOrEqualTo(String value) {
+            addCriterion("area <=", value, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaLike(String value) {
+            addCriterion("area like", value, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaNotLike(String value) {
+            addCriterion("area not like", value, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaIn(List<String> values) {
+            addCriterion("area in", values, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaNotIn(List<String> values) {
+            addCriterion("area not in", values, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaBetween(String value1, String value2) {
+            addCriterion("area between", value1, value2, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andAreaNotBetween(String value1, String value2) {
+            addCriterion("area not between", value1, value2, "area");
             return (Criteria) this;
         }
 
@@ -1034,66 +1174,6 @@ public class PositionExample {
             return (Criteria) this;
         }
 
-        public Criteria andPerDiemIsNull() {
-            addCriterion("per_diem is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemIsNotNull() {
-            addCriterion("per_diem is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemEqualTo(Double value) {
-            addCriterion("per_diem =", value, "perDiem");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemNotEqualTo(Double value) {
-            addCriterion("per_diem <>", value, "perDiem");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemGreaterThan(Double value) {
-            addCriterion("per_diem >", value, "perDiem");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemGreaterThanOrEqualTo(Double value) {
-            addCriterion("per_diem >=", value, "perDiem");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemLessThan(Double value) {
-            addCriterion("per_diem <", value, "perDiem");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemLessThanOrEqualTo(Double value) {
-            addCriterion("per_diem <=", value, "perDiem");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemIn(List<Double> values) {
-            addCriterion("per_diem in", values, "perDiem");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemNotIn(List<Double> values) {
-            addCriterion("per_diem not in", values, "perDiem");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemBetween(Double value1, Double value2) {
-            addCriterion("per_diem between", value1, value2, "perDiem");
-            return (Criteria) this;
-        }
-
-        public Criteria andPerDiemNotBetween(Double value1, Double value2) {
-            addCriterion("per_diem not between", value1, value2, "perDiem");
-            return (Criteria) this;
-        }
-
         public Criteria andWorkTimeIsNull() {
             addCriterion("work_time is null");
             return (Criteria) this;
@@ -1104,52 +1184,62 @@ public class PositionExample {
             return (Criteria) this;
         }
 
-        public Criteria andWorkTimeEqualTo(Integer value) {
+        public Criteria andWorkTimeEqualTo(String value) {
             addCriterion("work_time =", value, "workTime");
             return (Criteria) this;
         }
 
-        public Criteria andWorkTimeNotEqualTo(Integer value) {
+        public Criteria andWorkTimeNotEqualTo(String value) {
             addCriterion("work_time <>", value, "workTime");
             return (Criteria) this;
         }
 
-        public Criteria andWorkTimeGreaterThan(Integer value) {
+        public Criteria andWorkTimeGreaterThan(String value) {
             addCriterion("work_time >", value, "workTime");
             return (Criteria) this;
         }
 
-        public Criteria andWorkTimeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andWorkTimeGreaterThanOrEqualTo(String value) {
             addCriterion("work_time >=", value, "workTime");
             return (Criteria) this;
         }
 
-        public Criteria andWorkTimeLessThan(Integer value) {
+        public Criteria andWorkTimeLessThan(String value) {
             addCriterion("work_time <", value, "workTime");
             return (Criteria) this;
         }
 
-        public Criteria andWorkTimeLessThanOrEqualTo(Integer value) {
+        public Criteria andWorkTimeLessThanOrEqualTo(String value) {
             addCriterion("work_time <=", value, "workTime");
             return (Criteria) this;
         }
 
-        public Criteria andWorkTimeIn(List<Integer> values) {
+        public Criteria andWorkTimeLike(String value) {
+            addCriterion("work_time like", value, "workTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkTimeNotLike(String value) {
+            addCriterion("work_time not like", value, "workTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkTimeIn(List<String> values) {
             addCriterion("work_time in", values, "workTime");
             return (Criteria) this;
         }
 
-        public Criteria andWorkTimeNotIn(List<Integer> values) {
+        public Criteria andWorkTimeNotIn(List<String> values) {
             addCriterion("work_time not in", values, "workTime");
             return (Criteria) this;
         }
 
-        public Criteria andWorkTimeBetween(Integer value1, Integer value2) {
+        public Criteria andWorkTimeBetween(String value1, String value2) {
             addCriterion("work_time between", value1, value2, "workTime");
             return (Criteria) this;
         }
 
-        public Criteria andWorkTimeNotBetween(Integer value1, Integer value2) {
+        public Criteria andWorkTimeNotBetween(String value1, String value2) {
             addCriterion("work_time not between", value1, value2, "workTime");
             return (Criteria) this;
         }
@@ -1341,6 +1431,206 @@ public class PositionExample {
 
         public Criteria andDeadlineNotBetween(Long value1, Long value2) {
             addCriterion("deadline not between", value1, value2, "deadline");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemIsNull() {
+            addCriterion("per_diem is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemIsNotNull() {
+            addCriterion("per_diem is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemEqualTo(String value) {
+            addCriterion("per_diem =", value, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemNotEqualTo(String value) {
+            addCriterion("per_diem <>", value, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemGreaterThan(String value) {
+            addCriterion("per_diem >", value, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemGreaterThanOrEqualTo(String value) {
+            addCriterion("per_diem >=", value, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemLessThan(String value) {
+            addCriterion("per_diem <", value, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemLessThanOrEqualTo(String value) {
+            addCriterion("per_diem <=", value, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemLike(String value) {
+            addCriterion("per_diem like", value, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemNotLike(String value) {
+            addCriterion("per_diem not like", value, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemIn(List<String> values) {
+            addCriterion("per_diem in", values, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemNotIn(List<String> values) {
+            addCriterion("per_diem not in", values, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemBetween(String value1, String value2) {
+            addCriterion("per_diem between", value1, value2, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andPerDiemNotBetween(String value1, String value2) {
+            addCriterion("per_diem not between", value1, value2, "perDiem");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingIsNull() {
+            addCriterion("is_pressing is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingIsNotNull() {
+            addCriterion("is_pressing is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingEqualTo(Boolean value) {
+            addCriterion("is_pressing =", value, "isPressing");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingNotEqualTo(Boolean value) {
+            addCriterion("is_pressing <>", value, "isPressing");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingGreaterThan(Boolean value) {
+            addCriterion("is_pressing >", value, "isPressing");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_pressing >=", value, "isPressing");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingLessThan(Boolean value) {
+            addCriterion("is_pressing <", value, "isPressing");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_pressing <=", value, "isPressing");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingIn(List<Boolean> values) {
+            addCriterion("is_pressing in", values, "isPressing");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingNotIn(List<Boolean> values) {
+            addCriterion("is_pressing not in", values, "isPressing");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_pressing between", value1, value2, "isPressing");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsPressingNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_pressing not between", value1, value2, "isPressing");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateIsNull() {
+            addCriterion("work_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateIsNotNull() {
+            addCriterion("work_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateEqualTo(String value) {
+            addCriterion("work_date =", value, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateNotEqualTo(String value) {
+            addCriterion("work_date <>", value, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateGreaterThan(String value) {
+            addCriterion("work_date >", value, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateGreaterThanOrEqualTo(String value) {
+            addCriterion("work_date >=", value, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateLessThan(String value) {
+            addCriterion("work_date <", value, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateLessThanOrEqualTo(String value) {
+            addCriterion("work_date <=", value, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateLike(String value) {
+            addCriterion("work_date like", value, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateNotLike(String value) {
+            addCriterion("work_date not like", value, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateIn(List<String> values) {
+            addCriterion("work_date in", values, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateNotIn(List<String> values) {
+            addCriterion("work_date not in", values, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateBetween(String value1, String value2) {
+            addCriterion("work_date between", value1, value2, "workDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkDateNotBetween(String value1, String value2) {
+            addCriterion("work_date not between", value1, value2, "workDate");
             return (Criteria) this;
         }
     }

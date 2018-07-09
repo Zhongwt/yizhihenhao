@@ -14,6 +14,7 @@ import com.yzhh.backstage.api.commons.BizException;
 import com.yzhh.backstage.api.dao.ICompanyNoticeDAO;
 import com.yzhh.backstage.api.dao.IDeliveryResumeDAO;
 import com.yzhh.backstage.api.dao.IPositionDAO;
+import com.yzhh.backstage.api.dto.AuditDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.position.PositionDTO;
 import com.yzhh.backstage.api.dto.position.SearchPositionDTO;
@@ -246,14 +247,19 @@ public class PositionServiceImpl implements IPositionService{
 	}
 
 	@Override
-	public void passPosition(Long id) {
+	public void passPosition(AuditDTO auditDTO) {
 		
 		Long lastAccess = new Date().getTime();
-		Position position = checkPosition(id);
+		Position position = checkPosition(auditDTO.getId());
 		Position newPosition = new Position(); 
-		newPosition.setId(id);
+		newPosition.setId(auditDTO.getId());
 		newPosition.setLastAccess(lastAccess);
-		newPosition.setStatus(PositionStatusEnum.remove.getId());
+		newPosition.setOption(auditDTO.getNote());
+		if("通过".equals(auditDTO.getStatus())){
+			newPosition.setStatus(PositionStatusEnum.audited.getId());
+		}else {
+			newPosition.setStatus(PositionStatusEnum.reject.getId());
+		}
 		
 		positionDAO.updateByPrimaryKeySelective(newPosition);
 		
@@ -261,7 +267,12 @@ public class PositionServiceImpl implements IPositionService{
 		companyNotice.setCompanyId(position.getCompanyId());
 		companyNotice.setIsRead(IsReadEnum.not_read.getId());
 		companyNotice.setLastAccess(lastAccess);
-		companyNotice.setMessage("审核消息:您发布的职位【"+position.getName()+"】审核通过啦!");
+		
+		if("通过".equals(auditDTO.getStatus())){
+			companyNotice.setMessage("审核消息:您发布的职位【"+position.getName()+"】审核通过啦!");
+		}else {
+			companyNotice.setMessage("审核消息:您发布的职位【"+position.getName()+"】审核被驳回了啦，驳回理由："+auditDTO.getNote());
+		}
 		companyNoticeDAO.insertSelective(companyNotice);
 	}
 

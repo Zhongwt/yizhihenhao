@@ -8,6 +8,7 @@ public class UserDTO {
 	private Integer role;			//权限（1,管理原，2，公司，3用户）
 	private String jurisdiction;
 	private String email;
+	private String status;		//状态，比如公司，必须是已审核状态才能 操作其他功能
 	
 	public Long getId() {
 		return id;
@@ -44,5 +45,11 @@ public class UserDTO {
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

@@ -12,11 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.yzhh.backstage.api.commons.BizException;
+import com.yzhh.backstage.api.constans.Constants;
+import com.yzhh.backstage.api.dao.IAccountDAO;
 import com.yzhh.backstage.api.dao.ICompanyDAO;
 import com.yzhh.backstage.api.dao.ICompanyNoticeDAO;
 import com.yzhh.backstage.api.dao.IInterviewDAO;
 import com.yzhh.backstage.api.dao.IPositionDAO;
 import com.yzhh.backstage.api.dao.IResumeDAO;
+import com.yzhh.backstage.api.dto.ForgetPasswordDTO;
 import com.yzhh.backstage.api.dto.LoginDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.UpdatePasswordDTO;
@@ -27,10 +30,12 @@ import com.yzhh.backstage.api.dto.company.CompanyNoticeDTO;
 import com.yzhh.backstage.api.dto.company.CompanySearchDTO;
 import com.yzhh.backstage.api.dto.company.DescriptionDTO;
 import com.yzhh.backstage.api.dto.company.StatisticsDTO;
+import com.yzhh.backstage.api.entity.Account;
 import com.yzhh.backstage.api.entity.Company;
 import com.yzhh.backstage.api.entity.CompanyExample;
 import com.yzhh.backstage.api.entity.CompanyNotice;
 import com.yzhh.backstage.api.entity.CompanyNoticeExample;
+import com.yzhh.backstage.api.enums.AccountTypeEnum;
 import com.yzhh.backstage.api.enums.CompanyStatusEnum;
 import com.yzhh.backstage.api.enums.IsReadEnum;
 import com.yzhh.backstage.api.enums.PositionStatusEnum;
@@ -40,6 +45,7 @@ import com.yzhh.backstage.api.service.ICompanyService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
 import com.yzhh.backstage.api.util.MD5;
+import com.yzhh.backstage.api.util.RedisUtil;
 
 @Service
 public class CompanyServiceImpl implements ICompanyService {
@@ -54,6 +60,10 @@ public class CompanyServiceImpl implements ICompanyService {
 	private IInterviewDAO interviewDAO;
 	@Autowired
 	private IPositionDAO positionDAO;
+	@Autowired
+	private IAccountDAO accountDAO;
+	@Autowired
+	private RedisUtil redisUtil;
 
 	@Override
 	public PageDTO<CompanyDTO> queryByPage(CompanySearchDTO companySearchDTO, Long page, Integer size) {
@@ -91,6 +101,7 @@ public class CompanyServiceImpl implements ICompanyService {
 				companyDTO.setName(company.getName());
 				companyDTO.setJoinDate(DateUtils.longToString(company.getJoinDate(), null));
 				companyDTO.setStatus(CompanyStatusEnum.getValueById(company.getStatus()));
+				companyDTO.setLogo(company.getLogo());
 				list.add(companyDTO);
 			}
 		}
@@ -146,6 +157,14 @@ public class CompanyServiceImpl implements ICompanyService {
 		company.setWebsite(addCompanyDTO.getWebsite());
 		company.setNote(addCompanyDTO.getNote());
 		company.setPassword(MD5.getMD5(addCompanyDTO.getPassword()));
+		company.setLogo(addCompanyDTO.getLogo());
+		company.setCompanyType(addCompanyDTO.getCompanyType());
+		company.setRegistrationNumber(addCompanyDTO.getRegistrationNumber());
+		company.setEstablishTime(addCompanyDTO.getEstablishTime());
+		company.setRegisteredCapital(addCompanyDTO.getRegisteredCapital());
+		company.setProvince(addCompanyDTO.getProvince());
+		company.setArea(addCompanyDTO.getArea());
+		
 		companyDAO.insertSelective(company);
 	}
 
@@ -153,6 +172,13 @@ public class CompanyServiceImpl implements ICompanyService {
 	public CompanyDTO findById(Long id) {
 		
 		Company company = checkCompany(id);
+		
+		
+		Account account = accountDAO.getAccountByRelationId(company.getId(), AccountTypeEnum.company.getId());
+		Double balance = 0D;
+		if(account != null) {
+			balance = account.getBalance();
+		}
 		
 		CompanyDTO companyDTO = new CompanyDTO();
 		
@@ -170,6 +196,19 @@ public class CompanyServiceImpl implements ICompanyService {
 		companyDTO.setDescription(company.getDescription());
 		companyDTO.setPhone(company.getPhone());
 		companyDTO.setAttachent(company.getAttachment());
+		companyDTO.setLogo(company.getLogo());
+		companyDTO.setCompanyType(company.getCompanyType());
+		companyDTO.setRegistrationNumber(company.getRegistrationNumber());
+		companyDTO.setEstablishTime(company.getEstablishTime());
+		companyDTO.setRegisteredCapital(company.getRegisteredCapital());
+		companyDTO.setLogo(company.getLogo());
+		companyDTO.setCompanyType(company.getCompanyType());
+		companyDTO.setRegistrationNumber(company.getRegistrationNumber());
+		companyDTO.setEstablishTime(company.getEstablishTime());
+		companyDTO.setRegisteredCapital(company.getRegisteredCapital());
+		companyDTO.setProvince(company.getProvince());
+		companyDTO.setArea(company.getArea());
+		companyDTO.setBalance(balance);
 		
 		return companyDTO;
 	}
@@ -209,12 +248,15 @@ public class CompanyServiceImpl implements ICompanyService {
 		newCompany.setName(companyDTO.getName());
 		newCompany.setWebsite(companyDTO.getWebsite());
 		newCompany.setCity(companyDTO.getCity());
+		newCompany.setProvince(companyDTO.getProvince());
+		newCompany.setArea(companyDTO.getArea());
 		newCompany.setField(companyDTO.getField());
 		newCompany.setScale(companyDTO.getScale());
 		newCompany.setNote(companyDTO.getNote());
 		newCompany.setDescription(companyDTO.getDescription());
 		newCompany.setAddress(companyDTO.getAddress());
 		newCompany.setEmail(companyDTO.getEmail());
+		newCompany.setLogo(companyDTO.getLogo());
 		//newCompany.setDescription(companyDTO.getDescription());
 		
 		companyDAO.updateByPrimaryKeySelective(newCompany);
@@ -257,7 +299,7 @@ public class CompanyServiceImpl implements ICompanyService {
 		CompanyExample example = new CompanyExample();
 		example.createCriteria()
 			.andPhoneEqualTo(loginDTO.getUsername())
-			.andStatusEqualTo(CompanyStatusEnum.audited.getId());
+			.andStatusNotEqualTo(CompanyStatusEnum.remove.getId());
 		List<Company> list = companyDAO.selectByExample(example);
 		
 		if(CollectionUtils.isNotEmpty(list)) {
@@ -269,6 +311,9 @@ public class CompanyServiceImpl implements ICompanyService {
 				companyDTO.setRole(RoleEnum.company.getId());
 				companyDTO.setEmail(list.get(0).getEmail());
 				companyDTO.setPhone(list.get(0).getPhone());
+				companyDTO.setStatus(CompanyStatusEnum.getValueById(list.get(0).getStatus()));
+				
+				redisUtil.set(Constants.USER_LOGIN +companyDTO.getId(), companyDTO,Constants.TWO_HOUR);
 				
 				return companyDTO;
 			}
@@ -398,6 +443,31 @@ public class CompanyServiceImpl implements ICompanyService {
 			.andCompanyIdEqualTo(companyId)
 			.andIsReadEqualTo(IsReadEnum.not_read.getId());
 		return companyNoticeDAO.countByExample(example);
+	}
+
+	@Override
+	public void forgetPassword(ForgetPasswordDTO forgetPasswordDTO) {
+		
+		CompanyExample companyExample = new CompanyExample();
+		companyExample.createCriteria().andPhoneEqualTo(forgetPasswordDTO.getPhone());
+		List<Company> list = companyDAO.selectByExample(companyExample);
+		if(CollectionUtils.isEmpty(list)) {
+			throw new BizException("该手机号未注册公司");
+		}
+		
+		String code = (String)redisUtil.get(Constants.phone_verification_code+forgetPasswordDTO.getPhone());
+		if(StringUtils.isEmpty(code)) {
+			throw new BizException("请先发送手机验证码");
+		}
+		
+		if(!forgetPasswordDTO.getCode().equals(code)) {
+			throw new BizException("手机验证码不正确");
+		}
+		Company company = new Company();
+		company.setId(list.get(0).getId());
+		company.setLastAccess(new Date().getTime());
+		company.setPassword(MD5.getMD5(forgetPasswordDTO.getNewPassword()));
+		companyDAO.updateByPrimaryKeySelective(company);
 	}
 
 }
