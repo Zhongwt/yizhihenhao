@@ -20,4 +20,7 @@ public interface IResumeDAO extends IDAO<Resume, ResumeExample> {
 	
 	//根据条件获取简历数量
 	public Long countResume(Map<String,Object> params);
+	
+	//获取求职者默认简历
+	public Resume getJobSeekerDefaultResume(Long jobSeekerId);
 }

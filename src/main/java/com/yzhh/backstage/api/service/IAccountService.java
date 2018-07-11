@@ -11,4 +11,7 @@ public interface IAccountService {
 	
 	//获取账户流水
 	public PageDTO<AccountLogDTO> getAccountLogList(Long accountId,Long page,Integer size);
+	
+	//获取金额配置
+	public Double getAmountSettingByType(String type);
 }

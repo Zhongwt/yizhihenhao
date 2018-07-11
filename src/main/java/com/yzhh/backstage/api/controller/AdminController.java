@@ -318,13 +318,13 @@ public class AdminController {
 	@GetMapping("/position/{id}")
 	public ApiResponse positionInfo(@PathVariable Long id) {
 
-		PositionDTO positionDTO = positionService.findById(id);
+		PositionDTO positionDTO = positionService.findById(id,null);
 
 		return new ApiResponse(positionDTO);
 	}
 
 	@ApiOperation(value = "审核职位", notes = "", tags = { "管理员部分api" })
-	@PutMapping("/position/audit/{id}")
+	@PutMapping("/position/audit")
 	public ApiResponse passPosition(HttpServletRequest request, @RequestBody @Valid AuditDTO auditDTO,BindingResult result) {
 		
 		if (result.hasErrors()) {
@@ -336,7 +336,7 @@ public class AdminController {
 
 		positionService.passPosition(auditDTO);
 
-		PositionDTO positionDTO = positionService.findById(auditDTO.getId());
+		PositionDTO positionDTO = positionService.findById(auditDTO.getId(),null);
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
 		logService.addLog(user.getId(), user.getName(), ip, user.getName() + "审核"+auditDTO.getStatus()+"职位" + positionDTO.getName() + "");
 

@@ -2,7 +2,7 @@ package com.yzhh.backstage.api.enums;
 
 public enum DeliveryResumeStatusEnum {
 
-	notlook(1, "为查看"),
+	notlook(1, "未查看"),
 	look(2, "已查看"),
 	pending(3,"待定"),
 	not_right(4,"不合适"),

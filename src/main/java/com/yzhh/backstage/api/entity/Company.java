@@ -26,7 +26,7 @@ public class Company extends BaseEntity{
     private String registrationNumber;
     private String establishTime;
     private String registeredCapital;
-    private String option;
+    private String optionNote;
 
     public String getName() {
         return name;
@@ -212,11 +212,12 @@ public class Company extends BaseEntity{
         this.registeredCapital = registeredCapital == null ? null : registeredCapital.trim();
     }
 
-	public String getOption() {
-		return option;
+	public String getOptionNote() {
+		return optionNote;
 	}
 
-	public void setOption(String option) {
-		this.option = option;
+	public void setOptionNote(String optionNote) {
+		this.optionNote = optionNote;
 	}
+
 }

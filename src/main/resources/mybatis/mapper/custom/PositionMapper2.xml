@@ -8,7 +8,9 @@
     <result column="release_date" jdbcType="BIGINT" property="releaseDate" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
     <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
     <result column="perple_num" jdbcType="INTEGER" property="perpleNum" />
     <result column="seduction" jdbcType="VARCHAR" property="seduction" />
     <result column="description" jdbcType="VARCHAR" property="description" />
@@ -16,11 +18,14 @@
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="work_type" jdbcType="VARCHAR" property="workType" />
     <result column="internship_time" jdbcType="VARCHAR" property="internshipTime" />
-    <result column="per_diem" jdbcType="DOUBLE" property="perDiem" />
-    <result column="work_time" jdbcType="INTEGER" property="workTime" />
+    <result column="work_time" jdbcType="VARCHAR" property="workTime" />
     <result column="correction_chance" jdbcType="VARCHAR" property="correctionChance" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="deadline" jdbcType="BIGINT" property="deadline" />
+    <result column="per_diem" jdbcType="VARCHAR" property="perDiem" />
+    <result column="is_pressing" jdbcType="BIT" property="isPressing" />
+    <result column="work_date" jdbcType="VARCHAR" property="workDate" />
+    <result column="option_note" jdbcType="VARCHAR" property="optionNote" />
   </resultMap>
 	<sql id="condition_sql">
 		<if test="searchKey">
@@ -37,6 +42,39 @@
 		</if>
 		<if test="companyId != null">
 			AND  company_id  = #{companyId}
+		</if>
+		<if test="city != null">
+			AND  city  = #{city}
+		</if>
+		<if test="perDiem != null">
+			AND  per_diem  = #{perDiem}
+		</if>
+		<if test="workTime != null">
+			AND  work_time  = #{workTime}
+		</if>
+		<if test="workDate != null">
+			AND  work_date  = #{workDate}
+		</if>
+		<if test="education != null">
+			AND  education  = #{education}
+		</if>
+		<if test="correctionChance != null">
+			AND  correction_chance  = #{correctionChance}
+		</if>
+		<if test="type != null">
+			AND  type  = #{type}
+		</if>
+		<if test="name != null">
+			AND  name  = #{name}
+		</if>
+		<if test="workType != null">
+			AND  work_type  = #{workType}
+		</if>
+		<if test="workTypes == '寒暑假工'">
+			AND  (work_type  = "寒假工" or work_type  = "暑假工")
+		</if>
+		<if test="isPressing != null">
+			AND  is_pressing  = #{isPressing}
 		</if>
 	</sql>
 	

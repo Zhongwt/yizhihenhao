@@ -25,7 +25,7 @@
     <result column="per_diem" jdbcType="VARCHAR" property="perDiem" />
     <result column="is_pressing" jdbcType="BIT" property="isPressing" />
     <result column="work_date" jdbcType="VARCHAR" property="workDate" />
-    <result column="option" jdbcType="VARCHAR" property="option" />
+    <result column="option_note" jdbcType="VARCHAR" property="optionNote" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -88,7 +88,7 @@
   <sql id="Base_Column_List">
     id, last_access, company_id, release_date, type, name, province, city, area, perple_num, 
     seduction, description, education, address, work_type, internship_time, work_time, 
-    correction_chance, status, deadline, per_diem, is_pressing, work_date,option
+    correction_chance, status, deadline, per_diem, is_pressing, work_date,option_note
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.PositionExample" resultMap="BaseResultMap">
     select
@@ -131,7 +131,7 @@
       address, work_type, internship_time, 
       work_time, correction_chance, status, 
       deadline, per_diem, is_pressing, 
-      work_date,option)
+      work_date,option_note)
     values (#{lastAccess,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT}, #{releaseDate,jdbcType=BIGINT}, 
       #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{perpleNum,jdbcType=INTEGER}, 
@@ -139,7 +139,7 @@
       #{address,jdbcType=VARCHAR}, #{workType,jdbcType=VARCHAR}, #{internshipTime,jdbcType=VARCHAR}, 
       #{workTime,jdbcType=VARCHAR}, #{correctionChance,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{deadline,jdbcType=BIGINT}, #{perDiem,jdbcType=VARCHAR}, #{isPressing,jdbcType=BIT}, 
-      #{workDate,jdbcType=VARCHAR}, #{option,jdbcType=VARCHAR})
+      #{workDate,jdbcType=VARCHAR}, #{option_note,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.Position">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -213,8 +213,8 @@
       <if test="workDate != null">
         work_date,
       </if>
-      <if test="option != null">
-        option,
+      <if test="optionNote != null">
+        option_note,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -284,8 +284,8 @@
       <if test="workDate != null">
         #{workDate,jdbcType=VARCHAR},
       </if>
-      <if test="option != null">
-        #{option,jdbcType=VARCHAR},
+      <if test="optionNote != null">
+        #{option_note,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -367,8 +367,8 @@
       <if test="record.workDate != null">
         work_date = #{record.workDate,jdbcType=VARCHAR},
       </if>
-      <if test="record.option != null">
-        option = #{record.option,jdbcType=VARCHAR},
+      <if test="record.optionNote != null">
+        option_note = #{record.optionNote,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -400,7 +400,7 @@
       per_diem = #{record.perDiem,jdbcType=VARCHAR},
       is_pressing = #{record.isPressing,jdbcType=BIT},
       work_date = #{record.workDate,jdbcType=VARCHAR},
-      option = #{record.option,jdbcType=VARCHAR}
+      option_note = #{record.optionNote,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -474,8 +474,8 @@
       <if test="workDate != null">
         work_date = #{workDate,jdbcType=VARCHAR},
       </if>
-      <if test="option != null">
-        option = #{option,jdbcType=VARCHAR},
+      <if test="optionNote != null">
+        option_note = #{optionNote,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -504,7 +504,7 @@
       per_diem = #{perDiem,jdbcType=VARCHAR},
       is_pressing = #{isPressing,jdbcType=BIT},
       work_date = #{workDate,jdbcType=VARCHAR},
-      option = #{option,jdbcType=VARCHAR}
+      option_note = #{optionNote,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

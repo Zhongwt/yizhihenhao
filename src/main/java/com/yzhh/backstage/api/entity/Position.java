@@ -46,7 +46,7 @@ public class Position extends BaseEntity{
 
     private String workDate;
     
-    private String option;
+    private String optionNote;
 
     public Long getCompanyId() {
         return companyId;
@@ -172,14 +172,6 @@ public class Position extends BaseEntity{
         return correctionChance;
     }
 
-    public String getOption() {
-		return option;
-	}
-
-	public void setOption(String option) {
-		this.option = option;
-	}
-
 	public void setCorrectionChance(String correctionChance) {
         this.correctionChance = correctionChance == null ? null : correctionChance.trim();
     }
@@ -223,4 +215,16 @@ public class Position extends BaseEntity{
     public void setWorkDate(String workDate) {
         this.workDate = workDate == null ? null : workDate.trim();
     }
+
+	public String getOptionNote() {
+		return optionNote;
+	}
+
+	public void setOptionNote(String optionNote) {
+		this.optionNote = optionNote;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 }

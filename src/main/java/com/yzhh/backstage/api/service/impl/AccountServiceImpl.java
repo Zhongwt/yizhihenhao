@@ -10,12 +10,15 @@ import org.springframework.stereotype.Service;
 
 import com.yzhh.backstage.api.dao.IAccountDAO;
 import com.yzhh.backstage.api.dao.IAccountLogDAO;
+import com.yzhh.backstage.api.dao.IAmountSettingDAO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.account.AccountDTO;
 import com.yzhh.backstage.api.dto.account.AccountLogDTO;
 import com.yzhh.backstage.api.entity.Account;
 import com.yzhh.backstage.api.entity.AccountExample;
 import com.yzhh.backstage.api.entity.AccountLog;
+import com.yzhh.backstage.api.entity.AmountSetting;
+import com.yzhh.backstage.api.entity.AmountSettingExample;
 import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
@@ -27,6 +30,8 @@ public class AccountServiceImpl implements IAccountService{
 	private IAccountDAO accountDAO;
 	@Autowired
 	private IAccountLogDAO accountLogDAO;
+	@Autowired
+	private IAmountSettingDAO amountSettingDAO;
 	
 	@Override
 	public AccountDTO getAccount(Long relationId, int type) {
@@ -84,4 +89,14 @@ public class AccountServiceImpl implements IAccountService{
 		return new PageDTO<>(count, list, page, size);
 	}
 
+	@Override
+	public Double getAmountSettingByType(String type) {
+		AmountSettingExample example = new AmountSettingExample();
+		example.createCriteria().andTypeEqualTo(type);
+		List<AmountSetting> list = amountSettingDAO.selectByExample(example);
+		if(CollectionUtils.isNotEmpty(list)) {
+			return list.get(0).getAmount();
+		}
+		return null;
+	}
 }

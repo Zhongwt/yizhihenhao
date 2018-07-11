@@ -38,6 +38,12 @@ public class PositionDTO {
 	private String updateTime;			//
 	private String deliveryNum;			//
 	private String workDate;				//工作时长
+	private String companyLogo;		//
+	private String companyName;		//
+	private String companyField;			//公司领域
+	private String companyScale;		//公司规模
+	private Boolean isCollection;		//是否收藏
+	
 	
 	public String getUpdateTime() {
 		return updateTime;
@@ -172,5 +178,34 @@ public class PositionDTO {
 	public void setWorkDate(String workDate) {
 		this.workDate = workDate;
 	}
-	
+	public String getCompanyLogo() {
+		return companyLogo;
+	}
+	public void setCompanyLogo(String companyLogo) {
+		this.companyLogo = companyLogo;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getCompanyScale() {
+		return companyScale;
+	}
+	public void setCompanyScale(String companyScale) {
+		this.companyScale = companyScale;
+	}
+	public String getCompanyField() {
+		return companyField;
+	}
+	public void setCompanyField(String companyField) {
+		this.companyField = companyField;
+	}
+	public Boolean getIsCollection() {
+		return isCollection;
+	}
+	public void setIsCollection(Boolean isCollection) {
+		this.isCollection = isCollection;
+	}
 }

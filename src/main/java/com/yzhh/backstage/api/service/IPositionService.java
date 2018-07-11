@@ -16,7 +16,7 @@ public interface IPositionService {
 	//批量下线
 	public void downLine(List<Long> ids);
 	//职位详情
-	public PositionDTO findById(Long id);
+	public PositionDTO findById(Long id,Long jobSeekerId);
 	//审批职位
 	public void passPosition(AuditDTO auditDTO);
 	//用于获取职位名字

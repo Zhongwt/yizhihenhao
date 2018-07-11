@@ -225,7 +225,7 @@ public class CompanyController {
 	@GetMapping("/position/{id}")
 	public ApiResponse positionInfo(@PathVariable Long id) {
 
-		PositionDTO positionDTO = positionService.findById(id);
+		PositionDTO positionDTO = positionService.findById(id,null);
 
 		return new ApiResponse(positionDTO);
 	}

@@ -27,7 +27,7 @@
     <result column="registration_number" jdbcType="VARCHAR" property="registrationNumber" />
     <result column="establish_time" jdbcType="VARCHAR" property="establishTime" />
     <result column="registered_capital" jdbcType="VARCHAR" property="registeredCapital" />
-    <result column="option" jdbcType="VARCHAR" property="option" />
+    <result column="option_note" jdbcType="VARCHAR" property="optionNote" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -90,7 +90,7 @@
   <sql id="Base_Column_List">
     id, last_access, name, province, city, area, address, join_date, status, is_number, 
     description, field, scale, website, note, email, attachment, identification, phone, 
-    password, logo, company_type, registration_number, establish_time, registered_capital,option
+    password, logo, company_type, registration_number, establish_time, registered_capital,option_note
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.CompanyExample" resultMap="BaseResultMap">
     select
@@ -133,7 +133,7 @@
       website, note, email, 
       attachment, identification, phone, 
       password, logo, company_type, 
-      registration_number, establish_time, registered_capital,option
+      registration_number, establish_time, registered_capital,option_note
       )
     values (#{lastAccess,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
@@ -142,7 +142,7 @@
       #{website,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{attachment,jdbcType=VARCHAR}, #{identification,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, #{companyType,jdbcType=VARCHAR}, 
-      #{registrationNumber,jdbcType=VARCHAR}, #{establishTime,jdbcType=VARCHAR}, #{registeredCapital,jdbcType=VARCHAR},#{option,jdbcType=VARCHAR}
+      #{registrationNumber,jdbcType=VARCHAR}, #{establishTime,jdbcType=VARCHAR}, #{registeredCapital,jdbcType=VARCHAR},#{optionNote,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.Company">
@@ -223,8 +223,8 @@
       <if test="registeredCapital != null">
         registered_capital,
       </if>
-       <if test="option != null">
-        option,
+       <if test="optionNote != null">
+        option_note,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -300,8 +300,8 @@
       <if test="registeredCapital != null">
         #{registeredCapital,jdbcType=VARCHAR},
       </if>
-      <if test="option != null">
-        #{option,jdbcType=VARCHAR},
+      <if test="optionNote != null">
+        #{optionNote,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -389,8 +389,8 @@
       <if test="record.registeredCapital != null">
         registered_capital = #{record.registeredCapital,jdbcType=VARCHAR},
       </if>
-      <if test="record.option != null">
-        option = #{record.option,jdbcType=VARCHAR},
+      <if test="record.optionNote != null">
+        option_note = #{record.optionNote,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -424,7 +424,7 @@
       registration_number = #{record.registrationNumber,jdbcType=VARCHAR},
       establish_time = #{record.establishTime,jdbcType=VARCHAR},
       registered_capital = #{record.registeredCapital,jdbcType=VARCHAR},
-      option = #{record.option,jdbcType=VARCHAR}
+      option_note = #{record.optionNote,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -504,8 +504,8 @@
       <if test="registeredCapital != null">
         registered_capital = #{registeredCapital,jdbcType=VARCHAR},
       </if>
-      <if test="option != null">
-        option = #{option,jdbcType=VARCHAR},
+      <if test="optionNote != null">
+        option_note = #{optionNote,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -536,7 +536,7 @@
       registration_number = #{registrationNumber,jdbcType=VARCHAR},
       establish_time = #{establishTime,jdbcType=VARCHAR},
       registered_capital = #{registeredCapital,jdbcType=VARCHAR},
-      option = #{option,jdbcType=VARCHAR}
+      option_note = #{optionNote,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

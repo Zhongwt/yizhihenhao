@@ -104,7 +104,7 @@ public class AdminServiceImpl implements IAdminService{
 				adminDTO.setPassword("123456");
 				adminDTO.setEmail(admin.getEmail());
 				adminDTO.setJoinDate(DateUtils.longToString(admin.getJoinDate(), null));
-				adminDTO.setLastLoginDate(admin.getLastLoginDate() == null ? "" : DateUtils.longToString(admin.getLastLoginDate(), null) );
+				adminDTO.setLastLoginDate(admin.getLastLoginDate() == null ? "" : DateUtils.longToString(admin.getLastLoginDate(), DateUtils.yymmddhhmmss) );
 				list.add(adminDTO);
 			}
 		}

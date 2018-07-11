@@ -19,6 +19,7 @@ import com.yzhh.backstage.api.commons.ApiResponse;
 import com.yzhh.backstage.api.constans.Constants;
 import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.VerifyCodeDTO;
+import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.service.IAttachmentService;
 import com.yzhh.backstage.api.util.RandomImageUtil;
 import com.yzhh.backstage.api.util.RedisUtil;
@@ -37,6 +38,8 @@ public class CommonController {
 	private IAttachmentService attachmentService;
 	@Autowired
 	private RedisUtil redisUtil;
+	@Autowired
+	private IAccountService accountService;
 
 	@ApiOperation(value = "登录验证码", notes = "", tags = { "通用部分api" })
 	@GetMapping("/login/verify/code")
@@ -76,7 +79,7 @@ public class CommonController {
 		return new ApiResponse("3233");
 	}
 	
-	
+	@ApiOperation(value = "通用文件上传", notes = "", tags = { "通用部分api" })
 	@PostMapping(value = "/upload/file")
     public ApiResponse updateStudentStatus(MultipartFile file,HttpServletRequest request) {
 		
@@ -91,6 +94,13 @@ public class CommonController {
         }
 		
 		return new ApiResponse(id);
+    }
+	
+	@ApiOperation(value = "通用获取配置金额", notes = "", tags = { "通用部分api" })
+	@PostMapping(value = "/amount/setting")
+    public ApiResponse getAmountSetting(@RequestParam String type) {
+		Double amount = accountService.getAmountSettingByType(type);
+		return new ApiResponse(amount);
     }
 }
 
