@@ -5,35 +5,20 @@ public class JobSeeker extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 
 	private String name;
-
     private String openId;
-
     private String imageUrl;
-
     private Integer isAuth;
-
     private String sex;
-
     private String province;
-
     private String city;
-
     private String area;
-
     private String birthday;
-
     private String education;
-
     private String graduationTime;
-
     private String graduationSchool;
-
     private String major;
-
     private String majorType;
-
     private String phone;
-
     private String email;
 
     public String getName() {

@@ -1,5 +1,8 @@
 package com.yzhh.backstage.api.constans;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @description:redis中的缓存key，的字符串拼接
  * @projectName:common-redis
@@ -29,6 +32,9 @@ public class Constants
 	public final static int ONE_MONTH = 60 * 60 * 24 * 30;	//一月
 	
 	
+	 //储存openid
+	public static Map<String,String> OPENID =new HashMap<String,String>();
+	
 	 //获取access_token的接口地址（GET） 限200（次/天）
 	public final static String ACCESS_TOKEN = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
 	
@@ -46,10 +52,12 @@ public class Constants
 	//小程序appId     wxd4be41f24fe20120
 	
 	//微信支付商户号
+	//线上 ： 1501498901
     public static final String MCH_ID = "1501498901";
     
     //微信支付API秘钥
-    public static final String KEY = "";
+    //线上  :  yizhihenhaowxzfk77025818d05fc144
+    public static final String KEY = "yizhihenhaowxzfk77025818d05fc144";
     
     public static String GRANTTYPE="authorization_code";
     public static String REQUEST_TYPE="GET";
