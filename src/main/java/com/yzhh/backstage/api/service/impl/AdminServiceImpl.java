@@ -76,7 +76,7 @@ public class AdminServiceImpl implements IAdminService{
 				adminDTO.setRole(RoleEnum.admin.getId());
 				adminDTO.setEmail(list.get(0).getEmail());
 				
-				redisUtil.set(Constants.USER_LOGIN +adminDTO.getId(), adminDTO,Constants.TWO_HOUR);
+				redisUtil.set(Constants.ADMIN_LOGIN +adminDTO.getId(), adminDTO,Constants.TWO_HOUR);
 				
 				return adminDTO;
 			}

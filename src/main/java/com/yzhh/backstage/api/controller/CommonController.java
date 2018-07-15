@@ -57,7 +57,7 @@ public class CommonController {
 	@ApiOperation(value = "当前登录人信息", notes = "", tags = { "通用部分api" })
 	@GetMapping("/login/info")
 	public ApiResponse loginInfo(HttpServletRequest request) {
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		return new ApiResponse(user);
 	}
 	

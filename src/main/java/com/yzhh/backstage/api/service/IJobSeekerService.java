@@ -16,4 +16,7 @@ public interface IJobSeekerService {
 	
 	//用户登录
 	public UserDTO login(WeChatUserInfo user);
+	
+	//用户投递简历付款成功，记录账户流水
+	public void paySuccess(Long jobSeekerId,Long positionId,Integer totalFee);
 }

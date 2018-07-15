@@ -31,26 +31,32 @@ import com.yzhh.backstage.api.util.RedisUtil;
 public class CommonInterceptor implements HandlerInterceptor {
 
 	private final String TOKEN = "token";
-	
+	private final String IDENTITY = "identity";
+
 	@Autowired
 	private RedisUtil redisUtil;
-	
+
 	private Set<String> exceptionUrl = new HashSet<String>();
-	
+
 	{
 		exceptionUrl.add("/api/login/verify/code");
 		exceptionUrl.add("/api/mobile/verify/code");
 		exceptionUrl.add("/ap/email/verify/code");
 		exceptionUrl.add("/api/upload/file");
-		
+
 		exceptionUrl.add("/api/admin/login");
-		
+
 		exceptionUrl.add("/api/company/add");
 		exceptionUrl.add("/api/company/forget/password");
 		exceptionUrl.add("/api/company/login");
 		exceptionUrl.add("/api/company/add/company");
-		
-		
+
+		exceptionUrl.add("/api/job/get/code");
+		exceptionUrl.add("/api/job/get/code/token");
+		exceptionUrl.add("/api/job/delivery/position/pay/success");
+		exceptionUrl.add("/api/job/position/list");
+		exceptionUrl.add("/api/job/position/info");
+		exceptionUrl.add("/api/job/company/info");
 	}
 
 	/**
@@ -66,49 +72,66 @@ public class CommonInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
-		//-------测试代码 start -----------------------//
-		//LoginUser testUser = new LoginUser();
-		
-//		UserDTO userDTO = new UserDTO();
-//		
-//		userDTO.setId(1L);
-//		userDTO.setJurisdiction("1,2,3,4,5,6,7,8,9,10");
-//		userDTO.setEmail("");
-//		userDTO.setName("admin");
-//		userDTO.setRole(0);
-//		request.getSession().setAttribute(Constants.USER_LOGIN, userDTO);
-//		if (userDTO != null) {
-//			return true;
-//		}
-		
+
+		// -------测试代码 start -----------------------//
+		// LoginUser testUser = new LoginUser();
+
+		// UserDTO userDTO = new UserDTO();
+		//
+		// userDTO.setId(1L);
+		// userDTO.setJurisdiction("1,2,3,4,5,6,7,8,9,10");
+		// userDTO.setEmail("");
+		// userDTO.setName("admin");
+		// userDTO.setRole(0);
+		// request.getSession().setAttribute(Constants.USER_LOGIN, userDTO);
+		// if (userDTO != null) {
+		// return true;
+		// }
+
 		String uri = request.getRequestURI();
-        String ip = getIpAddr(request);
-        
-        request.getSession().setAttribute(Constants.IP, ip);
-	
-		 //如果是swagger的请求就直接通过
-        if(uri.startsWith("/swagger-resources") || uri.startsWith("/v2") || uri.startsWith("/configuration")) {
-        	return true;
-        }
-        
-        if(exceptionUrl.contains(uri)) {
-        	return true;
-        }
-        
-        UserDTO user = null;
-        
-        String token = request.getHeader(TOKEN);
-        if(token != null) {
-        	user = (UserDTO)redisUtil.get(Constants.USER_LOGIN+token);
-        	//刷新缓存
-        	redisUtil.set(Constants.USER_LOGIN +user.getId(), user,Constants.TWO_HOUR);
-        	request.getSession().setAttribute(Constants.USER_LOGIN, user);
-        }
-        
-        if(user == null) {
-        	throw new BizException(CommonError.USER_AUTH_ERROR);
-        }
+		String ip = getIpAddr(request);
+
+		request.getSession().setAttribute(Constants.IP, ip);
+
+		// 如果是swagger的请求就直接通过
+		if (uri.startsWith("/swagger-resources") || uri.startsWith("/v2") || uri.startsWith("/configuration")) {
+			return true;
+		}
+
+		if (exceptionUrl.contains(uri)) {
+			return true;
+		}
+
+		UserDTO user = null;
+
+		String token = request.getHeader(TOKEN);
+		String identity = request.getHeader(IDENTITY);
+		if (token != null) {
+			switch (identity) {
+			case "admin":
+				user = (UserDTO) redisUtil.get(Constants.ADMIN_LOGIN + token);
+				// 刷新缓存
+				redisUtil.set(Constants.ADMIN_LOGIN + user.getId(), user, Constants.TWO_HOUR);
+				request.getSession().setAttribute(Constants.USER_LOGIN_SESSION, user);
+				break;
+			case "company":
+				user = (UserDTO) redisUtil.get(Constants.COMPANY_LOGIN + token);
+				// 刷新缓存
+				redisUtil.set(Constants.COMPANY_LOGIN + user.getId(), user, Constants.TWO_HOUR);
+				request.getSession().setAttribute(Constants.USER_LOGIN_SESSION, user);
+				break;
+			case "jobSeeker":
+				user = (UserDTO) redisUtil.get(Constants.JOB_SEEKER_LOGIN + token);
+				// 刷新缓存
+				redisUtil.set(Constants.JOB_SEEKER_LOGIN + user.getId(), user, Constants.TWO_HOUR);
+				request.getSession().setAttribute(Constants.USER_LOGIN_SESSION, user);
+				break;
+			}
+		}
+
+		if (user == null) {
+			throw new BizException(CommonError.USER_AUTH_ERROR);
+		}
 
 		return true;
 	}
@@ -127,7 +150,7 @@ public class CommonInterceptor implements HandlerInterceptor {
 	@SuppressWarnings("unused")
 	private String getToken(HttpServletRequest request, String str) {
 		Cookie[] cookies = request.getCookies();
-		if(cookies != null) {
+		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if (str.equals(cookie.getName())) {
 					return cookie.getValue();
@@ -136,7 +159,7 @@ public class CommonInterceptor implements HandlerInterceptor {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @description:获取用户ip
 	 * @param request
@@ -174,21 +197,22 @@ public class CommonInterceptor implements HandlerInterceptor {
 		}
 		return ipAddress;
 	}
-	
+
 	/**
 	 * @description:直接写出response
 	 * @param response
 	 * @author:衷文涛
-	 * @throws IOException 
+	 * @throws IOException
 	 * @createTime:2018年3月7日 上午10:47:34
 	 */
 	@SuppressWarnings("unused")
-	private void writeOutResponse(int status,ApiResponse apiResponse,HttpServletResponse response) throws IOException {
+	private void writeOutResponse(int status, ApiResponse apiResponse, HttpServletResponse response)
+			throws IOException {
 		response.setStatus(status);
-     	response.setCharacterEncoding("UTF-8");
-     	response.setContentType("application/json; charset=utf-8");
-     	String json = JSON.toJSONString(apiResponse);
-     	response.getWriter().write(json);
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json; charset=utf-8");
+		String json = JSON.toJSONString(apiResponse);
+		response.getWriter().write(json);
 	}
-	
+
 }

@@ -102,7 +102,7 @@ public class CompanyController {
 	@GetMapping("/statistics")
 	public ApiResponse companyStatistics(HttpServletRequest request) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 
 		StatisticsDTO statisticsDTO = companyService.getCompanyStatistics(user.getId());
 
@@ -113,7 +113,7 @@ public class CompanyController {
 	@GetMapping("/info")
 	public ApiResponse companyInfo(HttpServletRequest request) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 
 		CompanyDTO companyDTO = companyService.findById(user.getId());
 
@@ -124,7 +124,7 @@ public class CompanyController {
 	@GetMapping("/notice/info")
 	public ApiResponse companyNoticeList(HttpServletRequest request, Long page, Integer size) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 
 		PageDTO<CompanyNoticeDTO> pageDTO = companyService.getNoticeList(user.getId(), page, size);
 
@@ -135,7 +135,7 @@ public class CompanyController {
 	@GetMapping("/notice/count")
 	public ApiResponse companyNoticeCount(HttpServletRequest request) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 
 		Long count = companyService.getCompanyNoticeCount(user.getId());
 
@@ -151,7 +151,7 @@ public class CompanyController {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
 		}
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		companyDTO.setId(user.getId());
 
 		companyService.update(companyDTO);
@@ -168,7 +168,7 @@ public class CompanyController {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
 		}
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 
 		companyService.updateDescription(user.getId(), dcescriptionDTO);
 
@@ -184,7 +184,7 @@ public class CompanyController {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
 		}
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 
 		companyService.updatePassword(user.getId(), updatePasswordDTO);
 
@@ -200,7 +200,7 @@ public class CompanyController {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
 		}
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
 			throw new BizException("公司无权操作职位");
 		}
@@ -234,7 +234,7 @@ public class CompanyController {
 	@PutMapping("/position/downline")
 	public ApiResponse downLinePosition(HttpServletRequest request, @RequestBody List<Long> ids) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
 			throw new BizException("公司无权操作职位");
 		}
@@ -252,7 +252,7 @@ public class CompanyController {
 		if (resumeSearchDTO == null) {
 			resumeSearchDTO = new ResumeSearchDTO();
 		}
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		resumeSearchDTO.setCompanyId(user.getId());
 		PageDTO<PageResumeDTO> p = resumeService.queryPage(resumeSearchDTO, page, size);
 
@@ -270,7 +270,7 @@ public class CompanyController {
 	@PutMapping("/resume/look")
 	public ApiResponse lockResume(HttpServletRequest request, @RequestBody List<Long> ids) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
 			throw new BizException("公司无权操作简历");
 		}
@@ -284,7 +284,7 @@ public class CompanyController {
 	@PutMapping("/resume/pending")
 	public ApiResponse pendingResume(HttpServletRequest request, @RequestBody List<Long> ids) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
 			throw new BizException("公司无权操作简历");
 		}
@@ -298,7 +298,7 @@ public class CompanyController {
 	@PutMapping("/resume/not")
 	public ApiResponse notRightResume(HttpServletRequest request, @RequestBody List<Long> ids) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
 			throw new BizException("公司无权操作简历");
 		}
@@ -313,7 +313,7 @@ public class CompanyController {
 	public ApiResponse interviewInvitation(HttpServletRequest request,
 			@RequestBody @Valid AddInterviewDTO addInterviewDTO, BindingResult result) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
 			throw new BizException("公司无权邀请面试");
 		}

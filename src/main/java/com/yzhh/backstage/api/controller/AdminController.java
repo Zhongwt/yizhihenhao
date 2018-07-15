@@ -96,11 +96,11 @@ public class AdminController {
 	@GetMapping("/login/out")
 	public ApiResponse adminLoginOut(HttpServletRequest request) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
 		logService.addLog(user.getId(), user.getName(), ip, user.getName() + "登出系统");
 
-		request.getSession().setAttribute(Constants.USER_LOGIN, null);
+		request.getSession().setAttribute(Constants.USER_LOGIN_SESSION, null);
 
 		return new ApiResponse();
 	}
@@ -125,7 +125,7 @@ public class AdminController {
 
 		adminService.saveOrUpdate(adminDTO);
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
 		if (adminDTO.getId() == null) {
 			logService.addLog(user.getId(), user.getName(), ip, user.getName() + "添加管理员" + adminDTO.getName());
@@ -148,7 +148,7 @@ public class AdminController {
 		adminService.updateJurisdiction(editJurisdictionDTO);
 		AdminPoorDTO adminDTO = adminService.findByID(editJurisdictionDTO.getId());
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
 		logService.addLog(user.getId(), user.getName(), ip, user.getName() + "编辑" + adminDTO.getName() + "管理员权限");
 
@@ -163,7 +163,7 @@ public class AdminController {
 		
 		adminService.delete(id);
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
 		logService.addLog(user.getId(), user.getName(), ip, user.getName() + "删除" + adminDTO.getName() + "管理员");
 
@@ -174,7 +174,7 @@ public class AdminController {
 	@GetMapping("/list/log/{id}")
 	public ApiResponse queryByPageLog(HttpServletRequest request, @PathVariable Long id, Long page, Integer size) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 
 		checkRole(JurisdictionEnum.search_log.getId(), user.getJurisdiction());
 
@@ -210,7 +210,7 @@ public class AdminController {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
 		}
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		checkRole(JurisdictionEnum.add_company.getId(), user.getJurisdiction());
 
 		companyService.addCompany(addCompanyDTO);
@@ -230,7 +230,7 @@ public class AdminController {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
 		}
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		checkRole(JurisdictionEnum.edit_company.getId(), user.getJurisdiction());
 
 		companyService.update(companyDTO);
@@ -255,7 +255,7 @@ public class AdminController {
 	@PutMapping("/company/pass/{id}")
 	public ApiResponse passCompany(HttpServletRequest request, @PathVariable Long id) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		checkRole(JurisdictionEnum.audit_company.getId(), user.getJurisdiction());
 
 		companyService.passCompany(id);
@@ -274,7 +274,7 @@ public class AdminController {
 		companyService.removeCompany(id);
 
 		CompanyDTO companyDTO = companyService.findById(id);
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
 		logService.addLog(user.getId(), user.getName(), ip, user.getName() + "移除企业" + companyDTO.getName() + "");
 
@@ -290,7 +290,7 @@ public class AdminController {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
 		}
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
 		if (positionDTO.getId() == null) {
 			checkRole(JurisdictionEnum.add_position.getId(), user.getJurisdiction());
@@ -331,7 +331,7 @@ public class AdminController {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
 		}
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		checkRole(JurisdictionEnum.audit_position.getId(), user.getJurisdiction());
 
 		positionService.passPosition(auditDTO);
@@ -350,7 +350,7 @@ public class AdminController {
 		positionService.downLine(ids);
 
 		String name = positionService.getName(ids);
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
 		logService.addLog(user.getId(), user.getName(), ip, user.getName() + "下线职位" + name + "");
 
@@ -361,7 +361,7 @@ public class AdminController {
 	@PutMapping("/position/remove")
 	public ApiResponse deletePosition(HttpServletRequest request, @RequestBody List<Long> ids) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		checkRole(JurisdictionEnum.delete_position.getId(), user.getJurisdiction());
 
 		positionService.downLine(ids);
@@ -387,7 +387,7 @@ public class AdminController {
 	@PutMapping("/resume/look")
 	public ApiResponse lockResume(HttpServletRequest request, @RequestBody List<Long> ids) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		checkRole(JurisdictionEnum.mark_job.getId(), user.getJurisdiction());
 
 		resumeService.updateStatus(ids, DeliveryResumeStatusEnum.look.getId());
@@ -403,7 +403,7 @@ public class AdminController {
 	@PutMapping("/resume/pending")
 	public ApiResponse pendingResume(HttpServletRequest request, @RequestBody List<Long> ids) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		checkRole(JurisdictionEnum.mark_job.getId(), user.getJurisdiction());
 
 		resumeService.updateStatus(ids, DeliveryResumeStatusEnum.pending.getId());
@@ -419,7 +419,7 @@ public class AdminController {
 	@PutMapping("/resume/not")
 	public ApiResponse notRightResume(HttpServletRequest request, @RequestBody List<Long> ids) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		checkRole(JurisdictionEnum.mark_job.getId(), user.getJurisdiction());
 
 		resumeService.updateStatus(ids, DeliveryResumeStatusEnum.not_right.getId());
@@ -440,7 +440,7 @@ public class AdminController {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
 		}
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		checkRole(JurisdictionEnum.notice_interview.getId(), user.getJurisdiction());
 
 		resumeService.interviewInvitation(addInterviewDTO);

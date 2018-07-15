@@ -8,4 +8,7 @@ public interface IAccountDAO extends IDAO<Account, AccountExample> {
 	//通过关联id获取账户
 	public Account getAccountByRelationId(Long relationId,Integer type);
 	
+	//记录账户流水
+	public void recordWater(Account account,Double amount,String note);
+	
 }

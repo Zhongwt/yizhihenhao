@@ -10,6 +10,7 @@ public class UserDTO {
 	private String email;
 	private String status;		//状态，比如公司，必须是已审核状态才能 操作其他功能
 	private String picUrl;
+	private String openId;
 	
 	public Long getId() {
 		return id;
@@ -58,5 +59,11 @@ public class UserDTO {
 	}
 	public void setPicUrl(String picUrl) {
 		this.picUrl = picUrl;
+	}
+	public String getOpenId() {
+		return openId;
+	}
+	public void setOpenId(String openId) {
+		this.openId = openId;
 	}
 }

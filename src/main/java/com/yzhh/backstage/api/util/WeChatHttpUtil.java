@@ -24,6 +24,8 @@ import com.yzhh.backstage.api.dto.wx.AccessToken;
 
 public class WeChatHttpUtil {
 
+	
+	private static String ACCESS_TOKEN = "https://api.weixin.qq.com/sns/oauth2/access_token";
 	/**
 	 * 
 	 * @description:https请求
@@ -197,19 +199,13 @@ public class WeChatHttpUtil {
 	 * @return
 	 */
 	public static String getOauthOpenId(String code){
-		for(String key : Constants.OPENID.keySet()) {
-			if (code.equalsIgnoreCase(key)) {
-				return Constants.OPENID.get(key);
-			}
-		}
-		StringBuilder url = new StringBuilder(Constants.ACCESS_TOKEN_URL);
+		StringBuilder url = new StringBuilder(ACCESS_TOKEN);
 		url.append("?appid=").append(Constants.APPID)
 			.append("&secret=").append(Constants.APPSECRET)
 			.append("&code=").append(code)
 			.append("&grant_type=").append(Constants.GRANTTYPE);
 		JSONObject response = WeChatHttpUtil.httpsRequest(url.toString(), Constants.REQUEST_TYPE, null);
 		String openId = response.getString(Constants.OPENIDVALUE);
-		Constants.OPENID.put(code, openId);
 		return openId;
 	}
 	
@@ -225,7 +221,7 @@ public class WeChatHttpUtil {
 	public static AccessToken getAccessToken(String appid, String appsecret) {
 		AccessToken accessToken = null;
 
-		String requestUrl = Constants.ACCESS_TOKEN.replace("APPID", appid).replace(
+		String requestUrl = ACCESS_TOKEN.replace("APPID", appid).replace(
 				"APPSECRET", appsecret);
 		JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
 		// 如果请求成功

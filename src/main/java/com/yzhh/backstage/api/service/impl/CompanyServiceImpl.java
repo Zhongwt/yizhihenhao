@@ -166,6 +166,15 @@ public class CompanyServiceImpl implements ICompanyService {
 		company.setArea(addCompanyDTO.getArea());
 		
 		companyDAO.insertSelective(company);
+		
+		Account account = new Account();
+		account.setLastAccess(date);
+		account.setType(AccountTypeEnum.company.getId());
+		account.setRelationId(company.getId());
+		account.setBalance(0d);
+		account.setCapital(0d);
+		account.setLargess(0d);
+		accountDAO.insertSelective(account);
 	}
 
 	@Override
@@ -313,7 +322,7 @@ public class CompanyServiceImpl implements ICompanyService {
 				companyDTO.setPhone(list.get(0).getPhone());
 				companyDTO.setStatus(CompanyStatusEnum.getValueById(list.get(0).getStatus()));
 				
-				redisUtil.set(Constants.USER_LOGIN +companyDTO.getId(), companyDTO,Constants.TWO_HOUR);
+				redisUtil.set(Constants.COMPANY_LOGIN +companyDTO.getId(), companyDTO,Constants.TWO_HOUR);
 				
 				return companyDTO;
 			}
