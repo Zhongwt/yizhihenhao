@@ -8,12 +8,13 @@ public class Resume extends BaseEntity{
     private Integer isDefault;
     private String wishPositionName;
     private String wishCity;
-    private Integer workDay;
+    private String workDay;
     private String workType;
     private String internshipTime;
-    private Double perDiem;
+    private String perDiem;
     private Long arrivalDay;
     private Integer isDelete;
+    private Integer integrity;
 
     public Long getJobSeekerId() {
         return jobSeekerId;
@@ -55,11 +56,11 @@ public class Resume extends BaseEntity{
         this.wishCity = wishCity == null ? null : wishCity.trim();
     }
 
-    public Integer getWorkDay() {
+    public String getWorkDay() {
         return workDay;
     }
 
-    public void setWorkDay(Integer workDay) {
+    public void setWorkDay(String workDay) {
         this.workDay = workDay;
     }
 
@@ -79,11 +80,11 @@ public class Resume extends BaseEntity{
         this.internshipTime = internshipTime == null ? null : internshipTime.trim();
     }
 
-    public Double getPerDiem() {
+    public String getPerDiem() {
         return perDiem;
     }
 
-    public void setPerDiem(Double perDiem) {
+    public void setPerDiem(String perDiem) {
         this.perDiem = perDiem;
     }
 
@@ -101,5 +102,13 @@ public class Resume extends BaseEntity{
 
 	public void setIsDelete(Integer isDelete) {
 		this.isDelete = isDelete;
+	}
+
+	public Integer getIntegrity() {
+		return integrity;
+	}
+
+	public void setIntegrity(Integer integrity) {
+		this.integrity = integrity;
 	}
 }

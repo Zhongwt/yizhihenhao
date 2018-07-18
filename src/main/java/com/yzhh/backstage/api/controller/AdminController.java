@@ -467,7 +467,7 @@ public class AdminController {
 	@GetMapping("/account/log/{id}")
 	public ApiResponse getAccountLog(@PathVariable Long id,Long page,Integer size) {
 
-		PageDTO<AccountLogDTO> pageDTO = accountService.getAccountLogList(id, page, size);
+		PageDTO<AccountLogDTO> pageDTO = accountService.getAccountLogList(id,null, page, size);
 
 		return new ApiResponse(pageDTO);
 	}

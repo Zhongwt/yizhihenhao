@@ -15,6 +15,7 @@ public class DeliveryResume extends BaseEntity{
     private Long positionId;			//
     private Long deliveryTime;		//
     private Integer status;				//
+    private Double money;			//投递花费
 
     public Long getResumeId() {
         return resumeId;
@@ -47,4 +48,12 @@ public class DeliveryResume extends BaseEntity{
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+	public Double getMoney() {
+		return money;
+	}
+
+	public void setMoney(Double money) {
+		this.money = money;
+	}
 }

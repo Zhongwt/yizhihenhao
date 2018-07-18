@@ -16,6 +16,9 @@ public class PageResumeDTO {
 	private String graduationTime;
 	private String interviewTime;
 	private String status;
+	private String companyName;
+	private String companyId;
+	private String companyLogo;
 	
 	public Long getDeliveryResumeId() {
 		return deliveryResumeId;
@@ -100,5 +103,23 @@ public class PageResumeDTO {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+	public String getCompanyLogo() {
+		return companyLogo;
+	}
+	public void setCompanyLogo(String companyLogo) {
+		this.companyLogo = companyLogo;
 	}
 }

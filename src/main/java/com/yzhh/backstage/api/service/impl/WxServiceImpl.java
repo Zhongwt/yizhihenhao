@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.yzhh.backstage.api.commons.BizException;
 import com.yzhh.backstage.api.dto.wx.WeChatAppLoginReq;
 import com.yzhh.backstage.api.dto.wx.WeChatUserInfo;

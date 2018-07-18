@@ -72,9 +72,9 @@ public class Constants
 	//微信获取个人信息
 	public static final String WX_USER_INFO = "https://mp.weixin.qq.com/debug/wxadoc/dev/api/open.html#wxgetuserinfoobject";
 	 //微信统一下单url
-    //public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     //微信支付通知url
-    public static final String NOTIFY_URL ="https://www.yizhihenhao.com/api/job/delivery/position/pay/success?ids=";
+    public static final String NOTIFY_URL ="https://www.yizhihenhao.com/api/pay/success?str=";
     
     public static final String RETURN_SUCCESS = "SUCCESS";
     
@@ -89,4 +89,12 @@ public class Constants
   //投递简历
     public static final String company_master_amout = "硕士及以上";
 	
+    public static final String message_module = "验证码${code}，您正在进行身份验证，打死不要告诉别人哦！";
+    
+    public static final String accessKeyId = "LTAI8Sd9lsD0ZWL9";
+    public static final String accessKeySecret = "lnnTwgvkGTlaHLzykhXJoi27zpIgSm";
+    public static final String signName = "阿里云短信测试专用";
+    public static final String identifyingTempleteCode = "SMS_139865027";
+    public static final String registTempleteCode = "SMS_139865026";
+    
 }

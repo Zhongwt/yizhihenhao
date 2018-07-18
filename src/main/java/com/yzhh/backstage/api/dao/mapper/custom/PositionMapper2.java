@@ -15,4 +15,7 @@ public interface PositionMapper2 {
 
 	// 计算公司数量
 	public Long countByPage(Map<String, Object> params);
+	
+	//通过职位获取城市
+	public List<String> getCityForPosition();
 }

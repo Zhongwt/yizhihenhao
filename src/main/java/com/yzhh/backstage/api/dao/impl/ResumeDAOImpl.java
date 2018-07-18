@@ -11,6 +11,7 @@ import com.yzhh.backstage.api.dao.mapper.custom.ResumeMapper2;
 import com.yzhh.backstage.api.dto.resume.PageResumeDTO;
 import com.yzhh.backstage.api.entity.Resume;
 import com.yzhh.backstage.api.entity.ResumeExample;
+import com.yzhh.backstage.api.enums.IsDeleteEnum;
 import com.yzhh.backstage.api.util.CollectionUtils;
 
 @Repository("resumeDAO")
@@ -42,7 +43,7 @@ public class ResumeDAOImpl extends DAOImpl<Resume, ResumeExample> implements IRe
 	@Override
 	public Resume getJobSeekerDefaultResume(Long jobSeekerId) {
 		ResumeExample example = new ResumeExample();
-		example.createCriteria().andJobSeekerIdEqualTo(jobSeekerId).andIsDefaultEqualTo(1);
+		example.createCriteria().andJobSeekerIdEqualTo(jobSeekerId).andIsDefaultEqualTo(IsDeleteEnum.nomal.getId());
 		List<Resume> list = mapper.selectByExample(example);
 		if(CollectionUtils.isNotEmpty(list)) {
 			return list.get(0);

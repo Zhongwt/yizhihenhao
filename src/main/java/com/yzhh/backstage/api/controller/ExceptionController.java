@@ -112,5 +112,14 @@ public class ExceptionController {
         apiReponse.setData(map);
         return apiReponse;
     }
+    
+    @ExceptionHandler(value = Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)	//400
+    @ResponseBody
+    public ApiResponse processException(Exception ex) {
+    	ex.printStackTrace();
+    	ApiResponse response = new ApiResponse(20000, "系统错误", ex.getMessage());
+        return response;
+    }
 
 }

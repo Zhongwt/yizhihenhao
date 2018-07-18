@@ -53,10 +53,11 @@ public class CommonInterceptor implements HandlerInterceptor {
 
 		exceptionUrl.add("/api/job/get/code");
 		exceptionUrl.add("/api/job/get/code/token");
-		exceptionUrl.add("/api/job/delivery/position/pay/success");
+		exceptionUrl.add("/api/job/pay/success");
 		exceptionUrl.add("/api/job/position/list");
 		exceptionUrl.add("/api/job/position/info");
 		exceptionUrl.add("/api/job/company/info");
+		exceptionUrl.add("/api/job/position/city");
 	}
 
 	/**

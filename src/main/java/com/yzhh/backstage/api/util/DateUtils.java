@@ -218,6 +218,7 @@ public class DateUtils {
 	}
 
 	public static void main(String[] args) throws Exception {
-		System.out.println(DateUtils.dateToWeek("29/06/2018"));
+		String d = "2018-7-20";
+		System.out.println(DateUtils.stringToLong(d, YYYYMMdd));
 	}
 }

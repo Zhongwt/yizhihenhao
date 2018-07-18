@@ -5,20 +5,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.yzhh.backstage.api.commons.BizException;
 import com.yzhh.backstage.api.dao.IAccountDAO;
 import com.yzhh.backstage.api.dao.IAccountLogDAO;
 import com.yzhh.backstage.api.dao.IAmountSettingDAO;
+import com.yzhh.backstage.api.dao.IDeliveryResumeDAO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.account.AccountDTO;
 import com.yzhh.backstage.api.dto.account.AccountLogDTO;
+import com.yzhh.backstage.api.dto.jobseeker.DeliveryDTO;
 import com.yzhh.backstage.api.entity.Account;
 import com.yzhh.backstage.api.entity.AccountExample;
 import com.yzhh.backstage.api.entity.AccountLog;
 import com.yzhh.backstage.api.entity.AmountSetting;
 import com.yzhh.backstage.api.entity.AmountSettingExample;
+import com.yzhh.backstage.api.enums.AccountSettingEnum;
 import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
@@ -32,6 +38,8 @@ public class AccountServiceImpl implements IAccountService{
 	private IAccountLogDAO accountLogDAO;
 	@Autowired
 	private IAmountSettingDAO amountSettingDAO;
+	@Autowired
+	private IDeliveryResumeDAO deliveryResumeDAO;
 	
 	@Override
 	public AccountDTO getAccount(Long relationId, int type) {
@@ -57,7 +65,7 @@ public class AccountServiceImpl implements IAccountService{
 	}
 
 	@Override
-	public PageDTO<AccountLogDTO> getAccountLogList(Long accountId, Long page, Integer size) {
+	public PageDTO<AccountLogDTO> getAccountLogList(Long accountId,String type, Long page, Integer size) {
 		
 		if(page == null) {
 			page = 1L;
@@ -67,6 +75,12 @@ public class AccountServiceImpl implements IAccountService{
 		}
 		List<AccountLogDTO> list = new ArrayList<>();
 		Map<String, Object> params = new HashMap<>();
+		
+		if(!StringUtils.isEmpty(type)) {
+			if("支出".equals(type) || "收入".equals(type)) {
+				params.put("type", type);
+			}
+		}
 		
 		params.put("accountId", accountId);
 		params.put("starNum", (page - 1) * size);
@@ -97,6 +111,40 @@ public class AccountServiceImpl implements IAccountService{
 		if(CollectionUtils.isNotEmpty(list)) {
 			return list.get(0).getAmount();
 		}
-		return null;
+		return 0D;
+	}
+
+	@Override
+	public PageDTO<DeliveryDTO> deliveryPayList(Long jobSeekerId, Long page, Integer size) {
+		
+		if (page == null) {
+			page = 1L;
+		}
+		if (size == null) {
+			size = 10;
+		}
+		
+		Map<String, Object> params = new HashedMap<>();
+		params.put("jobSeekerId", jobSeekerId);
+		params.put("starNum", (page - 1) * size);
+		params.put("size", size);
+		
+		List<DeliveryDTO> list = deliveryResumeDAO.queryByPage(params);
+		Long count = deliveryResumeDAO.countByPage(params);
+		
+		return new PageDTO<>(count, list, page, size);
+	}
+
+	@Override
+	public void paySuccess(Long relationId, String relationName, Integer type,Double totalFee) {
+		Account account = accountDAO.getAccountByRelationId(relationId, type);
+		
+		if(account == null) {
+			throw new BizException("用户账户未赵到，用户id"+relationId);
+		}
+		
+		Double rate = this.getAmountSettingByType(AccountSettingEnum.recharge.getName());
+		
+		accountDAO.rechargeWater(account, totalFee, totalFee.doubleValue() * rate, "用户【"+relationName+"】充值【"+totalFee+"】元成功");
 	}
 }

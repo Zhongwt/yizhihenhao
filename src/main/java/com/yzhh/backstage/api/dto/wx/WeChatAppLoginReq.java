@@ -1,11 +1,18 @@
 package com.yzhh.backstage.api.dto.wx;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class WeChatAppLoginReq {
 
-	private String code;						//登录code
+	@ApiModelProperty(value = "登录code，由wx.login获得")
+	private String code;						//
+	@ApiModelProperty(value = "登录rawData，由wx.wx.getUserInfo()获得")
 	private String rawData;				//
+	@ApiModelProperty(value = "登录encryptedData，由wx.wx.getUserInfo()获得")
 	private String encryptedData;		//
+	@ApiModelProperty(value = "登录iv，由wx.wx.getUserInfo()获得")
 	private String iv;							//
+	@ApiModelProperty(value = "登录签名signature，由wx.wx.getUserInfo()获得")
 	private String signature;				//
 	
 	public String getCode() {

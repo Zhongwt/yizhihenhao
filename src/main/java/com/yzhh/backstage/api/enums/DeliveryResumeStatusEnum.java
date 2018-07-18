@@ -7,6 +7,7 @@ public enum DeliveryResumeStatusEnum {
 	pending(3,"待定"),
 	not_right(4,"不合适"),
 	right(5,"已通知面试"),
+	accept(6,"已接受面试面试"),
     ;
     
     private int id;

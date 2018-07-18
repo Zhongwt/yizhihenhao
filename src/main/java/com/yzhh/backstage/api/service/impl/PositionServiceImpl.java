@@ -1,24 +1,32 @@
 package com.yzhh.backstage.api.service.impl;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.yzhh.backstage.api.commons.BizException;
+import com.yzhh.backstage.api.dao.ICollectionPositionDAO;
 import com.yzhh.backstage.api.dao.ICompanyDAO;
 import com.yzhh.backstage.api.dao.ICompanyNoticeDAO;
 import com.yzhh.backstage.api.dao.IDeliveryResumeDAO;
 import com.yzhh.backstage.api.dao.IPositionDAO;
 import com.yzhh.backstage.api.dto.AuditDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
+import com.yzhh.backstage.api.dto.position.PositionCityDTO;
 import com.yzhh.backstage.api.dto.position.PositionDTO;
 import com.yzhh.backstage.api.dto.position.SearchPositionDTO;
+import com.yzhh.backstage.api.entity.CollectionPosition;
+import com.yzhh.backstage.api.entity.CollectionPositionExample;
 import com.yzhh.backstage.api.entity.Company;
 import com.yzhh.backstage.api.entity.CompanyNotice;
 import com.yzhh.backstage.api.entity.Position;
@@ -26,6 +34,7 @@ import com.yzhh.backstage.api.enums.IsReadEnum;
 import com.yzhh.backstage.api.enums.PositionStatusEnum;
 import com.yzhh.backstage.api.service.IJobSeekerService;
 import com.yzhh.backstage.api.service.IPositionService;
+import com.yzhh.backstage.api.util.ChineseToEnglish;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
 
@@ -40,6 +49,10 @@ public class PositionServiceImpl implements IPositionService {
 	private ICompanyNoticeDAO companyNoticeDAO;
 	@Autowired
 	private ICompanyDAO companyDAO;
+	@Autowired
+	private ICollectionPositionDAO collectionPositionDAO;
+	
+	
 	@Autowired
 	private IJobSeekerService jobSeekerService;
 
@@ -120,9 +133,7 @@ public class PositionServiceImpl implements IPositionService {
 			searchPositionDTO = new SearchPositionDTO();
 		}
 
-		if (!StringUtils.isEmpty(searchPositionDTO.getSearchKey())) {
-			params.put("searchKey", searchPositionDTO.getSearchKey());
-		}
+		
 		if (searchPositionDTO.getCompanyId() != null) {
 			params.put("companyId", searchPositionDTO.getCompanyId());
 		}
@@ -133,7 +144,7 @@ public class PositionServiceImpl implements IPositionService {
 			if (searchPositionDTO.getStatus().equals("招聘中")) {
 				// 招聘中
 				params.put("status", PositionStatusEnum.audited.getId());
-				params.put("deadLineEnd", DateUtils.dateToString(date, null));
+				params.put("deadLineStar", DateUtils.dateToString(date, null));
 			}
 			if (searchPositionDTO.getStatus().equals("已下线")) {
 				// 已下线
@@ -142,7 +153,7 @@ public class PositionServiceImpl implements IPositionService {
 			if (searchPositionDTO.getStatus().equals("已过期")) {
 				// 已过期
 				params.put("status", PositionStatusEnum.audited.getId());
-				params.put("deadLineStar", DateUtils.dateToString(date, null));
+				params.put("deadLineEnd", DateUtils.dateToString(date, null));
 			}
 			if (searchPositionDTO.getStatus().equals("未审核")) {
 				// 审核中
@@ -176,9 +187,16 @@ public class PositionServiceImpl implements IPositionService {
 		}
 		if (!StringUtils.isEmpty(searchPositionDTO.getName())) {
 			params.put("name", searchPositionDTO.getName());
+			if (!StringUtils.isEmpty(searchPositionDTO.getSearchKey())) {
+				params.put("companyName", searchPositionDTO.getSearchKey());
+			}
+		}else {
+			if (!StringUtils.isEmpty(searchPositionDTO.getSearchKey())) {
+				params.put("searchKey", searchPositionDTO.getSearchKey());
+			}
 		}
 
-		if (!StringUtils.isEmpty(searchPositionDTO.getCity())) {
+		if (!StringUtils.isEmpty(searchPositionDTO.getWorkType())) {
 			if (searchPositionDTO.getWorkType().equals("周边兼职")) {
 				params.put("city", searchPositionDTO.getCity());
 				params.put("workType", "兼职");
@@ -190,9 +208,12 @@ public class PositionServiceImpl implements IPositionService {
 				params.put("workType", "实习");
 			}
 			if (searchPositionDTO.getWorkType().equals("急招推荐")) {
-				//params.put("workType", searchPositionDTO.getCity());
 				params.put("isPressing", 1);
 			}
+		}
+		
+		if(searchPositionDTO.getPositionIds() != null && searchPositionDTO.getPositionIds().size() != 0) {
+			params.put("positionIds", searchPositionDTO.getPositionIds());
 		}
 
 		List<PositionDTO> list = new ArrayList<>();
@@ -207,7 +228,7 @@ public class PositionServiceImpl implements IPositionService {
 
 				PositionDTO positionDTO = new PositionDTO();
 				positionDTO.setId(position.getId());
-				positionDTO.setCompanyId(positionDTO.getCompanyId());
+				positionDTO.setCompanyId(position.getCompanyId());
 				positionDTO.setUpdateTime(DateUtils.longToString(position.getLastAccess(), null));
 				positionDTO.setReleaseDate(DateUtils.longToString(position.getReleaseDate(), null));
 				positionDTO.setDeliveryNum(num + "人投递简历");
@@ -267,14 +288,14 @@ public class PositionServiceImpl implements IPositionService {
 	}
 
 	@Override
-	public PositionDTO findById(Long id,Long jobSeekerId) {
+	public PositionDTO findById(Long id, Long jobSeekerId) {
 
 		Position position = checkPosition(id);
 
 		PositionDTO positionDTO = new PositionDTO();
-		
+
 		Company company = companyDAO.selectByPrimaryKey(position.getCompanyId());
-		
+
 		// positionDTO.setLastAccess(DateUtils.longToString(position.getLastAccess(),
 		// null));
 		positionDTO.setId(position.getId());
@@ -299,11 +320,10 @@ public class PositionServiceImpl implements IPositionService {
 		positionDTO.setCompanyLogo(company.getLogo());
 		positionDTO.setCompanyField(company.getField());
 		positionDTO.setCompanyScale(company.getScale());
-		if(jobSeekerId != null) {
+		if (jobSeekerId != null) {
 			positionDTO.setIsCollection(jobSeekerService.isCollectionPosition(position.getId(), jobSeekerId));
 		}
-		
-		
+
 		return positionDTO;
 	}
 
@@ -364,5 +384,63 @@ public class PositionServiceImpl implements IPositionService {
 				positionDAO.updateByPrimaryKeySelective(position);
 			}
 		}
+	}
+
+	@Override
+	public PositionCityDTO getPositionCity() {
+
+		PositionCityDTO positionCityDTO = new PositionCityDTO();
+
+		List<String> cityList = positionDAO.getCityForPosition();
+		if (CollectionUtils.isNotEmpty(cityList)) {
+			for (String city : cityList) {
+				String cityEnglish = ChineseToEnglish.getPinYinHeadChar(city.substring(0, 1)).toUpperCase();;
+				//positionCityDTO.setA(a);
+				try {
+					Method set = positionCityDTO.getClass().getMethod("set"+cityEnglish, List.class);
+					Method get = positionCityDTO.getClass().getMethod("get"+cityEnglish);
+					@SuppressWarnings("unchecked")
+					List<String> list = (List<String>)get.invoke(positionCityDTO);
+					list.add(city);
+					set.invoke(positionCityDTO, list);
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return positionCityDTO;
+	}
+
+	@Override
+	public PageDTO<PositionDTO> collectionList(Long jobSeekerId, Long page, Integer size) {
+		
+		CollectionPositionExample example = new CollectionPositionExample();
+		example.createCriteria()
+			.andJobSeekerIdEqualTo(jobSeekerId);
+		
+		List<CollectionPosition> list = collectionPositionDAO.selectByExample(example);
+		
+		if(CollectionUtils.isNotEmpty(list)) {
+			Set<Long> positionIds = new HashSet<>();
+			for(CollectionPosition collectionPosition : list) {
+				positionIds.add(collectionPosition.getPositionId());
+			}
+			SearchPositionDTO searchPositionDTO = new SearchPositionDTO();
+			searchPositionDTO.setStatus("招聘中");
+			searchPositionDTO.setPositionIds(positionIds);
+			return this.list(searchPositionDTO, page, size);
+		}
+		List<PositionDTO> l = new ArrayList<>();
+		
+		return new PageDTO<PositionDTO>(0L, l, 0L, 0);
 	}
 }

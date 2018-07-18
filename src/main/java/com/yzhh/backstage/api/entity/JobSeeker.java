@@ -20,6 +20,7 @@ public class JobSeeker extends BaseEntity{
     private String majorType;
     private String phone;
     private String email;
+    private String note;
 
     public String getName() {
         return name;
@@ -148,4 +149,12 @@ public class JobSeeker extends BaseEntity{
     public void setEmail(String email) {
         this.email = email == null ? null : email.trim();
     }
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
 }

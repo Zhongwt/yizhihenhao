@@ -21,8 +21,10 @@ import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.VerifyCodeDTO;
 import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.service.IAttachmentService;
+import com.yzhh.backstage.api.util.MoblieMessageUtil;
 import com.yzhh.backstage.api.util.RandomImageUtil;
 import com.yzhh.backstage.api.util.RedisUtil;
+import com.yzhh.backstage.api.util.VerificationCodeProvider;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -64,19 +66,20 @@ public class CommonController {
 	@ApiOperation(value = "获取短信验证码", notes = "", tags = { "通用部分api" })
 	@GetMapping("/mobile/verify/code")
 	public ApiResponse getPhoneVerificationCode(@RequestParam String phone) {
-		
-		redisUtil.set(Constants.phone_verification_code+phone, "3233",Constants.TEN_MINUTES);
-		
-		return new ApiResponse("3233");
+		String verificationCode = VerificationCodeProvider.getVerificationCode(VerificationCodeProvider.LENGTH);
+		MoblieMessageUtil.sendSms(phone, "{\"code\":\"" + verificationCode + "\"}", Constants.identifyingTempleteCode);
+		redisUtil.set(Constants.phone_verification_code+phone, verificationCode,Constants.TEN_MINUTES);
+		return new ApiResponse(verificationCode);
 	}
 	
 	@ApiOperation(value = "获取邮箱验证码", notes = "", tags = { "通用部分api" })
 	@GetMapping("/email/verify/code")
 	public ApiResponse getEmailVerificationCode(@RequestParam String email) {
 		
-		redisUtil.set(Constants.email_verification_code+email, "3233",Constants.TEN_MINUTES);
+		String verificationCode = VerificationCodeProvider.getVerificationCode(VerificationCodeProvider.LENGTH);
+		redisUtil.set(Constants.email_verification_code+email, verificationCode,Constants.TEN_MINUTES);
 		
-		return new ApiResponse("3233");
+		return new ApiResponse(verificationCode);
 	}
 	
 	@ApiOperation(value = "通用文件上传", notes = "", tags = { "通用部分api" })
@@ -102,6 +105,16 @@ public class CommonController {
 		Double amount = accountService.getAmountSettingByType(type);
 		return new ApiResponse(amount);
     }
+	
+	@ApiOperation(value = "充值付款成功", notes = "由微信端调用，我们不用管", tags = { "求职者部分api" })
+	@GetMapping("/pay/success")
+	public ApiResponse deliveryPositionPaySuccess(String str) {
+
+		String[] strs = str.split("_");
+		accountService.paySuccess(Long.parseLong(strs[0]), strs[1], Integer.parseInt(strs[2]), Double.parseDouble(strs[3]));
+
+		return new ApiResponse();
+	}
 }
 
 

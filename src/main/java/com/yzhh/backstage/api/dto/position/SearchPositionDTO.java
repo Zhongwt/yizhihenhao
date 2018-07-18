@@ -1,19 +1,40 @@
 package com.yzhh.backstage.api.dto.position;
 
+import java.util.Set;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value="职位搜索实体类")
 public class SearchPositionDTO {
 
+	@ApiModelProperty(value = "搜索关键字")
 	private String searchKey;
+	@ApiModelProperty(value = "搜索状态，有：招聘中，已下线，已过期，未审核，求职者端不用传")
 	private String status;
+	@ApiModelProperty(value = "公司id，用于限定某一个特定公司")
 	private Long companyId;
+	@ApiModelProperty(value = "城市")
 	private String city;
+	@ApiModelProperty(value = "日薪")
 	private String perDiem;			//日薪
+	@ApiModelProperty(value = "周工作天数")
 	private String workTime;			//周工作天数
+	@ApiModelProperty(value = "工作时长（一个月或长期）")
 	private String workDate;			//工作时长（1一个月或长期）
+	@ApiModelProperty(value = "要求学历")
 	private String education;			//要求学历
+	@ApiModelProperty(value = "转正机会")
 	private String correctionChance;	//转正机会
+	@ApiModelProperty(value = "职位类别")
 	private String type;					//职位类别
+	@ApiModelProperty(value = "职位名称")
 	private String name;				//职位名称
+	@ApiModelProperty(value = "工作类型")
 	private String workType;			//工作类型
+	
+	@ApiModelProperty(value = "收藏职位id集合，前端不用传")
+	private Set<Long> positionIds;
 	
 	public String getSearchKey() {
 		return searchKey;
@@ -86,5 +107,11 @@ public class SearchPositionDTO {
 	}
 	public void setWorkType(String workType) {
 		this.workType = workType;
+	}
+	public Set<Long> getPositionIds() {
+		return positionIds;
+	}
+	public void setPositionIds(Set<Long> positionIds) {
+		this.positionIds = positionIds;
 	}
 }

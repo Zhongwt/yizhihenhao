@@ -28,62 +28,73 @@
     <result column="option_note" jdbcType="VARCHAR" property="optionNote" />
   </resultMap>
 	<sql id="condition_sql">
+		p.company_id = c.id
 		<if test="searchKey">
-			AND name like CONCAT(CONCAT('%',#{searchKey},'%'))
+			AND (p.name like CONCAT(CONCAT('%',#{searchKey},'%')) or c.name like CONCAT(CONCAT('%',#{searchKey},'%')))
 		</if>
 		<if test="status">
-			AND status = #{status}
+			AND p.status = #{status}
 		</if>
 		<if test="deadLineStar != null">
-			AND  deadline  &gt; #{deadLineStar}
+			AND  p.deadline  &gt; #{deadLineStar}
 		</if>
 		<if test="deadLineEnd != null">
-			AND  deadline  &lt; #{deadLineEnd}
+			AND  p.deadline  &lt; #{deadLineEnd}
 		</if>
 		<if test="companyId != null">
-			AND  company_id  = #{companyId}
+			AND  p.company_id  = #{companyId}
 		</if>
 		<if test="city != null">
-			AND  city  = #{city}
+			AND  p.city  = #{city}
 		</if>
 		<if test="perDiem != null">
-			AND  per_diem  = #{perDiem}
+			AND  p.per_diem  = #{perDiem}
 		</if>
 		<if test="workTime != null">
-			AND  work_time  = #{workTime}
+			AND  p.work_time  = #{workTime}
 		</if>
 		<if test="workDate != null">
-			AND  work_date  = #{workDate}
+			AND  p.work_date  = #{workDate}
 		</if>
 		<if test="education != null">
-			AND  education  = #{education}
+			AND  p.education  = #{education}
 		</if>
 		<if test="correctionChance != null">
-			AND  correction_chance  = #{correctionChance}
+			AND  p.correction_chance  = #{correctionChance}
 		</if>
 		<if test="type != null">
-			AND  type  = #{type}
+			AND  p.type  = #{type}
 		</if>
 		<if test="name != null">
-			AND  name  = #{name}
+			AND  p.name  = #{name}
 		</if>
 		<if test="workType != null">
-			AND  work_type  = #{workType}
+			AND  p.work_type  = #{workType}
 		</if>
 		<if test="workTypes == '寒暑假工'">
-			AND  (work_type  = "寒假工" or work_type  = "暑假工")
+			AND  (p.work_type  = "寒假工" or p.work_type  = "暑假工")
 		</if>
 		<if test="isPressing != null">
-			AND  is_pressing  = #{isPressing}
+			AND  p.is_pressing  = #{isPressing}
+		</if>
+		<if test="positionIds != null and positionIds.size > 0">
+			<foreach collection="positionIds" open=" AND p.id in (" close=")"
+				item="positionId" separator=",">
+				#{positionId}
+			</foreach>
+		</if>
+		<if test="companyName">
+			AND c.name like CONCAT(CONCAT('%',#{companyName},'%'))
 		</if>
 	</sql>
 	
 	<!-- 分页查询日志 -->
  	<select id="queryByPage" resultMap="BaseResultMap">
  		SELECT
-			*
+			p.*
 		FROM
-			position
+			position p,
+			company c
 		<where>
 			<include refid="condition_sql"></include>
 		</where>
@@ -94,12 +105,22 @@
  	<!-- 分页查询日志 -->
  	<select id="countByPage" resultType="Long">
  		SELECT
-			count(id)
+			count(p.id)
 		FROM
-			position
+			position p,
+			company c
 		<where>
 			<include refid="condition_sql"></include>
 		</where>
+ 	</select>
+ 	
+ 	
+ 	<!-- 通过职位获取城市 -->
+ 	<select id="getCityForPosition" resultType="String">
+ 		SELECT DISTINCT
+			city
+		FROM
+			position
  	</select>
  
 </mapper>

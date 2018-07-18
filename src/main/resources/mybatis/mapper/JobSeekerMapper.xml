@@ -20,6 +20,7 @@
     <result column="major_type" jdbcType="VARCHAR" property="majorType" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -81,7 +82,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, last_access, name, open_id, image_url, is_auth, sex, province, city, area, birthday, 
-    education, graduation_time, graduation_school, major, major_type, phone, email
+    education, graduation_time, graduation_school, major, major_type, phone, email,note
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.JobSeekerExample" resultMap="BaseResultMap">
     select
@@ -122,13 +123,13 @@
       province, city, area, 
       birthday, education, graduation_time, 
       graduation_school, major, major_type, 
-      phone, email)
+      phone, email,note)
     values (#{lastAccess,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR}, 
       #{imageUrl,jdbcType=VARCHAR}, #{isAuth,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, 
       #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
       #{birthday,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, #{graduationTime,jdbcType=VARCHAR}, 
       #{graduationSchool,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, #{majorType,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR})
+      #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},#{note,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.JobSeeker">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -187,6 +188,9 @@
       <if test="email != null">
         email,
       </if>
+      <if test="note != null">
+        note,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="lastAccess != null">
@@ -239,6 +243,9 @@
       </if>
       <if test="email != null">
         #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -305,6 +312,9 @@
       <if test="record.email != null">
         email = #{record.email,jdbcType=VARCHAR},
       </if>
+      <if test="record.note != null">
+        note = #{record.note,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -329,7 +339,8 @@
       major = #{record.major,jdbcType=VARCHAR},
       major_type = #{record.majorType,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR}
+      email = #{record.email,jdbcType=VARCHAR},
+      note = #{record.note,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -388,6 +399,9 @@
       <if test="email != null">
         email = #{email,jdbcType=VARCHAR},
       </if>
+       <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -409,7 +423,8 @@
       major = #{major,jdbcType=VARCHAR},
       major_type = #{majorType,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR}
+      email = #{email,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -29,14 +29,20 @@
  		<if test="sex != null">
  			AND js.sex = #{sex}
  		</if>
- 		<if test="status != null">
- 			AND dr.status = #{status}
- 		</if>
  		<if test="companyId != null">
  			AND p.company_id = #{companyId}
  		</if>
  		<if test="positionId != null">
  			AND p.id = #{positionId}
+ 		</if>
+ 		<if test="jobSeekerId != null">
+ 			AND js.id = #{jobSeekerId}
+ 		</if>
+ 		<if test="status != null and status != 5">
+ 			AND dr.status = #{status}
+ 		</if>
+ 		<if test="status != null and status == 5">
+ 			AND dr.status in (5,6)
  		</if>
  	</sql>
  	
@@ -56,7 +62,10 @@
 			r.major,
 			r.graduationTime,
 			i.interview_time interviewTime,
-			r.status status
+			r.status status,
+			r.companyId,
+			r.companyName,
+			r.companyLogo
 		FROM
 			(
 				SELECT
@@ -72,7 +81,10 @@
 					js.education education,
 					js.major major,
 					js.graduation_time graduationTime,
-					dr.status
+					dr.status,
+					p.name companyName,
+					p.id companyId,
+					p.logo companyLogo
 				FROM
 					job_seeker js,
 					delivery_resume dr,

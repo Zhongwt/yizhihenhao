@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzhh.backstage.api.dao.mapper.DeliveryResumeMapper">
+
+	<sql id="condition_sql">
+		<if test="jobSeekerId != null">
+			AND r.job_seeker_id = #{jobSeekerId}
+		</if>
+	</sql>
+
+	<!-- 获取投递支付记录 -->
+	<select id="queryByPage"  resultType="com.yzhh.backstage.api.dto.jobseeker.DeliveryDTO">
+		SELECT
+			dr.id id,
+			c.name companyName,
+			c.logo companyLogo,
+			p.name
+			positionName,
+			p.city city,
+			p.work_date workDate,
+			from_unixtime(
+			dr.last_access / 1000,
+			'%Y-%m-%d %H:%m:%s'
+			) deliveryTime,
+			dr.money money
+		FROM
+			delivery_resume dr,
+			resume r,
+			position p,
+			company c
+		WHERE
+			r.id = dr.resume_id
+		AND dr.position_id = p.id
+		AND p.company_id = c.id
+		<include refid="condition_sql"></include>
+		order by dr.last_access desc 
+		LIMIT #{starNum},#{size}
+	</select>
+	
+	<!-- 分页查询日志 -->
+ 	<select id="countByPage" resultType="Long">
+ 		SELECT
+			count(dr.id id)
+		FROM
+			delivery_resume dr,
+			resume r,
+			position p,
+			company c
+		WHERE
+			r.id = dr.resume_id
+		AND dr.position_id = p.id
+		AND p.company_id = c.id
+		<include refid="condition_sql"></include>
+ 	</select>
+
+</mapper>

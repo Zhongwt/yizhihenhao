@@ -27,5 +27,8 @@ public class PosotionDAOImpl extends DAOImpl<Position, PositionExample> implemen
 		return mapper2.countByPage(params);
 	}
 
-	
+	@Override
+	public List<String> getCityForPosition() {
+		return mapper2.getCityForPosition();
+	}
 }

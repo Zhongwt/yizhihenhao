@@ -1,18 +1,33 @@
 package com.yzhh.backstage.api.dto.resume;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ResumeSearchDTO {
 
+	@ApiModelProperty(value = "")
 	public String type;
+	@ApiModelProperty(value = "")
 	private String searchKey;
+	@ApiModelProperty(value = "城市")
 	private String city;
+	@ApiModelProperty(value = "工作时间")
 	private Integer workDay;
+	@ApiModelProperty(value = "到岗日期")
 	private String arrayDay;
+	@ApiModelProperty(value = "学历")
 	private String education;
+	@ApiModelProperty(value = "毕业时间")
 	private String graduationTime;
+	@ApiModelProperty(value = "简历性别")
 	private String sex;
+	@ApiModelProperty(value = "状态")
 	private String status;
+	@ApiModelProperty(value = "公司id")
 	private Long companyId;
+	@ApiModelProperty(value = "职位id")
 	private Long positionId;
+	@ApiModelProperty(value = "用户id")
+	private Long jobSeekerId;
 	public String getType() {
 		return type;
 	}
@@ -78,5 +93,11 @@ public class ResumeSearchDTO {
 	}
 	public void setPositionId(Long positionId) {
 		this.positionId = positionId;
+	}
+	public Long getJobSeekerId() {
+		return jobSeekerId;
+	}
+	public void setJobSeekerId(Long jobSeekerId) {
+		this.jobSeekerId = jobSeekerId;
 	}
 }
