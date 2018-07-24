@@ -28,6 +28,7 @@
     <result column="establish_time" jdbcType="VARCHAR" property="establishTime" />
     <result column="registered_capital" jdbcType="VARCHAR" property="registeredCapital" />
     <result column="option_note" jdbcType="VARCHAR" property="optionNote" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -90,7 +91,7 @@
   <sql id="Base_Column_List">
     id, last_access, name, province, city, area, address, join_date, status, is_number, 
     description, field, scale, website, note, email, attachment, identification, phone, 
-    password, logo, company_type, registration_number, establish_time, registered_capital,option_note
+    password, logo, company_type, registration_number, establish_time, registered_capital,option_note,nick_name
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.CompanyExample" resultMap="BaseResultMap">
     select
@@ -133,7 +134,7 @@
       website, note, email, 
       attachment, identification, phone, 
       password, logo, company_type, 
-      registration_number, establish_time, registered_capital,option_note
+      registration_number, establish_time, registered_capital,option_note,nick_name
       )
     values (#{lastAccess,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
@@ -142,7 +143,7 @@
       #{website,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{attachment,jdbcType=VARCHAR}, #{identification,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, #{companyType,jdbcType=VARCHAR}, 
-      #{registrationNumber,jdbcType=VARCHAR}, #{establishTime,jdbcType=VARCHAR}, #{registeredCapital,jdbcType=VARCHAR},#{optionNote,jdbcType=VARCHAR}
+      #{registrationNumber,jdbcType=VARCHAR}, #{establishTime,jdbcType=VARCHAR}, #{registeredCapital,jdbcType=VARCHAR},#{optionNote,jdbcType=VARCHAR},#{nickName,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.Company">
@@ -226,6 +227,9 @@
        <if test="optionNote != null">
         option_note,
       </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="lastAccess != null">
@@ -302,6 +306,9 @@
       </if>
       <if test="optionNote != null">
         #{optionNote,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -392,6 +399,9 @@
       <if test="record.optionNote != null">
         option_note = #{record.optionNote,jdbcType=VARCHAR},
       </if>
+      <if test="record.nickName != null">
+        nick_name = #{record.nickName,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -424,7 +434,8 @@
       registration_number = #{record.registrationNumber,jdbcType=VARCHAR},
       establish_time = #{record.establishTime,jdbcType=VARCHAR},
       registered_capital = #{record.registeredCapital,jdbcType=VARCHAR},
-      option_note = #{record.optionNote,jdbcType=VARCHAR}
+      option_note = #{record.optionNote,jdbcType=VARCHAR},
+      nick_name = #{record.nickName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -507,6 +518,9 @@
       <if test="optionNote != null">
         option_note = #{optionNote,jdbcType=VARCHAR},
       </if>
+       <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -536,7 +550,8 @@
       registration_number = #{registrationNumber,jdbcType=VARCHAR},
       establish_time = #{establishTime,jdbcType=VARCHAR},
       registered_capital = #{registeredCapital,jdbcType=VARCHAR},
-      option_note = #{optionNote,jdbcType=VARCHAR}
+      option_note = #{optionNote,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

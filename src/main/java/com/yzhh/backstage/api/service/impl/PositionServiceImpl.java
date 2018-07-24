@@ -249,6 +249,12 @@ public class PositionServiceImpl implements IPositionService {
 				positionDTO.setStatus(PositionStatusEnum.getValueById(position.getStatus()));
 				positionDTO.setCompanyLogo(company.getLogo());
 				positionDTO.setCompanyName(company.getName());
+				positionDTO.setRequired(position.getRequired());
+				positionDTO.setCompanyNickName(company.getNickName());
+				positionDTO.setCompanyField(company.getField());
+				positionDTO.setCompanyScale(company.getScale());
+				positionDTO.setIsPressing(position.getIsPressing());
+				positionDTO.setWorkDate(position.getWorkDate());
 
 				list.add(positionDTO);
 			}
@@ -312,6 +318,8 @@ public class PositionServiceImpl implements IPositionService {
 		positionDTO.setWorkType(position.getWorkType());
 		positionDTO.setInternshipTime(position.getInternshipTime());
 		positionDTO.setPerDiem(position.getPerDiem());
+		positionDTO.setWorkDate(position.getWorkDate());
+		positionDTO.setIsPressing(position.getIsPressing());
 		positionDTO.setWorkTime(position.getWorkTime());
 		positionDTO.setCorrectionChance(position.getCorrectionChance());
 		positionDTO.setDeadline(DateUtils.longToString(position.getDeadline(), null));
@@ -320,6 +328,8 @@ public class PositionServiceImpl implements IPositionService {
 		positionDTO.setCompanyLogo(company.getLogo());
 		positionDTO.setCompanyField(company.getField());
 		positionDTO.setCompanyScale(company.getScale());
+		positionDTO.setRequired(position.getRequired());
+		positionDTO.setCompanyNickName(company.getNickName());
 		if (jobSeekerId != null) {
 			positionDTO.setIsCollection(jobSeekerService.isCollectionPosition(position.getId(), jobSeekerId));
 		}

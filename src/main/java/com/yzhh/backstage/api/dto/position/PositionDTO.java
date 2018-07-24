@@ -42,9 +42,23 @@ public class PositionDTO {
 	private String companyName;		//
 	private String companyField;			//公司领域
 	private String companyScale;		//公司规模
+	private String companyNickName;		//公司规模
 	private Boolean isCollection;		//是否收藏
+	private String required;		//职位要求
 	
 	
+	public String getCompanyNickName() {
+		return companyNickName;
+	}
+	public void setCompanyNickName(String companyNickName) {
+		this.companyNickName = companyNickName;
+	}
+	public String getRequired() {
+		return required;
+	}
+	public void setRequired(String required) {
+		this.required = required;
+	}
 	public String getUpdateTime() {
 		return updateTime;
 	}

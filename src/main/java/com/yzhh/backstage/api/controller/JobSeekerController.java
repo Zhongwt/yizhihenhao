@@ -144,7 +144,7 @@ public class JobSeekerController {
 
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 
-		PositionDTO p = positionService.findById(id, user.getId());
+		PositionDTO p = positionService.findById(id, user == null ? null : user.getId());
 
 		return new ApiResponse(p);
 	}
@@ -157,6 +157,16 @@ public class JobSeekerController {
 		CompanyDTO companyDTO = companyService.findById(id);
 
 		return new ApiResponse(companyDTO);
+	}
+	
+	@ApiOperation(value = "职位是否被收藏", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "id", value = "公司id")})
+	@GetMapping("/is/collection")
+	public ApiResponse isCollection(HttpServletRequest request, @RequestParam Long positionId) {
+
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		
+		return new ApiResponse(jobSeekerService.isCollectionPosition(positionId, user.getId()));
 	}
 
 	@ApiOperation(value = "收藏或取消收藏职位", notes = "", tags = { "求职者部分api" })

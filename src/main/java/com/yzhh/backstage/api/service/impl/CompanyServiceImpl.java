@@ -218,6 +218,7 @@ public class CompanyServiceImpl implements ICompanyService {
 		companyDTO.setProvince(company.getProvince());
 		companyDTO.setArea(company.getArea());
 		companyDTO.setBalance(balance);
+		companyDTO.setNickName(company.getNickName());
 		
 		return companyDTO;
 	}

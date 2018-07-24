@@ -143,8 +143,21 @@ public class AccountServiceImpl implements IAccountService{
 			throw new BizException("用户账户未赵到，用户id"+relationId);
 		}
 		
-		Double rate = this.getAmountSettingByType(AccountSettingEnum.recharge.getName());
+		Double largessAmount = 0d;
+		if(totalFee > 200) {
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
+		}else if(totalFee > 100){
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
+		}else if(totalFee > 50){
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
+		}else if(totalFee > 30){
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
+		}else if(totalFee > 20){
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
+		}else if(totalFee > 10){
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
+		}
 		
-		accountDAO.rechargeWater(account, totalFee, totalFee.doubleValue() * rate, "用户【"+relationName+"】充值【"+totalFee+"】元成功");
+		accountDAO.rechargeWater(account, totalFee,largessAmount , "用户【"+relationName+"】充值【"+totalFee+"】元成功");
 	}
 }

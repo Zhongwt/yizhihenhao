@@ -179,6 +179,13 @@
 			<version>2.5.0</version>
 		</dependency>
 
+		<!-- 邮箱依赖包 -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.3-rc1</version>
+		</dependency>
+
 
 	</dependencies>
 

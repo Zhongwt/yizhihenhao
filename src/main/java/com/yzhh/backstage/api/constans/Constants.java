@@ -93,7 +93,7 @@ public class Constants
     
     public static final String accessKeyId = "LTAI8Sd9lsD0ZWL9";
     public static final String accessKeySecret = "lnnTwgvkGTlaHLzykhXJoi27zpIgSm";
-    public static final String signName = "阿里云短信测试专用";
+    public static final String signName = "一职很好";
     public static final String identifyingTempleteCode = "SMS_139865027";
     public static final String registTempleteCode = "SMS_139865026";
     

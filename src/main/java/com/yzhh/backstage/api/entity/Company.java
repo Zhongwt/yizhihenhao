@@ -27,6 +27,7 @@ public class Company extends BaseEntity{
     private String establishTime;
     private String registeredCapital;
     private String optionNote;
+    private String nickName;
 
     public String getName() {
         return name;
@@ -218,6 +219,14 @@ public class Company extends BaseEntity{
 
 	public void setOptionNote(String optionNote) {
 		this.optionNote = optionNote;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 
 }

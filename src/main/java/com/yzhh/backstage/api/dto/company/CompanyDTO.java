@@ -33,8 +33,15 @@ public class CompanyDTO {
 	private String establishTime;				//成立时间
 	private String registeredCapital;			//注册资本
 	private Double balance;						//公司余额
+	private String nickName;
 	
 	
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 	public String getProvince() {
 		return province;
 	}

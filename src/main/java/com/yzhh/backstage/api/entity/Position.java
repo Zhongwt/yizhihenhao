@@ -47,8 +47,18 @@ public class Position extends BaseEntity{
     private String workDate;
     
     private String optionNote;
+    
+    private String required;
 
-    public Long getCompanyId() {
+    public String getRequired() {
+		return required;
+	}
+
+	public void setRequired(String required) {
+		this.required = required;
+	}
+
+	public Long getCompanyId() {
         return companyId;
     }
 

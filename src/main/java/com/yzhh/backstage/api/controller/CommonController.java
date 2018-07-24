@@ -2,6 +2,7 @@ package com.yzhh.backstage.api.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -114,6 +115,10 @@ public class CommonController {
 		accountService.paySuccess(Long.parseLong(strs[0]), strs[1], Integer.parseInt(strs[2]), Double.parseDouble(strs[3]));
 
 		return new ApiResponse();
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(new Date(1632258691318L));
 	}
 }
 

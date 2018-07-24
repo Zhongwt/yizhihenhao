@@ -74,12 +74,14 @@ public class AccountDAOImpl extends DAOImpl<Account, AccountExample> implements 
 		log.setNote(note);
 		accountLogMappper.insertSelective(log);
 		
-		log.setId(null);
-		log.setLastAccess(lastAccess);
-		log.setAccountId(account.getId());
-		log.setSteam(largessAmount);
-		log.setNote("赠送");
-		accountLogMappper.insertSelective(log);
+		if(largessAmount > 0) {
+			log.setId(null);
+			log.setLastAccess(lastAccess);
+			log.setAccountId(account.getId());
+			log.setSteam(largessAmount);
+			log.setNote("赠送");
+			accountLogMappper.insertSelective(log);
+		}
 		
 		Account newAccount = new Account();
 		newAccount.setId(account.getId());

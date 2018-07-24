@@ -26,6 +26,7 @@
     <result column="is_pressing" jdbcType="BIT" property="isPressing" />
     <result column="work_date" jdbcType="VARCHAR" property="workDate" />
     <result column="option_note" jdbcType="VARCHAR" property="optionNote" />
+    <result column="required" jdbcType="VARCHAR" property="required" />
   </resultMap>
 	<sql id="condition_sql">
 		p.company_id = c.id

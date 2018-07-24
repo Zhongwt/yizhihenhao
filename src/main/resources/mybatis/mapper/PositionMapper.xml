@@ -26,6 +26,7 @@
     <result column="is_pressing" jdbcType="BIT" property="isPressing" />
     <result column="work_date" jdbcType="VARCHAR" property="workDate" />
     <result column="option_note" jdbcType="VARCHAR" property="optionNote" />
+    <result column="required" jdbcType="VARCHAR" property="required" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -88,7 +89,7 @@
   <sql id="Base_Column_List">
     id, last_access, company_id, release_date, type, name, province, city, area, perple_num, 
     seduction, description, education, address, work_type, internship_time, work_time, 
-    correction_chance, status, deadline, per_diem, is_pressing, work_date,option_note
+    correction_chance, status, deadline, per_diem, is_pressing, work_date,option_note,required
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.PositionExample" resultMap="BaseResultMap">
     select
@@ -131,7 +132,7 @@
       address, work_type, internship_time, 
       work_time, correction_chance, status, 
       deadline, per_diem, is_pressing, 
-      work_date,option_note)
+      work_date,option_note,required)
     values (#{lastAccess,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT}, #{releaseDate,jdbcType=BIGINT}, 
       #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{perpleNum,jdbcType=INTEGER}, 
@@ -139,7 +140,7 @@
       #{address,jdbcType=VARCHAR}, #{workType,jdbcType=VARCHAR}, #{internshipTime,jdbcType=VARCHAR}, 
       #{workTime,jdbcType=VARCHAR}, #{correctionChance,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{deadline,jdbcType=BIGINT}, #{perDiem,jdbcType=VARCHAR}, #{isPressing,jdbcType=BIT}, 
-      #{workDate,jdbcType=VARCHAR}, #{option_note,jdbcType=VARCHAR})
+      #{workDate,jdbcType=VARCHAR}, #{option_note,jdbcType=VARCHAR},#{required,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.Position">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -203,6 +204,9 @@
       </if>
       <if test="deadline != null">
         deadline,
+      </if>
+      <if test="required != null">
+        required,
       </if>
       <if test="perDiem != null">
         per_diem,
@@ -274,6 +278,9 @@
       </if>
       <if test="deadline != null">
         #{deadline,jdbcType=BIGINT},
+      </if>
+       <if test="required != null">
+        #{required,jdbcType=VARCHAR},
       </if>
       <if test="perDiem != null">
         #{perDiem,jdbcType=VARCHAR},
@@ -358,6 +365,10 @@
       <if test="record.deadline != null">
         deadline = #{record.deadline,jdbcType=BIGINT},
       </if>
+      
+      <if test="record.required != null">
+        required = #{record.required,jdbcType=VARCHAR},
+      </if>
       <if test="record.perDiem != null">
         per_diem = #{record.perDiem,jdbcType=VARCHAR},
       </if>
@@ -397,6 +408,7 @@
       correction_chance = #{record.correctionChance,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=INTEGER},
       deadline = #{record.deadline,jdbcType=BIGINT},
+      required = #{record.required,jdbcType=VARCHAR},
       per_diem = #{record.perDiem,jdbcType=VARCHAR},
       is_pressing = #{record.isPressing,jdbcType=BIT},
       work_date = #{record.workDate,jdbcType=VARCHAR},
@@ -465,6 +477,9 @@
       <if test="deadline != null">
         deadline = #{deadline,jdbcType=BIGINT},
       </if>
+      <if test="required != null">
+        required = #{required,jdbcType=VARCHAR},
+      </if>
       <if test="perDiem != null">
         per_diem = #{perDiem,jdbcType=VARCHAR},
       </if>
@@ -501,6 +516,7 @@
       correction_chance = #{correctionChance,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
       deadline = #{deadline,jdbcType=BIGINT},
+      required = #{required,jdbcType=VARCHAR},
       per_diem = #{perDiem,jdbcType=VARCHAR},
       is_pressing = #{isPressing,jdbcType=BIT},
       work_date = #{workDate,jdbcType=VARCHAR},

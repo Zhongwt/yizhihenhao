@@ -33,4 +33,5 @@ public interface IJobSeekerService {
 	
 	//校验简历和职位匹配度
 	public String matchResumeAndPosition(Long resumeId,Long positionId);
+	
 }
