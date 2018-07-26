@@ -39,6 +39,7 @@ import com.yzhh.backstage.api.dto.account.AccountDTO;
 import com.yzhh.backstage.api.dto.account.AccountLogDTO;
 import com.yzhh.backstage.api.dto.company.CompanyDTO;
 import com.yzhh.backstage.api.dto.jobseeker.DeliveryDTO;
+import com.yzhh.backstage.api.dto.jobseeker.FeedBackDTO;
 import com.yzhh.backstage.api.dto.jobseeker.JobSeekerDTO;
 import com.yzhh.backstage.api.dto.position.PositionCityDTO;
 import com.yzhh.backstage.api.dto.position.PositionDTO;
@@ -90,7 +91,7 @@ public class JobSeekerController {
 	private IResumeService resumeService;
 
 	private Logger logger = LoggerFactory.getLogger(JobSeekerController.class);
-
+	
 	// 微信服务 ping过来的方法，获取code及其openId 的数据
 	@ApiOperation(value = "获取code和openId", notes = "", tags = { "求职者部分api" })
 	@PostMapping("/get/code/token")
@@ -142,9 +143,9 @@ public class JobSeekerController {
 	@GetMapping("/position/info")
 	public ApiResponse positionInfo(HttpServletRequest request, @RequestParam Long id) {
 
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		String token = request.getHeader(Constants.TOKEN);
 
-		PositionDTO p = positionService.findById(id, user == null ? null : user.getId());
+		PositionDTO p = positionService.findById(id, token == null ? null : Long.parseLong(token));
 
 		return new ApiResponse(p);
 	}
@@ -160,7 +161,7 @@ public class JobSeekerController {
 	}
 	
 	@ApiOperation(value = "职位是否被收藏", notes = "", tags = { "求职者部分api" })
-	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "id", value = "公司id")})
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "positionId", value = "职位id")})
 	@GetMapping("/is/collection")
 	public ApiResponse isCollection(HttpServletRequest request, @RequestParam Long positionId) {
 
@@ -317,7 +318,7 @@ public class JobSeekerController {
 	@ApiOperation(value = "我的收藏职位", notes = "", tags = { "求职者部分api" })
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "page", value = "页码"),
 		@ApiImplicitParam(paramType = "query", dataType = "int", name = "size", value = "页面大小")})
-	@GetMapping("/position/list")
+	@GetMapping("/collection/position/list")
 	public ApiResponse collectionPositionList(HttpServletRequest request,Long page, Integer size) {
 
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
@@ -540,6 +541,19 @@ public class JobSeekerController {
 	public ApiResponse acceptInterview(@RequestParam Long deliveryResumeId) {
 
 		resumeService.acceptInterview(deliveryResumeId);
+		
+		return new ApiResponse();
+	}
+	
+	@ApiOperation(value = "接受面试", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "deliveryResumeId", value = "投递id",required=true)
+		})
+	@GetMapping("/feedback")
+	public ApiResponse addFeedBack(HttpServletRequest request,FeedBackDTO feedBackDTO) {
+
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		jobSeekerService.addFeedback(user.getId(), feedBackDTO);
 		
 		return new ApiResponse();
 	}

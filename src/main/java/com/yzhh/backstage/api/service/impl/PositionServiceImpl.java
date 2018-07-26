@@ -20,6 +20,7 @@ import com.yzhh.backstage.api.dao.ICompanyDAO;
 import com.yzhh.backstage.api.dao.ICompanyNoticeDAO;
 import com.yzhh.backstage.api.dao.IDeliveryResumeDAO;
 import com.yzhh.backstage.api.dao.IPositionDAO;
+import com.yzhh.backstage.api.dao.IResumeDAO;
 import com.yzhh.backstage.api.dto.AuditDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.position.PositionCityDTO;
@@ -51,6 +52,8 @@ public class PositionServiceImpl implements IPositionService {
 	private ICompanyDAO companyDAO;
 	@Autowired
 	private ICollectionPositionDAO collectionPositionDAO;
+	@Autowired
+	private IResumeDAO resumeDAO;
 	
 	
 	@Autowired
@@ -332,6 +335,7 @@ public class PositionServiceImpl implements IPositionService {
 		positionDTO.setCompanyNickName(company.getNickName());
 		if (jobSeekerId != null) {
 			positionDTO.setIsCollection(jobSeekerService.isCollectionPosition(position.getId(), jobSeekerId));
+			positionDTO.setIsDelivery(this.isDelivery(jobSeekerId, position.getId()));
 		}
 
 		return positionDTO;
@@ -453,4 +457,16 @@ public class PositionServiceImpl implements IPositionService {
 		
 		return new PageDTO<PositionDTO>(0L, l, 0L, 0);
 	}
+
+	@Override
+	public Boolean isDelivery(Long jobSeekerId, Long positionId) {
+		
+		Map<String,Object> params = new HashMap<>();
+		params.put("jobSeekerId", jobSeekerId);
+		params.put("positionId", positionId);
+		Long count = resumeDAO.isDelivery(params);
+		
+		return count != null && count > 0 ? true : false;
+	}
+
 }

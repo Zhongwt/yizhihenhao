@@ -2,8 +2,8 @@ package com.yzhh.backstage.api.enums;
 
 public enum CompanyIdentificationEnum {
 
-	Uncertified(1, "未审核"),
-	certified(2,"已审核"),
+	Uncertified(1, "未认证"),
+	certified(2,"已认证"),
     ;
     
     private int id;

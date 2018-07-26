@@ -25,17 +25,22 @@ import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.UpdatePasswordDTO;
 import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.company.AddCompanyDTO;
+import com.yzhh.backstage.api.dto.company.ApplyCompany;
 import com.yzhh.backstage.api.dto.company.CompanyDTO;
 import com.yzhh.backstage.api.dto.company.CompanyNoticeDTO;
 import com.yzhh.backstage.api.dto.company.CompanySearchDTO;
 import com.yzhh.backstage.api.dto.company.DescriptionDTO;
+import com.yzhh.backstage.api.dto.company.RegisterCompany;
+import com.yzhh.backstage.api.dto.company.StatementDTO;
 import com.yzhh.backstage.api.dto.company.StatisticsDTO;
+import com.yzhh.backstage.api.dto.company.UpdateCompanyDTO;
 import com.yzhh.backstage.api.entity.Account;
 import com.yzhh.backstage.api.entity.Company;
 import com.yzhh.backstage.api.entity.CompanyExample;
 import com.yzhh.backstage.api.entity.CompanyNotice;
 import com.yzhh.backstage.api.entity.CompanyNoticeExample;
 import com.yzhh.backstage.api.enums.AccountTypeEnum;
+import com.yzhh.backstage.api.enums.CompanyIdentificationEnum;
 import com.yzhh.backstage.api.enums.CompanyStatusEnum;
 import com.yzhh.backstage.api.enums.IsReadEnum;
 import com.yzhh.backstage.api.enums.PositionStatusEnum;
@@ -315,15 +320,7 @@ public class CompanyServiceImpl implements ICompanyService {
 		if(CollectionUtils.isNotEmpty(list)) {
 			if(password.equals(list.get(0).getPassword())) {
 				
-				UserDTO companyDTO = new UserDTO();
-				companyDTO.setId(list.get(0).getId());
-				companyDTO.setName(list.get(0).getName());
-				companyDTO.setRole(RoleEnum.company.getId());
-				companyDTO.setEmail(list.get(0).getEmail());
-				companyDTO.setPhone(list.get(0).getPhone());
-				companyDTO.setStatus(CompanyStatusEnum.getValueById(list.get(0).getStatus()));
-				
-				redisUtil.set(Constants.COMPANY_LOGIN +companyDTO.getId(), companyDTO,Constants.TWO_HOUR);
+				UserDTO companyDTO = this.updateLogin(list.get(0));
 				
 				return companyDTO;
 			}
@@ -478,6 +475,126 @@ public class CompanyServiceImpl implements ICompanyService {
 		company.setLastAccess(new Date().getTime());
 		company.setPassword(MD5.getMD5(forgetPasswordDTO.getNewPassword()));
 		companyDAO.updateByPrimaryKeySelective(company);
+	}
+
+	@Override
+	public void registerCompany(RegisterCompany registerCompany) {
+
+		CompanyExample example = new CompanyExample();
+		example.createCriteria().andPhoneEqualTo(registerCompany.getPhone());
+		List<Company> list = companyDAO.selectByExample(example);
+		if(CollectionUtils.isNotEmpty(list)) {
+			throw new BizException("手机号已被注册");
+		}
+		
+		Long lastAccess = new Date().getTime();
+		Company company = new Company();
+		company.setPhone(registerCompany.getPhone());
+		company.setPassword(MD5.getMD5(registerCompany.getPassword()));
+		company.setLastAccess(lastAccess);
+		company.setJoinDate(lastAccess);
+		company.setIdentification(CompanyIdentificationEnum.Uncertified.getId());
+		
+		companyDAO.insertSelective(company);
+	}
+
+	@Override
+	public void applyCompany(Long companyId, ApplyCompany applyCompany) {
+		
+		checkCompany(companyId);
+		Company company = new Company();
+		
+		CompanyExample example = new CompanyExample();
+		example.createCriteria().andPhoneEqualTo(applyCompany.getName());
+		List<Company> list = companyDAO.selectByExample(example);
+		if(CollectionUtils.isNotEmpty(list) || list.get(0).getId().longValue() != companyId) {
+			throw new BizException("公司名称已被注册");
+		}
+		example.createCriteria().andPhoneEqualTo(applyCompany.getEmail());
+		list = companyDAO.selectByExample(example);
+		if(CollectionUtils.isNotEmpty(list) || list.get(0).getId().longValue() != companyId) {
+			throw new BizException("公司邮箱已被注册");
+		}
+		
+		company.setId(companyId);
+		company.setLastAccess(new Date().getTime());
+		company.setName(applyCompany.getName());
+		company.setEmail(applyCompany.getEmail());
+		company.setCompanyType(applyCompany.getCompanyType());
+		company.setRegistrationNumber(applyCompany.getRegistrationNumber());
+		company.setEstablishTime(applyCompany.getEstablishTime());
+		company.setRegisteredCapital(applyCompany.getRegisteredCapital());
+		company.setAttachment(applyCompany.getAttachment());
+		company.setStatus(CompanyStatusEnum.pending.getId());
+		
+		companyDAO.updateByPrimaryKeySelective(company);
+		
+		//刷新缓存
+		company = companyDAO.selectByPrimaryKey(companyId);
+		updateLogin(company);
+	}
+	
+	private UserDTO updateLogin(Company company) {
+		UserDTO companyDTO = new UserDTO();
+		companyDTO.setId(company.getId());
+		companyDTO.setName(company.getName());
+		companyDTO.setRole(RoleEnum.company.getId());
+		companyDTO.setEmail(company.getEmail());
+		companyDTO.setPhone(company.getPhone());
+		companyDTO.setStatus(CompanyStatusEnum.getValueById(company.getStatus()));
+		
+		redisUtil.set(Constants.COMPANY_LOGIN +companyDTO.getId(), companyDTO,Constants.TWO_HOUR);
+		
+		return companyDTO;
+	}
+
+	@Override
+	public void statmentCompany(Long companyId, StatementDTO statementDTO) {
+		this.checkCompany(companyId);
+		
+		CompanyExample example = new CompanyExample();
+		example.createCriteria().andPhoneEqualTo(statementDTO.getEmail());
+		List<Company> list = companyDAO.selectByExample(example);
+		if(CollectionUtils.isNotEmpty(list) || list.get(0).getId().longValue() != companyId) {
+			throw new BizException("公司邮箱已被注册");
+		}
+		
+		Company company = new Company();
+		company.setId(companyId);
+		company.setLastAccess(new Date().getTime());
+		company.setEmail(statementDTO.getEmail());
+		company.setOptionNote(statementDTO.getOptionNote());
+		company.setAttachment(statementDTO.getOptionNote());
+		company.setStatus(CompanyStatusEnum.pending.getId());
+		companyDAO.updateByPrimaryKeySelective(company);
+		
+		company = companyDAO.selectByPrimaryKey(companyId);
+		this.updateLogin(company);
+	}
+
+	@Override
+	public void update(Long companyId, UpdateCompanyDTO updateCompanyDTO) {
+
+		this.checkCompany(companyId);
+		
+		Company company = new Company();
+		company.setId(companyId);
+		company.setLastAccess(new Date().getTime());
+		company.setNickName(updateCompanyDTO.getNickName());
+		company.setNote(updateCompanyDTO.getNote());
+		company.setWebsite(updateCompanyDTO.getWebsite());
+		company.setField(updateCompanyDTO.getField());
+		company.setScale(updateCompanyDTO.getScale());
+		company.setCity(updateCompanyDTO.getCity());
+		company.setProvince(updateCompanyDTO.getProvince());
+		company.setArea(updateCompanyDTO.getArea());
+		company.setDescription(updateCompanyDTO.getDescription());
+		company.setLogo(updateCompanyDTO.getLogo());
+		
+		companyDAO.updateByPrimaryKeySelective(company);
+		
+		company = companyDAO.selectByPrimaryKey(companyId);
+		this.updateLogin(company);
 	}
 
 }

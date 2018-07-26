@@ -1,5 +1,7 @@
 package com.yzhh.backstage.api.dto.wx;
 
+import java.io.Serializable;
+
 /**
  * 
  * @description:微信用户的基本信息
@@ -7,10 +9,11 @@ package com.yzhh.backstage.api.dto.wx;
  * @createTime:2018年6月1日 下午3:37:59
  * @version 1.0
  */
-public class WeChatUserInfo {
+public class WeChatUserInfo implements Serializable{
+	private static final long serialVersionUID = 1L;
 	// 用户的标识
 	private String openId;
-	private String nickname;
+	private String nickName;
 	private int gender;
 	private String country;
 	private String province;
@@ -23,12 +26,6 @@ public class WeChatUserInfo {
 	}
 	public void setOpenId(String openId) {
 		this.openId = openId;
-	}
-	public String getNickname() {
-		return nickname;
-	}
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
 	}
 	public int getGender() {
 		return gender;
@@ -66,5 +63,10 @@ public class WeChatUserInfo {
 	public void setAvatarUrl(String avatarUrl) {
 		this.avatarUrl = avatarUrl;
 	}
-
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 }

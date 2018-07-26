@@ -27,7 +27,6 @@ import com.yzhh.backstage.api.commons.BizException;
 import com.yzhh.backstage.api.dto.wx.WeChatAppLoginReq;
 import com.yzhh.backstage.api.dto.wx.WeChatUserInfo;
 import com.yzhh.backstage.api.service.IWxService;
-import com.yzhh.backstage.api.util.HmacUtil;
 
 @Service
 public class WxServiceImpl implements IWxService {
@@ -41,13 +40,6 @@ public class WxServiceImpl implements IWxService {
 
 		WeChatUserInfo user = null;
 		
-		String wx_signature = HmacUtil.SHA1(req.getRawData() + sessionKey);
-		if (!wx_signature.equals(req.getSignature())) {
-			logger.info(" req signature=" + wx_signature);
-			logger.info(" java signature=" + req.getSignature());
-			throw new BizException("微信获取个人信息签名错误");
-		}
-
 		byte[] resultByte = null;
 		try {
 			resultByte = decrypt(Base64.decode(req.getEncryptedData()), Base64.decode(sessionKey),
@@ -64,12 +56,12 @@ public class WxServiceImpl implements IWxService {
 			}
 			logger.info("userInfo = " + userInfoStr);
 			
-			user = (WeChatUserInfo)JSON.parse(userInfoStr);
+			user = JSON.parseObject(userInfoStr, WeChatUserInfo.class);
 		}
 
 		return user;
 	}
-
+	
 	private byte[] decrypt(byte[] content, byte[] keyByte, byte[] ivByte) throws InvalidAlgorithmParameterException {
 		initialize();
 		try {

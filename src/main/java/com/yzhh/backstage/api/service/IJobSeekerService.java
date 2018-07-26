@@ -1,6 +1,7 @@
 package com.yzhh.backstage.api.service;
 
 import com.yzhh.backstage.api.dto.UserDTO;
+import com.yzhh.backstage.api.dto.jobseeker.FeedBackDTO;
 import com.yzhh.backstage.api.dto.jobseeker.JobSeekerDTO;
 import com.yzhh.backstage.api.dto.wx.WeChatUserInfo;
 import com.yzhh.backstage.api.entity.JobSeeker;
@@ -34,4 +35,6 @@ public interface IJobSeekerService {
 	//校验简历和职位匹配度
 	public String matchResumeAndPosition(Long resumeId,Long positionId);
 	
+	//新增反馈意见
+	public void addFeedback(Long jobSeekerId,FeedBackDTO feedBackDTO);
 }

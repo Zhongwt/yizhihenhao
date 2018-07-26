@@ -45,6 +45,7 @@ public class PositionDTO {
 	private String companyNickName;		//公司规模
 	private Boolean isCollection;		//是否收藏
 	private String required;		//职位要求
+	private Boolean isDelivery;			//是否投递
 	
 	
 	public String getCompanyNickName() {
@@ -221,5 +222,11 @@ public class PositionDTO {
 	}
 	public void setIsCollection(Boolean isCollection) {
 		this.isCollection = isCollection;
+	}
+	public Boolean getIsDelivery() {
+		return isDelivery;
+	}
+	public void setIsDelivery(Boolean isDelivery) {
+		this.isDelivery = isDelivery;
 	}
 }

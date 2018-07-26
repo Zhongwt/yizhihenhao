@@ -26,6 +26,7 @@ import com.yzhh.backstage.api.util.MoblieMessageUtil;
 import com.yzhh.backstage.api.util.RandomImageUtil;
 import com.yzhh.backstage.api.util.RedisUtil;
 import com.yzhh.backstage.api.util.VerificationCodeProvider;
+import com.yzhh.backstage.api.util.eamil.EmailUtil;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -53,7 +54,6 @@ public class CommonController {
 		VerifyCodeDTO verifyCodeDTO = new VerifyCodeDTO();
 		verifyCodeDTO.setCode(number);
 		verifyCodeDTO.setUrl(base64Image);
-		
 		return new ApiResponse(verifyCodeDTO);
 	}
 
@@ -78,6 +78,7 @@ public class CommonController {
 	public ApiResponse getEmailVerificationCode(@RequestParam String email) {
 		
 		String verificationCode = VerificationCodeProvider.getVerificationCode(VerificationCodeProvider.LENGTH);
+		EmailUtil.sendMail(email, "验证码", "您的验证码为："+verificationCode+"，请不要告诉任何人！");
 		redisUtil.set(Constants.email_verification_code+email, verificationCode,Constants.TEN_MINUTES);
 		
 		return new ApiResponse(verificationCode);
@@ -97,7 +98,7 @@ public class CommonController {
             e.printStackTrace();
         }
 		
-		return new ApiResponse(id);
+		return new ApiResponse("http://img.yizhihenhao.com/"+id);
     }
 	
 	@ApiOperation(value = "通用获取配置金额", notes = "", tags = { "通用部分api" })

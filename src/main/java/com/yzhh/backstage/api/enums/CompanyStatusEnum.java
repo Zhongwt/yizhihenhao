@@ -5,6 +5,7 @@ public enum CompanyStatusEnum {
 	remove(0, "已移除"),
 	pending(1, "未审核"),
 	audited(2,"已审核"),
+	reject(3, "已驳回"),
     ;
     
     private int id;

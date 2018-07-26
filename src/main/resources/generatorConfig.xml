@@ -40,15 +40,10 @@
 
 
 
-      <table schema="DB2ADMIN" tableName="position">
+      <table schema="DB2ADMIN" tableName="feedback">
           <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
       </table>
-      <table schema="DB2ADMIN" tableName="job_seeker">
-          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
-      </table>
-      <table schema="DB2ADMIN" tableName="company">
-          <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
-      </table>
+
 
   </context>
 </generatorConfiguration>

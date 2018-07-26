@@ -11,6 +11,16 @@ public class UserDTO {
 	private String status;		//状态，比如公司，必须是已审核状态才能 操作其他功能
 	private String picUrl;
 	private String openId;
+	private String sex;
+	private String province;
+	private String city;
+	private String area;
+	private String birthday;
+	private String education;
+	private String graduationTime;
+	private String graduationSchool;
+	private String major;
+	private String majorType;
 	
 	public Long getId() {
 		return id;
@@ -65,5 +75,65 @@ public class UserDTO {
 	}
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+	public String getSex() {
+		return sex;
+	}
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+	public String getProvince() {
+		return province;
+	}
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getArea() {
+		return area;
+	}
+	public void setArea(String area) {
+		this.area = area;
+	}
+	public String getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+	public String getEducation() {
+		return education;
+	}
+	public void setEducation(String education) {
+		this.education = education;
+	}
+	public String getGraduationTime() {
+		return graduationTime;
+	}
+	public void setGraduationTime(String graduationTime) {
+		this.graduationTime = graduationTime;
+	}
+	public String getGraduationSchool() {
+		return graduationSchool;
+	}
+	public void setGraduationSchool(String graduationSchool) {
+		this.graduationSchool = graduationSchool;
+	}
+	public String getMajor() {
+		return major;
+	}
+	public void setMajor(String major) {
+		this.major = major;
+	}
+	public String getMajorType() {
+		return majorType;
+	}
+	public void setMajorType(String majorType) {
+		this.majorType = majorType;
 	}
 }

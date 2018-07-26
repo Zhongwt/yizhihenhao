@@ -175,4 +175,16 @@
 			AND status = 1
 		</if>
  	</select>
+ 	
+ 	<!-- 计算一个人投递了多少职位 -->
+ 	<select id="isDelivery"  resultType="Long">
+ 		SELECT
+			COUNT(dr.id)
+		FROM
+			delivery_resume dr,
+			resume r
+		WHERE
+			r.job_seeker_id = #{jobSeekerId}
+		AND dr.position_id = #{positionId}
+ 	</select>
 </mapper>

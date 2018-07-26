@@ -15,10 +15,13 @@ public interface ResumeMapper2 {
 
 	// 计算公司数量
 	public Long countByPage(Map<String, Object> params);
-	
-	//通过简历id获取简历名称
-	public List<String> getName(Map<String,Object> params);
 
-	//获取简历数量
-	public Long countResume(Map<String,Object> params);
+	// 通过简历id获取简历名称
+	public List<String> getName(Map<String, Object> params);
+
+	// 获取简历数量
+	public Long countResume(Map<String, Object> params);
+
+	// 获取一个人是否投递了职位
+	public Long isDelivery(Map<String, Object> params);
 }

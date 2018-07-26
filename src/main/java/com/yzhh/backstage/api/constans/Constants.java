@@ -10,6 +10,9 @@ package com.yzhh.backstage.api.constans;
  */
 public class Constants
 {
+	public final static String TOKEN = "token";
+	public final static String IDENTITY = "identity";
+	
 	public final static String USER_LOGIN_SESSION = "user_login_session";
 	
 	public final static String ADMIN_LOGIN = "admin_login_";
@@ -24,11 +27,11 @@ public class Constants
 	
 	public final static String email_verification_code = "email_verification_code_";
 	
-	public final static Long TEN_MINUTES = 60 * 10 * 1000L;		//10分钟
+	public final static int TEN_MINUTES = 60 * 10;		//10分钟
 	
 	public final static int HALF_HOUR = 60 * 30;		// 半小时
 	
-	public final static int TWO_HOUR = 60 * 60 * 2 * 1000;	//两小时
+	public final static int TWO_HOUR = 60 * 60 * 2;	//两小时
 	
 	public final static int ONE_DAY = 60 * 60 * 24;	//一天
 	

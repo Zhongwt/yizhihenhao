@@ -23,4 +23,7 @@ public interface IResumeDAO extends IDAO<Resume, ResumeExample> {
 	
 	//获取求职者默认简历
 	public Resume getJobSeekerDefaultResume(Long jobSeekerId);
+	
+	//获取一个人是否投递了职位
+	public Long isDelivery(Map<String, Object> params);
 }

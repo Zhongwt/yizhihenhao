@@ -11,16 +11,19 @@ import com.yzhh.backstage.api.constans.Constants;
 import com.yzhh.backstage.api.dao.IAccountDAO;
 import com.yzhh.backstage.api.dao.ICollectionPositionDAO;
 import com.yzhh.backstage.api.dao.IDeliveryResumeDAO;
+import com.yzhh.backstage.api.dao.IFeedBackDAO;
 import com.yzhh.backstage.api.dao.IJobSeekerDAO;
 import com.yzhh.backstage.api.dao.IPositionDAO;
 import com.yzhh.backstage.api.dao.IResumeDAO;
 import com.yzhh.backstage.api.dto.UserDTO;
+import com.yzhh.backstage.api.dto.jobseeker.FeedBackDTO;
 import com.yzhh.backstage.api.dto.jobseeker.JobSeekerDTO;
 import com.yzhh.backstage.api.dto.wx.WeChatUserInfo;
 import com.yzhh.backstage.api.entity.Account;
 import com.yzhh.backstage.api.entity.CollectionPosition;
 import com.yzhh.backstage.api.entity.CollectionPositionExample;
 import com.yzhh.backstage.api.entity.DeliveryResume;
+import com.yzhh.backstage.api.entity.Feedback;
 import com.yzhh.backstage.api.entity.JobSeeker;
 import com.yzhh.backstage.api.entity.Position;
 import com.yzhh.backstage.api.entity.Resume;
@@ -50,6 +53,8 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 	private RedisUtil redisUtil;
 	@Autowired
 	private IAccountDAO accountDAO;
+	@Autowired
+	private IFeedBackDAO feedBackDAO;
 	
 	@Autowired
 	private IAccountService accountService;
@@ -135,13 +140,13 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 					
 			jobSeeker = new JobSeeker();
 			jobSeeker.setLastAccess(lastAccess);
-			jobSeeker.setName(user.getNickname());
+			jobSeeker.setName(user.getNickName());
 			jobSeeker.setOpenId(user.getOpenId());
 			jobSeeker.setImageUrl(user.getAvatarUrl());
 			//jobSeeker.setIsAuth(user.getSubscribe());
 			jobSeeker.setSex(user.getGender() == 1 ? "男" : "女");
-			jobSeeker.setProvince(user.getProvince());
-			jobSeeker.setCity(user.getCity());
+			//jobSeeker.setProvince(user.getProvince());
+			//jobSeeker.setCity(user.getCity());
 			jobSeekerDAO.insertSelective(jobSeeker);
 			
 			Account account = new Account();
@@ -161,6 +166,15 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 		userDTO.setPhone(jobSeeker.getPhone());
 		userDTO.setPicUrl(jobSeeker.getImageUrl());
 		userDTO.setOpenId(jobSeeker.getOpenId());
+		userDTO.setSex(jobSeeker.getSex());
+		userDTO.setProvince(jobSeeker.getProvince());
+		userDTO.setCity(jobSeeker.getCity());
+		userDTO.setArea(jobSeeker.getBirthday());
+		userDTO.setEducation(jobSeeker.getEducation());
+		userDTO.setGraduationSchool(jobSeeker.getGraduationSchool());
+		userDTO.setGraduationTime(jobSeeker.getGraduationTime());
+		userDTO.setMajor(jobSeeker.getMajor());
+		userDTO.setMajorType(jobSeeker.getMajorType());
 		
 		redisUtil.set(Constants.JOB_SEEKER_LOGIN +userDTO.getId(), userDTO,Constants.TWO_HOUR);
 		
@@ -240,6 +254,11 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 		jobSeeker.setNote(jobSeekerDTO.getNote() == null ? "" : jobSeekerDTO.getNote());
 		
 		jobSeekerDAO.updateByPrimaryKeySelective(jobSeeker);
+		
+		//刷新登录信息
+		WeChatUserInfo user = new WeChatUserInfo();
+		user.setOpenId(jobSeeker.getOpenId());
+		login(user);
 	}
 
 	@Override
@@ -308,6 +327,18 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 			s = "匹配度为"+matching+"%，其中"+str+"与该职位要求不匹配，"+mystr;
 		}
 		return s;
+	}
+
+	@Override
+	public void addFeedback(Long jobSeekerId, FeedBackDTO feedBackDTO) {
+		
+		Feedback feedback = new Feedback();
+		feedback.setLastAccess(new Date().getTime());
+		feedback.setType(AccountTypeEnum.job_seeker.getName());
+		feedback.setRelationId(jobSeekerId);
+		feedback.setContactWay(feedBackDTO.getContactWay());
+		feedback.setFeedback(feedBackDTO.getFeedback());
+		feedBackDAO.insertSelective(feedback);
 	}
 
 	

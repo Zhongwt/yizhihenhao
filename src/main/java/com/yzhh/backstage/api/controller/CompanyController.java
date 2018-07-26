@@ -24,11 +24,13 @@ import com.yzhh.backstage.api.dto.LoginDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.UpdatePasswordDTO;
 import com.yzhh.backstage.api.dto.UserDTO;
-import com.yzhh.backstage.api.dto.company.AddCompanyDTO;
+import com.yzhh.backstage.api.dto.company.ApplyCompany;
 import com.yzhh.backstage.api.dto.company.CompanyDTO;
 import com.yzhh.backstage.api.dto.company.CompanyNoticeDTO;
-import com.yzhh.backstage.api.dto.company.DescriptionDTO;
+import com.yzhh.backstage.api.dto.company.RegisterCompany;
+import com.yzhh.backstage.api.dto.company.StatementDTO;
 import com.yzhh.backstage.api.dto.company.StatisticsDTO;
+import com.yzhh.backstage.api.dto.company.UpdateCompanyDTO;
 import com.yzhh.backstage.api.dto.position.PositionDTO;
 import com.yzhh.backstage.api.dto.position.SearchPositionDTO;
 import com.yzhh.backstage.api.dto.resume.AddInterviewDTO;
@@ -70,16 +72,16 @@ public class CompanyController {
 		return new ApiResponse();
 	}
 
-	@ApiOperation(value = "企业加盟", notes = "", tags = { "企业部分api" })
-	@PostMapping("/add")
-	public ApiResponse addCompany(HttpServletRequest request, @RequestBody @Valid AddCompanyDTO addCompanyDTO,
+	@ApiOperation(value = "企业注册", notes = "", tags = { "企业部分api" })
+	@PostMapping("/register")
+	public ApiResponse registerCompany(HttpServletRequest request, @RequestBody @Valid RegisterCompany registerCompany,
 			BindingResult result) {
 
 		if (result.hasErrors()) {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
 		}
 
-		companyService.addCompany(addCompanyDTO);
+		companyService.registerCompany(registerCompany);
 
 		return new ApiResponse();
 	}
@@ -96,6 +98,36 @@ public class CompanyController {
 		UserDTO companyDTO = companyService.login(loginDTO);
 
 		return new ApiResponse(companyDTO);
+	}
+	
+	@ApiOperation(value = "企业申请审核", notes = "", tags = { "企业部分api" })
+	@PostMapping("/apply")
+	public ApiResponse companyApply(HttpServletRequest request, @RequestBody @Valid ApplyCompany applyCompany,
+			BindingResult result) {
+
+		if (result.hasErrors()) {
+			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
+		}
+		
+		UserDTO user = (UserDTO)request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		companyService.applyCompany(user.getId(), applyCompany);
+
+		return new ApiResponse();
+	}
+	
+	@ApiOperation(value = "企业申述", notes = "", tags = { "企业部分api" })
+	@PostMapping("/statement")
+	public ApiResponse companyStatement(HttpServletRequest request, @RequestBody @Valid StatementDTO statementDTO,
+			BindingResult result) {
+
+		if (result.hasErrors()) {
+			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
+		}
+		
+		UserDTO user = (UserDTO)request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		companyService.statmentCompany(user.getId(), statementDTO);
+
+		return new ApiResponse();
 	}
 
 	@ApiOperation(value = "企业首页统计", notes = "", tags = { "企业部分api" })
@@ -144,7 +176,7 @@ public class CompanyController {
 
 	@ApiOperation(value = "修改公司基础信息", notes = "", tags = { "企业部分api" })
 	@PostMapping("/save")
-	public ApiResponse updateCompany(HttpServletRequest request, @RequestBody @Validated CompanyDTO companyDTO,
+	public ApiResponse updateCompany(HttpServletRequest request, @RequestBody @Validated UpdateCompanyDTO updateCompanyDTO,
 			BindingResult result) {
 
 		if (result.hasErrors()) {
@@ -152,25 +184,7 @@ public class CompanyController {
 		}
 
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
-		companyDTO.setId(user.getId());
-
-		companyService.update(companyDTO);
-
-		return new ApiResponse();
-	}
-
-	@ApiOperation(value = "修改公司描述", notes = "", tags = { "企业部分api" })
-	@PostMapping("/save/description")
-	public ApiResponse updateCompanyDescription(HttpServletRequest request,
-			@RequestBody @Validated DescriptionDTO dcescriptionDTO, BindingResult result) {
-
-		if (result.hasErrors()) {
-			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
-		}
-
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
-
-		companyService.updateDescription(user.getId(), dcescriptionDTO);
+		companyService.update(user.getId(),updateCompanyDTO);
 
 		return new ApiResponse();
 	}

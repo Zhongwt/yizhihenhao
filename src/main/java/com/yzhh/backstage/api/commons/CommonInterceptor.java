@@ -30,9 +30,6 @@ import com.yzhh.backstage.api.util.RedisUtil;
  */
 public class CommonInterceptor implements HandlerInterceptor {
 
-	private final String TOKEN = "token";
-	private final String IDENTITY = "identity";
-
 	@Autowired
 	private RedisUtil redisUtil;
 
@@ -46,10 +43,9 @@ public class CommonInterceptor implements HandlerInterceptor {
 
 		exceptionUrl.add("/api/admin/login");
 
-		exceptionUrl.add("/api/company/add");
+		exceptionUrl.add("/api/company/register");
 		exceptionUrl.add("/api/company/forget/password");
 		exceptionUrl.add("/api/company/login");
-		exceptionUrl.add("/api/company/add/company");
 
 		exceptionUrl.add("/api/job/get/code");
 		exceptionUrl.add("/api/job/get/code/token");
@@ -105,8 +101,8 @@ public class CommonInterceptor implements HandlerInterceptor {
 
 		UserDTO user = null;
 
-		String token = request.getHeader(TOKEN);
-		String identity = request.getHeader(IDENTITY);
+		String token = request.getHeader(Constants.TOKEN);
+		String identity = request.getHeader(Constants.IDENTITY);
 		if (token != null) {
 			switch (identity) {
 			case "admin":

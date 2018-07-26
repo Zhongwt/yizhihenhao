@@ -24,10 +24,10 @@ public interface IPositionService {
 	public String getName(List<Long> ids);
 	//删除
 	public void delete(List<Long> ids);
-	
 	//获取所有职位的城市列表
 	public PositionCityDTO getPositionCity();
-	
 	//用户收藏职位列表
 	public PageDTO<PositionDTO> collectionList(Long jobSeekerId,Long page,Integer size);
+	//是否投递职位
+	public Boolean isDelivery(Long jobSeekerId,Long positionId);
 }

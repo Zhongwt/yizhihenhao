@@ -50,4 +50,9 @@ public class ResumeDAOImpl extends DAOImpl<Resume, ResumeExample> implements IRe
 		}
 		return null;
 	}
+
+	@Override
+	public Long isDelivery(Map<String, Object> params) {
+		return mapper2.isDelivery(params);
+	}
 }
