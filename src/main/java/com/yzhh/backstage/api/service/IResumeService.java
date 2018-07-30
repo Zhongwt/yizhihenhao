@@ -75,4 +75,17 @@ public interface IResumeService {
 
 	//接受面试
 	public void acceptInterview(Long deliveryResumeId);
+	
+	//删除实习
+	public void deleteInternshipExperience(Long internshipExperienceId);
+	// 删除教育背景
+	public void deleteEducationalBackground(Long educationalBackgroundId);
+	// 删除项目经历
+	public void deleteProjectExperience(Long projectExperienceId);
+	// 删除技能爱好
+	public void deleteSkillHobby(Long skillHobbyId);
+	// 删除作品展示
+	public void deleteWorksShow(Long worksShowId);
+	// 删除自我评价
+	public void deleteSelfEvaluation(Long selfEvaluationId);
 }

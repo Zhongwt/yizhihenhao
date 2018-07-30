@@ -120,7 +120,6 @@ public class CommonInterceptor implements HandlerInterceptor {
 			case "jobSeeker":
 				user = (UserDTO) redisUtil.get(Constants.JOB_SEEKER_LOGIN + token);
 				// 刷新缓存
-				redisUtil.set(Constants.JOB_SEEKER_LOGIN + user.getId(), user, Constants.TWO_HOUR);
 				request.getSession().setAttribute(Constants.USER_LOGIN_SESSION, user);
 				break;
 			}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yzhh.backstage.api.dao.mapper.ResumeMapper">
+<mapper namespace="com.yzhh.backstage.api.dao.mapper.custom.ResumeMapper2">
   <sql id="condition_sql">
  		<if test="type != null">
 				AND p.type = #{type}
@@ -177,7 +177,7 @@
  	</select>
  	
  	<!-- 计算一个人投递了多少职位 -->
- 	<select id="isDelivery"  resultType="Long">
+ 	<select id="isDeliveryPosition"  resultType="Long">
  		SELECT
 			COUNT(dr.id)
 		FROM

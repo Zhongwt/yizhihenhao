@@ -23,9 +23,8 @@ import com.yzhh.backstage.api.dto.VerifyCodeDTO;
 import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.service.IAttachmentService;
 import com.yzhh.backstage.api.util.MoblieMessageUtil;
-import com.yzhh.backstage.api.util.RandomImageUtil;
 import com.yzhh.backstage.api.util.RedisUtil;
-import com.yzhh.backstage.api.util.VerificationCodeProvider;
+import com.yzhh.backstage.api.util.VerifyCodeUtils;
 import com.yzhh.backstage.api.util.eamil.EmailUtil;
 
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +36,7 @@ import io.swagger.annotations.ApiOperation;
 public class CommonController {
 	
 	@Autowired
-	private RandomImageUtil randomImageUtil;
+	private VerifyCodeUtils verifyCodeUtils;
 	@Autowired
 	private IAttachmentService attachmentService;
 	@Autowired
@@ -49,8 +48,8 @@ public class CommonController {
 	@GetMapping("/login/verify/code")
 	public ApiResponse getVerifyCodeImge() throws Exception {
 		
-		String number = randomImageUtil.getRandomNumber(4);
-		String base64Image = randomImageUtil.createRandomNumberImage(number);
+		String number = verifyCodeUtils.getRandomNumber(VerifyCodeUtils.LENGTH);
+		String base64Image = verifyCodeUtils.createRandomNumberImage(number);
 		VerifyCodeDTO verifyCodeDTO = new VerifyCodeDTO();
 		verifyCodeDTO.setCode(number);
 		verifyCodeDTO.setUrl(base64Image);
@@ -67,7 +66,7 @@ public class CommonController {
 	@ApiOperation(value = "获取短信验证码", notes = "", tags = { "通用部分api" })
 	@GetMapping("/mobile/verify/code")
 	public ApiResponse getPhoneVerificationCode(@RequestParam String phone) {
-		String verificationCode = VerificationCodeProvider.getVerificationCode(VerificationCodeProvider.LENGTH);
+		String verificationCode = verifyCodeUtils.getRandomNumber(VerifyCodeUtils.LENGTH);
 		MoblieMessageUtil.sendSms(phone, "{\"code\":\"" + verificationCode + "\"}", Constants.identifyingTempleteCode);
 		redisUtil.set(Constants.phone_verification_code+phone, verificationCode,Constants.TEN_MINUTES);
 		return new ApiResponse(verificationCode);
@@ -77,7 +76,7 @@ public class CommonController {
 	@GetMapping("/email/verify/code")
 	public ApiResponse getEmailVerificationCode(@RequestParam String email) {
 		
-		String verificationCode = VerificationCodeProvider.getVerificationCode(VerificationCodeProvider.LENGTH);
+		String verificationCode = verifyCodeUtils.getRandomNumber(VerifyCodeUtils.LENGTH);
 		EmailUtil.sendMail(email, "验证码", "您的验证码为："+verificationCode+"，请不要告诉任何人！");
 		redisUtil.set(Constants.email_verification_code+email, verificationCode,Constants.TEN_MINUTES);
 		
@@ -86,12 +85,13 @@ public class CommonController {
 	
 	@ApiOperation(value = "通用文件上传", notes = "", tags = { "通用部分api" })
 	@PostMapping(value = "/upload/file")
-    public ApiResponse updateStudentStatus(MultipartFile file,HttpServletRequest request) {
+    public ApiResponse updateStudentStatus(MultipartFile file,HttpServletRequest request) throws IOException {
 		
 		Long id = 0L;
+		
         try {
            id = attachmentService.addAttachment(file.getOriginalFilename());
-           String path="/home/yzhh/file/"+id;
+           String path="/home/yzhh/img/"+id;
            File newFile=new File(path);
            file.transferTo(newFile);
         } catch ( IOException e) {

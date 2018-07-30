@@ -23,5 +23,5 @@ public interface ResumeMapper2 {
 	public Long countResume(Map<String, Object> params);
 
 	// 获取一个人是否投递了职位
-	public Long isDelivery(Map<String, Object> params);
+	public Long isDeliveryPosition(Map<String, Object> params);
 }

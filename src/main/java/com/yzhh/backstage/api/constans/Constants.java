@@ -31,7 +31,7 @@ public class Constants
 	
 	public final static int HALF_HOUR = 60 * 30;		// 半小时
 	
-	public final static int TWO_HOUR = 60 * 60 * 2;	//两小时
+	public final static long TWO_HOUR = 60 * 60 * 2 * 1000L;	//两小时
 	
 	public final static int ONE_DAY = 60 * 60 * 24;	//一天
 	

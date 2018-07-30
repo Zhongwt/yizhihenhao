@@ -21,6 +21,7 @@ public class UserDTO {
 	private String graduationSchool;
 	private String major;
 	private String majorType;
+	private String note;
 	
 	public Long getId() {
 		return id;
@@ -135,5 +136,11 @@ public class UserDTO {
 	}
 	public void setMajorType(String majorType) {
 		this.majorType = majorType;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
 	}
 }

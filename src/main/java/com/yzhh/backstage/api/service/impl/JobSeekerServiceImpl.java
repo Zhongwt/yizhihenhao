@@ -169,14 +169,16 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 		userDTO.setSex(jobSeeker.getSex());
 		userDTO.setProvince(jobSeeker.getProvince());
 		userDTO.setCity(jobSeeker.getCity());
-		userDTO.setArea(jobSeeker.getBirthday());
+		userDTO.setArea(jobSeeker.getArea());
 		userDTO.setEducation(jobSeeker.getEducation());
 		userDTO.setGraduationSchool(jobSeeker.getGraduationSchool());
 		userDTO.setGraduationTime(jobSeeker.getGraduationTime());
 		userDTO.setMajor(jobSeeker.getMajor());
 		userDTO.setMajorType(jobSeeker.getMajorType());
+		userDTO.setBirthday(jobSeeker.getBirthday());
+		userDTO.setNote(jobSeeker.getNote());
 		
-		redisUtil.set(Constants.JOB_SEEKER_LOGIN +userDTO.getId(), userDTO,Constants.TWO_HOUR);
+		redisUtil.set(Constants.JOB_SEEKER_LOGIN +userDTO.getId(), userDTO);
 		
 		return userDTO;
 	}
@@ -204,7 +206,7 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 		
 		jobSeekerDTO.setId(jobSeeker.getId());
 		jobSeekerDTO.setName(jobSeeker.getName());
-		jobSeekerDTO.setImageUrl(jobSeeker.getImageUrl());
+		jobSeekerDTO.setPicUrl(jobSeeker.getImageUrl());
 		jobSeekerDTO.setSex(jobSeeker.getSex());
 		jobSeekerDTO.setProvince(jobSeeker.getProvince());
 		jobSeekerDTO.setCity(jobSeeker.getCity());
@@ -238,7 +240,7 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 		
 		jobSeeker.setLastAccess(lastAccess);
 		jobSeeker.setName(jobSeekerDTO.getName());
-		jobSeeker.setImageUrl(jobSeekerDTO.getImageUrl());
+		jobSeeker.setImageUrl(jobSeekerDTO.getPicUrl());
 		jobSeeker.setSex(jobSeekerDTO.getSex());
 		jobSeeker.setProvince(jobSeekerDTO.getProvince());
 		jobSeeker.setCity(jobSeekerDTO.getCity());

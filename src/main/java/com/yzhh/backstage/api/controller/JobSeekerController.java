@@ -545,12 +545,9 @@ public class JobSeekerController {
 		return new ApiResponse();
 	}
 	
-	@ApiOperation(value = "接受面试", notes = "", tags = { "求职者部分api" })
-	@ApiImplicitParams({ 
-		@ApiImplicitParam(paramType = "query", dataType = "long", name = "deliveryResumeId", value = "投递id",required=true)
-		})
-	@GetMapping("/feedback")
-	public ApiResponse addFeedBack(HttpServletRequest request,FeedBackDTO feedBackDTO) {
+	@ApiOperation(value = "投诉建议接口", notes = "", tags = { "求职者部分api" })
+	@PostMapping("/feedback")
+	public ApiResponse addFeedBack(HttpServletRequest request,@RequestBody FeedBackDTO feedBackDTO) {
 
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		jobSeekerService.addFeedback(user.getId(), feedBackDTO);
@@ -558,6 +555,72 @@ public class JobSeekerController {
 		return new ApiResponse();
 	}
 
+	@ApiOperation(value = "删除实习经历", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "internshipExperienceId", value = "实习经历id",required=true)
+	})
+	@DeleteMapping("/delete/internship/experience")
+	public ApiResponse deleteInternshipExperience(@RequestParam Long internshipExperienceId) {
+		
+		resumeService.deleteInternshipExperience(internshipExperienceId);
+		
+		return new ApiResponse();
+	}
+	@ApiOperation(value = "删除教育背景", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "educationalBackgroundId", value = "教育背景id",required=true)
+	})
+	@DeleteMapping("/delete/educational/background")
+	public ApiResponse deleteEducationalBackground(@RequestParam Long educationalBackgroundId) {
+		
+		resumeService.deleteEducationalBackground(educationalBackgroundId);
+		
+		return new ApiResponse();
+	}
+	@ApiOperation(value = "删除项目经历", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "projectExperienceId", value = "项目经历id",required=true)
+	})
+	@DeleteMapping("/delete/project/experience")
+	public ApiResponse deleteProjectExperience(@RequestParam Long projectExperienceId) {
+		
+		resumeService.deleteProjectExperience(projectExperienceId);
+		
+		return new ApiResponse();
+	}
+	@ApiOperation(value = "删除能力爱好", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "skillHobbyId", value = "能力爱好id",required=true)
+	})
+	@DeleteMapping("/delete/skill/hobby")
+	public ApiResponse deleteSkillHobby(@RequestParam Long skillHobbyId) {
+		
+		resumeService.deleteSkillHobby(skillHobbyId);
+		
+		return new ApiResponse();
+	}
+	@ApiOperation(value = "删除工作展示", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "worksShowId", value = "作品展示id",required=true)
+	})
+	@DeleteMapping("/delete/works/show")
+	public ApiResponse deleteWorksShow(@RequestParam Long worksShowId) {
+		
+		resumeService.deleteWorksShow(worksShowId);
+		
+		return new ApiResponse();
+	}
+	@ApiOperation(value = "删除自我评价", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "selfEvaluationId", value = "自我评价id",required=true)
+	})
+	@DeleteMapping("/delete/self/evaluation")
+	public ApiResponse deleteSelfEvaluation(@RequestParam Long selfEvaluationId) {
+		
+		resumeService.deleteSelfEvaluation(selfEvaluationId);
+		
+		return new ApiResponse();
+	}
 }
 
 

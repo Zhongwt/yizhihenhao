@@ -53,6 +53,6 @@ public class ResumeDAOImpl extends DAOImpl<Resume, ResumeExample> implements IRe
 
 	@Override
 	public Long isDelivery(Map<String, Object> params) {
-		return mapper2.isDelivery(params);
+		return mapper2.isDeliveryPosition(params);
 	}
 }

@@ -12,35 +12,28 @@ public class JobSeekerDTO {
 	private String name;
 	@NotNull
 	@ApiModelProperty(value = "头像url")
-	private String imageUrl;
+	private String picUrl;
 	@NotNull
 	@ApiModelProperty(value = "性别")
 	private String sex;
-	@NotNull
 	@ApiModelProperty(value = "省")
 	private String province;
 	@NotNull
 	@ApiModelProperty(value = "市")
 	private String city;
-	@NotNull
 	@ApiModelProperty(value = "区")
 	private String area;
 	@NotNull
 	@ApiModelProperty(value = "生日")
 	private String birthday;
-	@NotNull
 	@ApiModelProperty(value = "学历")
 	private String education;
-	@NotNull
 	@ApiModelProperty(value = "毕业时间")
 	private String graduationTime;
-	@NotNull
 	@ApiModelProperty(value = "毕业学校")
 	private String graduationSchool;
-	@NotNull
 	@ApiModelProperty(value = "专业")
 	private String major;
-	@NotNull
 	@ApiModelProperty(value = "专业类型")
 	private String majorType;
 	@NotNull
@@ -63,12 +56,6 @@ public class JobSeekerDTO {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public String getImageUrl() {
-		return imageUrl;
-	}
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
 	}
 	public String getSex() {
 		return sex;
@@ -147,5 +134,11 @@ public class JobSeekerDTO {
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	public String getPicUrl() {
+		return picUrl;
+	}
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
 	}
 }

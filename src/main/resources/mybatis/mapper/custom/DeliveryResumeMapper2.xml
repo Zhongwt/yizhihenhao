@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yzhh.backstage.api.dao.mapper.DeliveryResumeMapper">
+<mapper namespace="com.yzhh.backstage.api.dao.mapper.custom.DeliveryResumeMapper2">
 
 	<sql id="condition_sql">
 		<if test="jobSeekerId != null">

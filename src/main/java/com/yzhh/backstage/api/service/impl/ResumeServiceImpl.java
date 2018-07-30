@@ -733,6 +733,36 @@ public class ResumeServiceImpl implements IResumeService {
 		newDeliveryResume.setStatus(DeliveryResumeStatusEnum.accept.getId());
 		deliveryResumeDAO.updateByPrimaryKeySelective(newDeliveryResume);
 	}
+
+	@Override
+	public void deleteInternshipExperience(Long internshipExperienceId) {
+		internshipExperienceDAO.deleteByPrimaryKey(internshipExperienceId);
+	}
+
+	@Override
+	public void deleteEducationalBackground(Long educationalBackgroundId) {
+		educationalBackgroundDAO.deleteByPrimaryKey(educationalBackgroundId);
+	}
+
+	@Override
+	public void deleteProjectExperience(Long projectExperienceId) {
+		projectExperienceDAO.deleteByPrimaryKey(projectExperienceId);
+	}
+
+	@Override
+	public void deleteSkillHobby(Long skillHobbyId) {
+		skillHobbyDAO.deleteByPrimaryKey(skillHobbyId);
+	}
+
+	@Override
+	public void deleteWorksShow(Long worksShowId) {
+		worksShowDAO.deleteByPrimaryKey(worksShowId);
+	}
+
+	@Override
+	public void deleteSelfEvaluation(Long selfEvaluationId) {
+		selfEvaluationDAO.deleteByPrimaryKey(selfEvaluationId);
+	}
 }
 
 
