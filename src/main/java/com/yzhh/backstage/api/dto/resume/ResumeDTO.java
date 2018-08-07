@@ -17,8 +17,12 @@ public class ResumeDTO {
 	private String phone;
 	@ApiModelProperty(value = "电话")
 	private String email;
+	@ApiModelProperty(value = "求职者Id")
+	private Long jobSeekerId;
 	@ApiModelProperty(value = "求职者名称")
 	private String jobSeekerName;
+	@ApiModelProperty(value = "求职者性别")
+	private String sex;
 	@ApiModelProperty(value = "简历名称")
 	private String name;
 	@ApiModelProperty(value = "是否默认")
@@ -35,6 +39,8 @@ public class ResumeDTO {
 	private String workType;
 	@ApiModelProperty(value = "到岗日期")
 	private String arrivalDay;
+	@ApiModelProperty(value = "实习时间")
+	private String internshipTime;
 	
 	@ApiModelProperty(value = "教育背景")
 	private List<EducationalBackgroundDTO> educationalBackgroundList;
@@ -48,6 +54,27 @@ public class ResumeDTO {
 	private List<WorksShowDTO> worksShowList;
 	@ApiModelProperty(value = "自我评价")
 	private List<SelfEvaluationDTO> selfEvaluationList;
+	
+	@ApiModelProperty(value = "投递职位id")
+	private Long positionId;
+	@ApiModelProperty(value = "投递职位名称")
+	private String positionName;
+	@ApiModelProperty(value = "投递状态")
+	private String deliveryStatus;
+	@ApiModelProperty(value = "面试时间")
+	private String interviewTime;
+	@ApiModelProperty(value = "面试地址")
+	private String interviewAddress;
+	@ApiModelProperty(value = "面试联系电话")
+	private String interviewPhone;
+	@ApiModelProperty(value = "面试联系人")
+	private String interviewContract;
+	@ApiModelProperty(value = "面试备注")
+	private String interviewNote;
+	@ApiModelProperty(value = "是否需要付费")
+	private Boolean needPay;
+	@ApiModelProperty(value = "价格")
+	private Double amount;
 	
 	public Long getId() {
 		return id;
@@ -174,5 +201,83 @@ public class ResumeDTO {
 	}
 	public void setSelfEvaluationList(List<SelfEvaluationDTO> selfEvaluationList) {
 		this.selfEvaluationList = selfEvaluationList;
+	}
+	public String getInternshipTime() {
+		return internshipTime;
+	}
+	public void setInternshipTime(String internshipTime) {
+		this.internshipTime = internshipTime;
+	}
+	public Long getPositionId() {
+		return positionId;
+	}
+	public void setPositionId(Long positionId) {
+		this.positionId = positionId;
+	}
+	public String getPositionName() {
+		return positionName;
+	}
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
+	public String getDeliveryStatus() {
+		return deliveryStatus;
+	}
+	public void setDeliveryStatus(String deliveryStatus) {
+		this.deliveryStatus = deliveryStatus;
+	}
+	public String getInterviewTime() {
+		return interviewTime;
+	}
+	public void setInterviewTime(String interviewTime) {
+		this.interviewTime = interviewTime;
+	}
+	public String getInterviewAddress() {
+		return interviewAddress;
+	}
+	public void setInterviewAddress(String interviewAddress) {
+		this.interviewAddress = interviewAddress;
+	}
+	public String getInterviewPhone() {
+		return interviewPhone;
+	}
+	public void setInterviewPhone(String interviewPhone) {
+		this.interviewPhone = interviewPhone;
+	}
+	public String getInterviewContract() {
+		return interviewContract;
+	}
+	public void setInterviewContract(String interviewContract) {
+		this.interviewContract = interviewContract;
+	}
+	public String getInterviewNote() {
+		return interviewNote;
+	}
+	public void setInterviewNote(String interviewNote) {
+		this.interviewNote = interviewNote;
+	}
+	public String getSex() {
+		return sex;
+	}
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+	public Boolean getNeedPay() {
+		return needPay;
+	}
+	public void setNeedPay(Boolean needPay) {
+		this.needPay = needPay;
+	}
+	public Double getAmount() {
+		return amount;
+	}
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+	public Long getJobSeekerId() {
+		return jobSeekerId;
+	}
+	public void setJobSeekerId(Long jobSeekerId) {
+		this.jobSeekerId = jobSeekerId;
 	}
 }

@@ -1,20 +1,30 @@
 package com.yzhh.backstage.api.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.yzhh.backstage.api.commons.BizException;
+import com.yzhh.backstage.api.dao.ICompanyDAO;
+import com.yzhh.backstage.api.dao.ICompanyJobSeekerDAO;
 import com.yzhh.backstage.api.dao.IDeliveryResumeDAO;
 import com.yzhh.backstage.api.dao.IEducationalBackgroundDAO;
 import com.yzhh.backstage.api.dao.IInternshipExperienceDAO;
 import com.yzhh.backstage.api.dao.IInterviewDAO;
+import com.yzhh.backstage.api.dao.IJobSeekerDAO;
+import com.yzhh.backstage.api.dao.IPositionDAO;
 import com.yzhh.backstage.api.dao.IProjectExperienceDAO;
 import com.yzhh.backstage.api.dao.IResumeDAO;
 import com.yzhh.backstage.api.dao.ISelfEvaluationDAO;
@@ -28,11 +38,13 @@ import com.yzhh.backstage.api.dto.resume.InternshipExperienceDTO;
 import com.yzhh.backstage.api.dto.resume.PageResumeDTO;
 import com.yzhh.backstage.api.dto.resume.ProjectExperienceDTO;
 import com.yzhh.backstage.api.dto.resume.ResumeDTO;
+import com.yzhh.backstage.api.dto.resume.ResumeLibDTO;
 import com.yzhh.backstage.api.dto.resume.ResumePoorDTO;
 import com.yzhh.backstage.api.dto.resume.ResumeSearchDTO;
 import com.yzhh.backstage.api.dto.resume.SelfEvaluationDTO;
 import com.yzhh.backstage.api.dto.resume.SkillHobbyDTO;
 import com.yzhh.backstage.api.dto.resume.WorksShowDTO;
+import com.yzhh.backstage.api.entity.Company;
 import com.yzhh.backstage.api.entity.DeliveryResume;
 import com.yzhh.backstage.api.entity.EducationalBackground;
 import com.yzhh.backstage.api.entity.EducationalBackgroundExample;
@@ -40,6 +52,7 @@ import com.yzhh.backstage.api.entity.InternshipExperience;
 import com.yzhh.backstage.api.entity.InternshipExperienceExample;
 import com.yzhh.backstage.api.entity.Interview;
 import com.yzhh.backstage.api.entity.JobSeeker;
+import com.yzhh.backstage.api.entity.Position;
 import com.yzhh.backstage.api.entity.ProjectExperience;
 import com.yzhh.backstage.api.entity.ProjectExperienceExample;
 import com.yzhh.backstage.api.entity.Resume;
@@ -53,10 +66,13 @@ import com.yzhh.backstage.api.entity.WorksShowExample;
 import com.yzhh.backstage.api.enums.DeliveryResumeStatusEnum;
 import com.yzhh.backstage.api.enums.IsDefaultEnum;
 import com.yzhh.backstage.api.enums.IsDeleteEnum;
+import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.service.IJobSeekerService;
 import com.yzhh.backstage.api.service.IResumeService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
+import com.yzhh.backstage.api.util.WordUtil;
+import com.yzhh.backstage.api.util.eamil.EmailUtil;
 
 @Service
 public class ResumeServiceImpl implements IResumeService {
@@ -79,9 +95,19 @@ public class ResumeServiceImpl implements IResumeService {
 	private IWorksShowDAO worksShowDAO;
 	@Autowired
 	private ISelfEvaluationDAO selfEvaluationDAO;
+	@Autowired
+	private IJobSeekerDAO jobSeekerDAO;
+	@Autowired
+	private IPositionDAO positionDAO;
+	@Autowired
+	private ICompanyDAO companyDAO;
+	@Autowired
+	private ICompanyJobSeekerDAO companyJobSeekerDAO;
 
 	@Autowired
 	private IJobSeekerService jobSeekerService;
+	@Autowired
+	private IAccountService accountService;
 
 	@Override
 	public PageDTO<PageResumeDTO> queryPage(ResumeSearchDTO resumeSearchDTO, Long page, Integer size) {
@@ -96,8 +122,14 @@ public class ResumeServiceImpl implements IResumeService {
 
 		Map<String, Object> params = new HashMap<>();
 
+		params.put("starNum", (page - 1) * size);
+		params.put("size", size);
+
 		if (resumeSearchDTO == null) {
 			resumeSearchDTO = new ResumeSearchDTO();
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getName())) {
+			params.put("name", resumeSearchDTO.getName());
 		}
 		if (!StringUtils.isEmpty(resumeSearchDTO.getType())) {
 			params.put("type", resumeSearchDTO.getType());
@@ -108,17 +140,23 @@ public class ResumeServiceImpl implements IResumeService {
 		if (!StringUtils.isEmpty(resumeSearchDTO.getCity())) {
 			params.put("city", resumeSearchDTO.getCity());
 		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getInternshipTime())) {
+			params.put("internshipTime", resumeSearchDTO.getInternshipTime());
+		}
 		if (resumeSearchDTO.getWorkDay() != null) {
 			params.put("workDay", resumeSearchDTO.getWorkDay());
 		}
 		if (!StringUtils.isEmpty(resumeSearchDTO.getArrayDay())) {
-			params.put("arrayDay", resumeSearchDTO.getArrayDay());
+			params.put("arrayDay", DateUtils.stringToLong(resumeSearchDTO.getArrayDay(), null));
 		}
 		if (!StringUtils.isEmpty(resumeSearchDTO.getEducation())) {
 			params.put("education", resumeSearchDTO.getEducation());
 		}
 		if (!StringUtils.isEmpty(resumeSearchDTO.getGraduationTime())) {
 			params.put("graduationTime", resumeSearchDTO.getGraduationTime());
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getGraduationSchool())) {
+			params.put("graduationSchool", resumeSearchDTO.getGraduationSchool());
 		}
 		if (!StringUtils.isEmpty(resumeSearchDTO.getSex())) {
 			params.put("sex", resumeSearchDTO.getSex());
@@ -131,6 +169,9 @@ public class ResumeServiceImpl implements IResumeService {
 		}
 		if (resumeSearchDTO.getPositionId() != null) {
 			params.put("positionId", resumeSearchDTO.getPositionId());
+		}
+		if (resumeSearchDTO.getJobSeekerId() != null) {
+			params.put("jobSeekerId", resumeSearchDTO.getJobSeekerId());
 		}
 
 		List<PageResumeDTO> list = resumeDAO.queryByPage(params);
@@ -185,6 +226,42 @@ public class ResumeServiceImpl implements IResumeService {
 		newDeliveryResume.setLastAccess(date);
 		newDeliveryResume.setStatus(DeliveryResumeStatusEnum.right.getId());
 		deliveryResumeDAO.updateByPrimaryKeySelective(newDeliveryResume);
+
+		Resume resume = resumeDAO.selectByPrimaryKey(deliveryResume.getResumeId());
+		JobSeeker jobSeeker = jobSeekerDAO.selectByPrimaryKey(resume.getJobSeekerId());
+		Position position = positionDAO.selectByPrimaryKey(deliveryResume.getPositionId());
+		Company company = companyDAO.selectByPrimaryKey(position.getCompanyId());
+
+		StringBuffer html = new StringBuffer();
+		html.append("<div style=\"margin:20px 0;padding:20px 15px;\">");
+		html.append(jobSeeker.getName() + "，您好~");
+		html.append("<br> 你的简历已经通过筛选，很高兴邀请你参加面试。");
+		html.append("<br>");
+		html.append("<br> ");
+		html.append("<strong>面试公司：" + company.getName() + "</strong>");
+		html.append("<br> ");
+		html.append("<strong>面试职位：" + position.getName() + "</strong>");
+		html.append("<br> ");
+		html.append(
+				"<strong>面试时间：<span style=\"border-bottom: 1px dashed rgb(204, 204, 204); position: relative;\" t=\"5\" times=\" 09:30\">"
+						+ addInterviewDTO.getInterviewTime().substring(0, 10) + "</span> "
+						+ addInterviewDTO.getInterviewTime().substring(11, 16) + "</strong>");
+		html.append("<br> ");
+		html.append("<strong>面试地点：" + addInterviewDTO.getAddress() + "</strong>");
+		html.append("<br> ");
+		html.append("<strong>联系人：" + addInterviewDTO.getContacts() + "</strong>");
+		html.append("<br> ");
+		html.append("<strong>联系电话：" + addInterviewDTO.getPhone());
+		html.append("<br>");
+		html.append("<strong>备注：" + addInterviewDTO.getNote());
+		html.append("<br>");
+		html.append("<br>");
+		html.append("<div style=\"MARGIN-BOTTOM: 10px; HEIGHT: 30px; TEXT-ALIGN: right; MARGIN-TOP: 10px\">");
+		html.append("<span style=\"FONT-SIZE: 10pt; COLOR: #c0c0c0\"> </span>");
+		html.append("</div> ");
+		html.append("</div> ");
+
+		EmailUtil.sendMail(jobSeeker.getEmail(), "面试邀请", html.toString());
 	}
 
 	@Override
@@ -214,10 +291,11 @@ public class ResumeServiceImpl implements IResumeService {
 			for (Resume resume : resumes) {
 				ResumePoorDTO resumePoorDTO = new ResumePoorDTO();
 				resumePoorDTO.setId(resume.getId());
-				resumePoorDTO.setIsDefault(resume.getIsDelete());
+				resumePoorDTO.setPicUrl(jobSeeker.getImageUrl());
+				resumePoorDTO.setIsDefault(resume.getIsDefault());
 				resumePoorDTO.setName(resume.getName());
 				resumePoorDTO.setJobSeekerName(jobSeeker.getName());
-				resumePoorDTO.setIntegrity(0 + "%");
+				resumePoorDTO.setIntegrity(resume.getIntegrity() + "%");
 				resumePoorDTO.setWishCity(resume.getWishCity());
 				resumePoorDTO.setWorkDay(resume.getWorkDay());
 				resumePoorDTO.setWishPositionName(resume.getWishPositionName());
@@ -292,7 +370,9 @@ public class ResumeServiceImpl implements IResumeService {
 		resumeDTO.setGraduationSchool(jobSeeker.getGraduationSchool());
 		resumeDTO.setPhone(jobSeeker.getPhone());
 		resumeDTO.setEmail(jobSeeker.getEmail());
+		resumeDTO.setJobSeekerId(jobSeeker.getId());
 		resumeDTO.setJobSeekerName(jobSeeker.getName());
+		resumeDTO.setSex(jobSeeker.getSex());
 		resumeDTO.setName(resume.getName());
 		resumeDTO.setIsDefault(resume.getIsDefault());
 		resumeDTO.setWishPositionName(resume.getWishPositionName());
@@ -300,6 +380,7 @@ public class ResumeServiceImpl implements IResumeService {
 		resumeDTO.setPerDiem(resume.getPerDiem());
 		resumeDTO.setWorkDay(resume.getWorkDay());
 		resumeDTO.setWorkType(resume.getWorkType());
+		resumeDTO.setInternshipTime(resume.getInternshipTime());
 		resumeDTO.setArrivalDay(DateUtils.longToString(resume.getArrivalDay(), null));
 		resumeDTO.setEducationalBackgroundList(educationalBackgroundList);
 		resumeDTO.setInternshipExperienceList(internshipExperienceList);
@@ -322,10 +403,14 @@ public class ResumeServiceImpl implements IResumeService {
 				dto.setId(entity.getId());
 				dto.setStartTime(DateUtils.longToString(entity.getStartTime(), null));
 				dto.setEndTime(DateUtils.longToString(entity.getEndTime(), null));
-				dto.setEduation(entity.getEduation());
+				dto.setEducation(entity.getEduation());
 				dto.setSchool(entity.getSchool());
 				dto.setCity(entity.getCity());
 				dto.setMajor(entity.getMajor());
+				dto.setMajorType(entity.getMajorType());
+				dto.setMajorCourses(entity.getMajorCourses());
+				dto.setRanking(entity.getRanking());
+				dto.setHonor(entity.getHonor());
 				list.add(dto);
 			}
 		}
@@ -487,10 +572,14 @@ public class ResumeServiceImpl implements IResumeService {
 		entity.setResumeId(resumeId);
 		entity.setStartTime(DateUtils.stringToLong(dto.getStartTime(), null));
 		entity.setEndTime(DateUtils.stringToLong(dto.getEndTime(), null));
-		entity.setEduation(dto.getEduation());
+		entity.setEduation(dto.getEducation());
 		entity.setSchool(dto.getSchool());
 		entity.setCity(dto.getCity());
 		entity.setMajor(dto.getMajor());
+		entity.setMajorType(dto.getMajorType());
+		entity.setMajorCourses(dto.getMajorCourses());
+		entity.setRanking(dto.getRanking());
+		entity.setHonor(dto.getHonor());
 
 		if (dto.getId() != null) {
 			educationalBackgroundDAO.updateByPrimaryKeySelective(entity);
@@ -700,18 +789,19 @@ public class ResumeServiceImpl implements IResumeService {
 		ResumeExample example = new ResumeExample();
 		example.createCriteria().andJobSeekerIdEqualTo(jobSeekerId).andIsDeleteEqualTo(IsDeleteEnum.nomal.getId());
 		Long count = resumeDAO.countByExample(example);
-		
+
 		Resume resume = new Resume();
 		resume.setJobSeekerId(jobSeekerId);
 		resume.setLastAccess(new Date().getTime());
 		resume.setIsDelete(IsDeleteEnum.nomal.getId());
-		resume.setIsDefault(count != null && count>0 ? IsDefaultEnum.nomal.getId() : IsDefaultEnum.is_default.getId());
+		resume.setIsDefault(
+				count != null && count > 0 ? IsDefaultEnum.nomal.getId() : IsDefaultEnum.is_default.getId());
 		resume.setIntegrity(0);
 		resumeDAO.insertSelective(resume);
 	}
 
 	@Override
-	public void modifyResumeName(Long resumeId,String name) {
+	public void modifyResumeName(Long resumeId, String name) {
 		this.checkResume(resumeId);
 		Resume resume = new Resume();
 		resume.setId(resumeId);
@@ -722,12 +812,12 @@ public class ResumeServiceImpl implements IResumeService {
 
 	@Override
 	public void acceptInterview(Long deliveryResumeId) {
-		
+
 		DeliveryResume deliveryResume = deliveryResumeDAO.selectByPrimaryKey(deliveryResumeId);
-		if(deliveryResume == null) {
+		if (deliveryResume == null) {
 			throw new BizException("未找到投递信息");
 		}
-		
+
 		DeliveryResume newDeliveryResume = new DeliveryResume();
 		newDeliveryResume.setId(deliveryResumeId);
 		newDeliveryResume.setStatus(DeliveryResumeStatusEnum.accept.getId());
@@ -763,31 +853,178 @@ public class ResumeServiceImpl implements IResumeService {
 	public void deleteSelfEvaluation(Long selfEvaluationId) {
 		selfEvaluationDAO.deleteByPrimaryKey(selfEvaluationId);
 	}
+
+	@Override
+	public ResumeDTO conmpanyGetDeliveryResume(Long deliveryResumeId) {
+
+		DeliveryResume deliveryResume = deliveryResumeDAO.selectByPrimaryKey(deliveryResumeId);
+
+		if (deliveryResume == null) {
+			throw new BizException("未找到投递信息");
+		}
+
+		ResumeDTO resumeDTO = this.findById(deliveryResume.getResumeId());
+
+		Position position = positionDAO.selectByPrimaryKey(deliveryResume.getPositionId());
+
+		Interview interview = interviewDAO.getInterviewByDeliveryResumeId(deliveryResumeId);
+
+		resumeDTO.setPositionId(position.getId());
+		resumeDTO.setPositionName(position.getName());
+		resumeDTO.setDeliveryStatus(DeliveryResumeStatusEnum.getValueById(deliveryResume.getStatus()));
+		if (interview != null) {
+			resumeDTO.setInternshipTime(DateUtils.longToString(interview.getInterviewTime(), null));
+			resumeDTO.setInterviewAddress(interview.getAddress());
+			resumeDTO.setInterviewContract(interview.getContacts());
+			resumeDTO.setInterviewPhone(interview.getPhone());
+			resumeDTO.setInterviewNote(interview.getNote());
+		}
+
+		return resumeDTO;
+	}
+
+	@Override
+	public PageDTO<ResumeLibDTO> resumeLibList(ResumeSearchDTO resumeSearchDTO, Long page, Integer size) {
+
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		if (page == null || page <= 0) {
+			page = 1L;
+		}
+		if (size == null || size <= 0) {
+			size = 10;
+		}
+
+		params.put("starNum", (page - 1) * size);
+		params.put("size", size);
+
+		if (resumeSearchDTO == null) {
+			resumeSearchDTO = new ResumeSearchDTO();
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getName())) {
+			params.put("name", resumeSearchDTO.getName());
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getType())) {
+			params.put("type", resumeSearchDTO.getType());
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getSearchKey())) {
+			params.put("searchKey", resumeSearchDTO.getSearchKey());
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getCity())) {
+			params.put("city", resumeSearchDTO.getCity());
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getInternshipTime())) {
+			params.put("internshipTime", resumeSearchDTO.getInternshipTime());
+		}
+		if (resumeSearchDTO.getWorkDay() != null) {
+			params.put("workDay", resumeSearchDTO.getWorkDay());
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getArrayDay())) {
+			params.put("arrayDay", DateUtils.stringToLong(resumeSearchDTO.getArrayDay(), null));
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getEducation())) {
+			params.put("education", resumeSearchDTO.getEducation());
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getGraduationTime())) {
+			params.put("graduationTime", resumeSearchDTO.getGraduationTime());
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getGraduationSchool())) {
+			params.put("graduationSchool", resumeSearchDTO.getGraduationSchool());
+		}
+		if (!StringUtils.isEmpty(resumeSearchDTO.getSex())) {
+			params.put("sex", resumeSearchDTO.getSex());
+		}
+
+		List<ResumeLibDTO> list = resumeDAO.queryLibByPage(params);
+		Long count = resumeDAO.countLibByPage(params);
+
+		return new PageDTO<>(count, list, page, size);
+	}
+
+	@Override
+	public ResumeDTO conmpanyGetResume(Long companyId, Long resumeId) {
+
+		ResumeDTO resumeDTO = this.findById(resumeId);
+
+		Double amount = 0d;
+
+		boolean flag = true;
+
+		// 搜索简历是否投递过该公司，如果是，不需要付费，如果不是，需要付费
+		List<DeliveryResume> deliveryResumes = deliveryResumeDAO.getDeliveryResume(companyId, resumeId);
+		if (CollectionUtils.isNotEmpty(deliveryResumes)) {
+			flag = false;
+		}
+
+		// 判断公司是否下载付费过这个人，如果是，不需要付费
+		if (!companyJobSeekerDAO.comfirmIsPay(companyId, resumeDTO.getJobSeekerId())) {
+			flag = false;
+		}
+
+		if (flag) {
+			resumeDTO.setPhone(StringUtils.isEmpty(resumeDTO.getPhone()) ? ""
+					: resumeDTO.getPhone().substring(0, 3) + "****" + resumeDTO.getPhone().substring(7, 11));
+			resumeDTO.setPhone(StringUtils.isEmpty(resumeDTO.getEmail()) ? ""
+					: resumeDTO.getEmail().substring(0, 1) + "**********" + resumeDTO.getEmail()
+							.substring(resumeDTO.getEmail().indexOf("@"), resumeDTO.getEmail().length()));
+			amount = accountService.getAmountSettingByType(resumeDTO.getEducation());
+		}
+
+		resumeDTO.setNeedPay(flag);
+		resumeDTO.setAmount(amount);
+
+		return resumeDTO;
+	}
+
+	@Override
+	public XWPFDocument downloadResume(Long companyId, Long resumeId) {
+		Resume resume = resumeDAO.selectByPrimaryKey(resumeId);
+
+		// 判断是否已经付过费 true 没付过 false已经付过
+		boolean flag = companyJobSeekerDAO.comfirmIsPay(companyId, resume.getJobSeekerId());
+
+		// 没有付过就查询是否是被投递
+		if (flag) {
+			// 判断是否被投递给这家公司
+			List<DeliveryResume> list = deliveryResumeDAO.getDeliveryResume(companyId, resumeId);
+			flag = CollectionUtils.isNotEmpty(list) ? false : true;
+		}
+
+		if (flag) {
+			throw new BizException("简历未付费，下载失败");
+		}
+
+		String fileName = resume.getId() + "_" + resume.getLastAccess() + ".docx";
+		
+		// 下载
+		File file = new File(WordUtil.path +fileName);
+
+		try {
+			//XWPFDocument doc;
+			// 判断文件是否存在
+			if (!file.exists()) {
+				// 不存在，生成
+				ResumeDTO resumeDTO = this.findById(resumeId);
+				WordUtil.makeDoc(resumeDTO, fileName);
+				//生成文件
+			}
+			//存在直接去读取就可以
+			InputStream is = new FileInputStream(file);
+			return new XWPFDocument(is);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public InputStream downloadResumes(Long companyId, List<Long> resumeId) {
+			return null;
+	}
+	
+	
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

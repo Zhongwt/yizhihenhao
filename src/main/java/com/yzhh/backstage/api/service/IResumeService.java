@@ -1,6 +1,9 @@
 package com.yzhh.backstage.api.service;
 
+import java.io.InputStream;
 import java.util.List;
+
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.resume.AddInterviewDTO;
@@ -10,6 +13,7 @@ import com.yzhh.backstage.api.dto.resume.InternshipExperienceDTO;
 import com.yzhh.backstage.api.dto.resume.PageResumeDTO;
 import com.yzhh.backstage.api.dto.resume.ProjectExperienceDTO;
 import com.yzhh.backstage.api.dto.resume.ResumeDTO;
+import com.yzhh.backstage.api.dto.resume.ResumeLibDTO;
 import com.yzhh.backstage.api.dto.resume.ResumePoorDTO;
 import com.yzhh.backstage.api.dto.resume.ResumeSearchDTO;
 import com.yzhh.backstage.api.dto.resume.SelfEvaluationDTO;
@@ -45,11 +49,11 @@ public interface IResumeService {
 
 	// 简历详情
 	public ResumeDTO findById(Long resumeId);
-	
-	//修改简历名称
-	public void modifyResumeName(Long resumeId,String name);
-	
-	//新增简历
+
+	// 修改简历名称
+	public void modifyResumeName(Long resumeId, String name);
+
+	// 新增简历
 	public void add(Long jobSeekerId);
 
 	// 保存实习期望
@@ -73,19 +77,39 @@ public interface IResumeService {
 	// 保存自我评价
 	public void saveSelfEvaluation(Long resumeId, SelfEvaluationDTO selfEvaluationDTO);
 
-	//接受面试
+	// 接受面试
 	public void acceptInterview(Long deliveryResumeId);
-	
-	//删除实习
+
+	// 删除实习
 	public void deleteInternshipExperience(Long internshipExperienceId);
+
 	// 删除教育背景
 	public void deleteEducationalBackground(Long educationalBackgroundId);
+
 	// 删除项目经历
 	public void deleteProjectExperience(Long projectExperienceId);
+
 	// 删除技能爱好
 	public void deleteSkillHobby(Long skillHobbyId);
+
 	// 删除作品展示
 	public void deleteWorksShow(Long worksShowId);
+
 	// 删除自我评价
 	public void deleteSelfEvaluation(Long selfEvaluationId);
+
+	// 公司获取投递过来的简历
+	public ResumeDTO conmpanyGetDeliveryResume(Long deliveryResumeId);
+
+	// 简历库列表
+	public PageDTO<ResumeLibDTO> resumeLibList(ResumeSearchDTO resumeSearchDTO, Long page, Integer size);
+
+	// 公司获取投递过来的简历
+	public ResumeDTO conmpanyGetResume(Long companyId, Long resumeId);
+
+	// 下载单个简历
+	public XWPFDocument downloadResume(Long companyId, Long resumeId);
+
+	// 下载单个简历
+	public InputStream downloadResumes(Long companyId, List<Long> resumeId);
 }

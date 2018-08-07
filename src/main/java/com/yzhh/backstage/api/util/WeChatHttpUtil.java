@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -356,8 +357,7 @@ public class WeChatHttpUtil {
 		Map<String, Object> resultMap;
 		try {
 			WxPaySendData paySendData = new WxPaySendData();
-			String orderStr = "用户【"+userId+"】【"+userName+"】充值"+fee+"元";
-			//String userStr = userId+"_"+userName;
+			String orderStr = UUIDUtils.getUUID();
 			int totalFee = (int) (fee * 100);
 			// 构建微信支付请求参数集合
 			paySendData.setAppId(Constants.APPID);
@@ -372,6 +372,8 @@ public class WeChatHttpUtil {
 			paySendData.setTradeType(Constants.TRADE_TYPE_JSAPI);
 			paySendData.setSpBillCreateIp((String) map.get("remoteIp"));
 			paySendData.setOpenId((String) map.get("openId"));
+			paySendData.setTimeStart(DateUtils.dateToString(new Date(), DateUtils.no_yymmddhhmmss));
+			paySendData.setTimeExpire(DateUtils.dateToString(new Date(new Date().getTime() + Constants.TEN_MINUTES  * 1000), DateUtils.no_yymmddhhmmss));
 			// 将参数拼成map,生产签名
 			SortedMap<String, Object> params = buildParamMap(paySendData);
 			paySendData.setSign(WeChatHttpUtil.getSign(params));

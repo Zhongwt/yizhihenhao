@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.yzhh.backstage.api.dao.IResumeDAO;
 import com.yzhh.backstage.api.dao.mapper.custom.ResumeMapper2;
 import com.yzhh.backstage.api.dto.resume.PageResumeDTO;
+import com.yzhh.backstage.api.dto.resume.ResumeLibDTO;
 import com.yzhh.backstage.api.entity.Resume;
 import com.yzhh.backstage.api.entity.ResumeExample;
 import com.yzhh.backstage.api.enums.IsDeleteEnum;
@@ -54,5 +55,15 @@ public class ResumeDAOImpl extends DAOImpl<Resume, ResumeExample> implements IRe
 	@Override
 	public Long isDelivery(Map<String, Object> params) {
 		return mapper2.isDeliveryPosition(params);
+	}
+
+	@Override
+	public List<ResumeLibDTO> queryLibByPage(Map<String, Object> params) {
+		return mapper2.queryLibByPage(params);
+	}
+
+	@Override
+	public Long countLibByPage(Map<String, Object> params) {
+		return mapper2.countLibByPage(params);
 	}
 }

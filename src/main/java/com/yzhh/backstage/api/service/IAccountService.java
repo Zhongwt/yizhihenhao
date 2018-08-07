@@ -20,5 +20,5 @@ public interface IAccountService {
 	public PageDTO<DeliveryDTO> deliveryPayList(Long jobSeekerId,Long page,Integer size);
 	
 	//充值成功
-	public void paySuccess(Long relationId,String relationName,Integer type,Double totalFee);
+	public void paySuccess(Long relationId,Integer type,Double totalFee);
 }

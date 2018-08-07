@@ -1,6 +1,7 @@
 package com.yzhh.backstage.api.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -50,6 +51,7 @@ import com.yzhh.backstage.api.dto.resume.InternshipExperienceDTO;
 import com.yzhh.backstage.api.dto.resume.PageResumeDTO;
 import com.yzhh.backstage.api.dto.resume.ProjectExperienceDTO;
 import com.yzhh.backstage.api.dto.resume.ResumeDTO;
+import com.yzhh.backstage.api.dto.resume.ResumePoorDTO;
 import com.yzhh.backstage.api.dto.resume.ResumeSearchDTO;
 import com.yzhh.backstage.api.dto.resume.SelfEvaluationDTO;
 import com.yzhh.backstage.api.dto.resume.SkillHobbyDTO;
@@ -65,6 +67,7 @@ import com.yzhh.backstage.api.service.IJobSeekerService;
 import com.yzhh.backstage.api.service.IPositionService;
 import com.yzhh.backstage.api.service.IResumeService;
 import com.yzhh.backstage.api.service.IWxService;
+import com.yzhh.backstage.api.util.RedisUtil;
 import com.yzhh.backstage.api.util.ValidateUtil;
 import com.yzhh.backstage.api.util.WeChatHttpUtil;
 
@@ -83,12 +86,15 @@ public class JobSeekerController {
 	private ICompanyService companyService;
 	@Autowired
 	private IJobSeekerService jobSeekerService;
+	@SuppressWarnings("unused")
 	@Autowired
 	private IWxService wxService;
 	@Autowired
 	private IAccountService accountService;
 	@Autowired
 	private IResumeService resumeService;
+	@Autowired
+	private RedisUtil redisUtil;
 
 	private Logger logger = LoggerFactory.getLogger(JobSeekerController.class);
 	
@@ -119,7 +125,9 @@ public class JobSeekerController {
 			
 			// 下面就可以写自己的业务代码了
 			// 最后要返回一个自定义的登录态,用来做后续数据传输的验证
-			WeChatUserInfo user = wxService.getUserInfoService(req,openId,sessionKey);
+			WeChatUserInfo user = JSON.parseObject(req.getRawData(),WeChatUserInfo.class);
+			System.out.println(openId);
+			user.setOpenId(openId);
 			userDTO = jobSeekerService.login(user);
 		}
 
@@ -190,7 +198,8 @@ public class JobSeekerController {
 		WeChatPayDTO weChatPayDTO = null;
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		String openId = user.getOpenId();
-		String str = user.getId()+"_"+user.getName()+"_"+AccountTypeEnum.job_seeker.getId()+"_"+amount;
+		String str = user.getId()+"_"+AccountTypeEnum.job_seeker.getId()+"_"+amount;
+		redisUtil.set(str, "123",Constants.TEN_MINUTES);
 		//String str = user.getId() + "_" + positionId + "_" + totalFee;
 		// 通过code获取网页授权access_token
 		// 构建微信统一下单需要的参数
@@ -290,9 +299,9 @@ public class JobSeekerController {
 	public ApiResponse resumeList(HttpServletRequest request) {
 
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
-		resumeService.getJobSeekerResumePoorList(user.getId());
+		List<ResumePoorDTO> list = resumeService.getJobSeekerResumePoorList(user.getId());
 		
-		return new ApiResponse();
+		return new ApiResponse(list);
 	}
 	
 	@ApiOperation(value = "将简历设置成默认", notes = "", tags = { "求职者部分api" })
@@ -346,7 +355,7 @@ public class JobSeekerController {
 	@GetMapping("/account/log")
 	public ApiResponse myAccountLog(@RequestParam Long accountId,String type,Long page,Integer size) {
 
-		PageDTO<AccountLogDTO> pageDTO = accountService.getAccountLogList(accountId,null, page, size);
+		PageDTO<AccountLogDTO> pageDTO = accountService.getAccountLogList(accountId,type, page, size);
 
 		return new ApiResponse(pageDTO);
 	}

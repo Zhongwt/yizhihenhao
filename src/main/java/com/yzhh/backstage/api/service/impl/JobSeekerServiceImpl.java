@@ -124,8 +124,10 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 		DeliveryResume deliveryResume = new DeliveryResume();
 		deliveryResume.setLastAccess(date.getTime());
 		deliveryResume.setResumeId(resume.getId());
+		deliveryResume.setPositionId(positionId);
 		deliveryResume.setDeliveryTime(date.getTime());
 		deliveryResume.setStatus(DeliveryResumeStatusEnum.notlook.getId());
+		deliveryResume.setMoney(amount);
 		deliveryResumeDAO.insertSelective(deliveryResume);
 		
 		accountDAO.consumptionWater(account, amount, "用户使用"+resume.getName()+"简历，投递"+position.getName()+"职位，消费"+amount+"元");

@@ -2,49 +2,74 @@ package com.yzhh.backstage.api.dto.position;
 
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class PositionDTO {
 
 	private Long id;
 	@NotNull
+	@ApiModelProperty(value="公司id")
 	private Long companyId;
 	@NotNull
+	@ApiModelProperty(value="职位类型")
 	private String type;
 	@NotNull
+	@ApiModelProperty(value="职位名称")
 	private String name;
 	@NotNull
+	@ApiModelProperty(value="城市")
 	private String city;
-	@NotNull
+	@ApiModelProperty(value="招聘人数")
 	private Integer perpleNum;
+	@ApiModelProperty(value="职位诱惑")
 	private String seduction;			//职位诱惑
 	@NotNull
+	@ApiModelProperty(value="学历要求")
 	private String education;			//学历
+	@ApiModelProperty(value="招聘位置")
 	private String address;
-	@NotNull
+	@ApiModelProperty(value="工作类型")
 	private String workType;			//工作类型
-	@NotNull
-	private String internshipTime;	//实习时间
-	@NotNull
+	@ApiModelProperty(value="实习时间/工作时长")
+	private String internshipTime;	//实习时间/工作时长
+	@ApiModelProperty(value="日薪")
 	private String perDiem;			//日薪
-	@NotNull
+	@ApiModelProperty(value="周工作时间")
 	private String workTime;		//周工作时间
-	@NotNull
+	@ApiModelProperty(value="转正机会")
 	private String correctionChance;	//转正机会
 	@NotNull
+	@ApiModelProperty(value="截止日期")
 	private String deadline;				//截止日期
+	@ApiModelProperty(value="是否急招")
 	private Boolean isPressing;			//急招？
+	@ApiModelProperty(value="职位描述")
 	private String description;			//描述
+	@ApiModelProperty(value="发布时间")
 	private String releaseDate;			//发布时间
+	@ApiModelProperty(value="状态")
 	private String status;					//
+	@ApiModelProperty(value="更新时间")
 	private String updateTime;			//
+	@ApiModelProperty(value="投递人数")
 	private String deliveryNum;			//
+	@ApiModelProperty(value="工作时长")
 	private String workDate;				//工作时长
+	@ApiModelProperty(value="公司logo")
 	private String companyLogo;		//
+	@ApiModelProperty(value="公司名称")
 	private String companyName;		//
+	@ApiModelProperty(value="公司领域")
 	private String companyField;			//公司领域
+	@ApiModelProperty(value="公司规模")
 	private String companyScale;		//公司规模
+	@ApiModelProperty(value="公司昵称")
 	private String companyNickName;		//公司规模
+	@ApiModelProperty(value="是否收藏")
 	private Boolean isCollection;		//是否收藏
-	private String required;		//职位要求
+	@ApiModelProperty(value="简历要求")
+	private String required;				//简历要求
+	@ApiModelProperty(value="是否投递")
 	private Boolean isDelivery;			//是否投递
 	
 	

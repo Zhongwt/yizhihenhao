@@ -15,7 +15,7 @@ public class EducationalBackgroundDTO {
 	private String endTime;
 	@NotNull
 	@ApiModelProperty(value = "学历")
-	private String eduation;
+	private String education;
 	@NotNull
 	@ApiModelProperty(value = "学校")
 	private String school;
@@ -25,6 +25,14 @@ public class EducationalBackgroundDTO {
 	@NotNull
 	@ApiModelProperty(value = "专业")
 	private String major;
+	@ApiModelProperty(value = "专业类别")
+	private String majorType;
+	@ApiModelProperty(value = "专业课程")
+	private String majorCourses;
+	@ApiModelProperty(value = "专业排名")
+	private String ranking;
+	@ApiModelProperty(value = "荣誉")
+	private String honor;
 	
 	public Long getId() {
 		return id;
@@ -44,14 +52,14 @@ public class EducationalBackgroundDTO {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
-	public String getEduation() {
-		return eduation;
-	}
-	public void setEduation(String eduation) {
-		this.eduation = eduation;
-	}
 	public String getSchool() {
 		return school;
+	}
+	public String getEducation() {
+		return education;
+	}
+	public void setEducation(String education) {
+		this.education = education;
 	}
 	public void setSchool(String school) {
 		this.school = school;
@@ -67,5 +75,29 @@ public class EducationalBackgroundDTO {
 	}
 	public void setMajor(String major) {
 		this.major = major;
+	}
+	public String getMajorType() {
+		return majorType;
+	}
+	public void setMajorType(String majorType) {
+		this.majorType = majorType;
+	}
+	public String getMajorCourses() {
+		return majorCourses;
+	}
+	public void setMajorCourses(String majorCourses) {
+		this.majorCourses = majorCourses;
+	}
+	public String getRanking() {
+		return ranking;
+	}
+	public void setRanking(String ranking) {
+		this.ranking = ranking;
+	}
+	public String getHonor() {
+		return honor;
+	}
+	public void setHonor(String honor) {
+		this.honor = honor;
 	}
 }

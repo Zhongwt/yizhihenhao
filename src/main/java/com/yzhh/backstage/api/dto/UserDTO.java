@@ -22,6 +22,7 @@ public class UserDTO {
 	private String major;
 	private String majorType;
 	private String note;
+	private String nickName;
 	
 	public Long getId() {
 		return id;
@@ -142,5 +143,11 @@ public class UserDTO {
 	}
 	public void setNote(String note) {
 		this.note = note;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 }

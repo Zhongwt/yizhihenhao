@@ -1,16 +1,31 @@
 package com.yzhh.backstage.api.dto.company;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class StatisticsDTO {
 	
-	private Long pendingResumeCount;			//多少待处理简历
-	private Long notlookResumeCount;				//为查看简历
-	private Long underwayPositionCount;			//在招职位
-	private Long overduePositionCount;			//即将过期
-	private Long alreadyExpiredPositionCount;	//已经过期职位
-	private Long simpleTreatmentPercentage;	//简历处理率
-	private Long acceptResumeCount;				//收到简历数量
-	private Long releasePositionCount;				//发布职位数量
-	private Long interviewCount;						//面试数量
+	@ApiModelProperty(value = "多少待处理简历")
+	private Long pendingResumeCount;			//
+	@ApiModelProperty(value = "未查看简历")
+	private Long notlookResumeCount;				//
+	@ApiModelProperty(value = "在招职位")
+	private Long underwayPositionCount;			//
+	@ApiModelProperty(value = "即将过期")
+	private Long overduePositionCount;			//
+	@ApiModelProperty(value = "已经过期职位")
+	private Long alreadyExpiredPositionCount;	//
+	@ApiModelProperty(value = "简历处理率")
+	private Long simpleTreatmentPercentage;	//
+	@ApiModelProperty(value = "收到简历数量")
+	private Long acceptResumeCount;				//
+	@ApiModelProperty(value = "发布职位数量")
+	private Long releasePositionCount;				//
+	@ApiModelProperty(value = "面试数量")
+	private Long interviewCount;						//
+	@ApiModelProperty(value = "将要面试数量")
+	private Long willInterviewCount;					//
+	@ApiModelProperty(value = "今日面试数量")
+	private Long todayInterviewCount;				//
 	
 	public Long getPendingResumeCount() {
 		return pendingResumeCount;
@@ -65,5 +80,17 @@ public class StatisticsDTO {
 	}
 	public void setInterviewCount(Long interviewCount) {
 		this.interviewCount = interviewCount;
+	}
+	public Long getWillInterviewCount() {
+		return willInterviewCount;
+	}
+	public void setWillInterviewCount(Long willInterviewCount) {
+		this.willInterviewCount = willInterviewCount;
+	}
+	public Long getTodayInterviewCount() {
+		return todayInterviewCount;
+	}
+	public void setTodayInterviewCount(Long todayInterviewCount) {
+		this.todayInterviewCount = todayInterviewCount;
 	}
 }

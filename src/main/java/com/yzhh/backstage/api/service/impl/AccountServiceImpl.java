@@ -93,7 +93,7 @@ public class AccountServiceImpl implements IAccountService{
 			for(AccountLog accountLog : accountLogs) {
 				AccountLogDTO accountLogDTO = new AccountLogDTO();
 				accountLogDTO.setId(accountLog.getId());
-				accountLogDTO.setUpdateTime(DateUtils.longToString(accountLog.getLastAccess(), null));
+				accountLogDTO.setUpdateTime(DateUtils.longToString(accountLog.getLastAccess(), DateUtils.yymmddhhmmss));
 				accountLogDTO.setStream(accountLog.getSteam());
 				accountLogDTO.setNote(accountLog.getNote());
 				list.add(accountLogDTO);
@@ -136,7 +136,7 @@ public class AccountServiceImpl implements IAccountService{
 	}
 
 	@Override
-	public void paySuccess(Long relationId, String relationName, Integer type,Double totalFee) {
+	public void paySuccess(Long relationId, Integer type,Double totalFee) {
 		Account account = accountDAO.getAccountByRelationId(relationId, type);
 		
 		if(account == null) {
@@ -158,6 +158,6 @@ public class AccountServiceImpl implements IAccountService{
 			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
 		}
 		
-		accountDAO.rechargeWater(account, totalFee,largessAmount , "用户【"+relationName+"】充值【"+totalFee+"】元成功");
+		accountDAO.rechargeWater(account, totalFee,largessAmount , "用户充值【"+totalFee+"】元成功");
 	}
 }

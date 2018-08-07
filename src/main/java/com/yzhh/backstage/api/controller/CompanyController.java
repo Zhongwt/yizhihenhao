@@ -1,10 +1,17 @@
 package com.yzhh.backstage.api.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yzhh.backstage.api.commons.ApiResponse;
@@ -35,6 +43,8 @@ import com.yzhh.backstage.api.dto.position.PositionDTO;
 import com.yzhh.backstage.api.dto.position.SearchPositionDTO;
 import com.yzhh.backstage.api.dto.resume.AddInterviewDTO;
 import com.yzhh.backstage.api.dto.resume.PageResumeDTO;
+import com.yzhh.backstage.api.dto.resume.ResumeDTO;
+import com.yzhh.backstage.api.dto.resume.ResumeLibDTO;
 import com.yzhh.backstage.api.dto.resume.ResumeSearchDTO;
 import com.yzhh.backstage.api.enums.CompanyStatusEnum;
 import com.yzhh.backstage.api.enums.DeliveryResumeStatusEnum;
@@ -44,6 +54,8 @@ import com.yzhh.backstage.api.service.IPositionService;
 import com.yzhh.backstage.api.service.IResumeService;
 import com.yzhh.backstage.api.util.ValidateUtil;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @Validated
@@ -153,6 +165,8 @@ public class CompanyController {
 	}
 
 	@ApiOperation(value = "企业通知列表", notes = "", tags = { "企业部分api" })
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "page", value = "页码"),
+		@ApiImplicitParam(paramType = "query", dataType = "int", name = "size", value = "页面大小")})
 	@GetMapping("/notice/info")
 	public ApiResponse companyNoticeList(HttpServletRequest request, Long page, Integer size) {
 
@@ -205,7 +219,7 @@ public class CompanyController {
 		return new ApiResponse();
 	}
 
-	@ApiOperation(value = "保存职位", notes = "新增和修改职位通用，区别在于职位id是否有传", tags = { "管理员部分api" })
+	@ApiOperation(value = "保存职位", notes = "新增和修改职位通用，区别在于职位id是否有传", tags = { "企业部分api" })
 	@PostMapping("/save/position")
 	public ApiResponse saveOrUpdatePosition(HttpServletRequest request, @RequestBody @Valid PositionDTO positionDTO,
 			BindingResult result) {
@@ -225,7 +239,7 @@ public class CompanyController {
 		return new ApiResponse();
 	}
 
-	@ApiOperation(value = "职位列表", notes = "", tags = { "管理员部分api" })
+	@ApiOperation(value = "职位列表", notes = "", tags = { "企业部分api" })
 	@PostMapping("/position/list")
 	public ApiResponse positionList(HttpServletRequest request, @RequestBody SearchPositionDTO searchPositionDTO,
 			Long page, Integer size) {
@@ -235,7 +249,7 @@ public class CompanyController {
 		return new ApiResponse(p);
 	}
 
-	@ApiOperation(value = "职位详情", notes = "", tags = { "管理员部分api" })
+	@ApiOperation(value = "职位详情", notes = "", tags = { "企业部分api" })
 	@GetMapping("/position/{id}")
 	public ApiResponse positionInfo(@PathVariable Long id) {
 
@@ -244,7 +258,7 @@ public class CompanyController {
 		return new ApiResponse(positionDTO);
 	}
 
-	@ApiOperation(value = "下线职位", notes = "", tags = { "管理员部分api" })
+	@ApiOperation(value = "下线职位", notes = "", tags = { "企业部分api" })
 	@PutMapping("/position/downline")
 	public ApiResponse downLinePosition(HttpServletRequest request, @RequestBody List<Long> ids) {
 
@@ -258,9 +272,9 @@ public class CompanyController {
 		return new ApiResponse();
 	}
 
-	@ApiOperation(value = "简历列表", notes = "这个对接的时候再说", tags = { "管理员部分api" })
-	@PostMapping("/resume/list")
-	public ApiResponse resumeList(HttpServletRequest request, @RequestBody ResumeSearchDTO resumeSearchDTO, Long page,
+	@ApiOperation(value = "投递过来的简历列表", notes = "这个对接的时候再说", tags = { "企业部分api" })
+	@PostMapping("/delivery/resume/list")
+	public ApiResponse deliveryResumeList(HttpServletRequest request, @RequestBody ResumeSearchDTO resumeSearchDTO, Long page,
 			Integer size) {
 
 		if (resumeSearchDTO == null) {
@@ -273,64 +287,47 @@ public class CompanyController {
 		return new ApiResponse(p);
 	}
 
-	@ApiOperation(value = "简历详情", notes = "", tags = { "管理员部分api" })
-	@PostMapping("/resume/{deliveryResumeId}")
-	public ApiResponse resumeList(HttpServletRequest request, @PathVariable Long deliveryResumeId) {
+	@ApiOperation(value = "投递过来的简历详情", notes = "", tags = { "企业部分api" })
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "path", dataType = "long", name = "deliveryResumeId", value = "投递简历id")})
+	@PostMapping("/delivery/resume/{deliveryResumeId}")
+	public ApiResponse deliveryResumeInfo(HttpServletRequest request, @PathVariable Long deliveryResumeId) {
 
-		return new ApiResponse();
+		ResumeDTO resumeDTO = resumeService.conmpanyGetDeliveryResume(deliveryResumeId);
+		
+		return new ApiResponse(resumeDTO);
 	}
 
-	@ApiOperation(value = "批量查看简历", notes = "", tags = { "管理员部分api" })
+	@ApiOperation(value = "批量查看简历", notes = "", tags = { "企业部分api" })
 	@PutMapping("/resume/look")
 	public ApiResponse lockResume(HttpServletRequest request, @RequestBody List<Long> ids) {
-
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
-		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
-			throw new BizException("公司无权操作简历");
-		}
 
 		resumeService.updateStatus(ids, DeliveryResumeStatusEnum.look.getId());
 
 		return new ApiResponse();
 	}
 
-	@ApiOperation(value = "批量待定简历", notes = "", tags = { "管理员部分api" })
+	@ApiOperation(value = "批量待定简历", notes = "", tags = { "企业部分api" })
 	@PutMapping("/resume/pending")
 	public ApiResponse pendingResume(HttpServletRequest request, @RequestBody List<Long> ids) {
-
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
-		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
-			throw new BizException("公司无权操作简历");
-		}
 
 		resumeService.updateStatus(ids, DeliveryResumeStatusEnum.pending.getId());
 
 		return new ApiResponse();
 	}
 
-	@ApiOperation(value = "批量不合适简历", notes = "", tags = { "管理员部分api" })
+	@ApiOperation(value = "批量不合适简历", notes = "", tags = { "企业部分api" })
 	@PutMapping("/resume/not")
 	public ApiResponse notRightResume(HttpServletRequest request, @RequestBody List<Long> ids) {
-
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
-		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
-			throw new BizException("公司无权操作简历");
-		}
 
 		resumeService.updateStatus(ids, DeliveryResumeStatusEnum.not_right.getId());
 
 		return new ApiResponse();
 	}
 
-	@ApiOperation(value = "邀请面试", notes = "", tags = { "管理员部分api" })
+	@ApiOperation(value = "邀请面试", notes = "", tags = { "企业部分api" })
 	@PostMapping("/interview/invitation")
 	public ApiResponse interviewInvitation(HttpServletRequest request,
 			@RequestBody @Valid AddInterviewDTO addInterviewDTO, BindingResult result) {
-
-		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
-		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
-			throw new BizException("公司无权邀请面试");
-		}
 
 		if (result.hasErrors()) {
 			ValidateUtil.throwBeanValidationException(result, CommonError.REQUEST_PARAMETER_ERROR.getId());
@@ -341,8 +338,79 @@ public class CompanyController {
 		return new ApiResponse();
 	}
 
-	public ApiResponse resumeList(HttpServletRequest request) {
-		return null;
+	@ApiOperation(value = "简历列表，企业自主查询的简历，不是用户投递过来的简历", notes = "", tags = { "企业部分api" })
+	@PostMapping("/resume/list")
+	public ApiResponse resumeList(HttpServletRequest request,@RequestBody ResumeSearchDTO resumeSearchDTO, Long page,
+			Integer size) {
+		
+		PageDTO<ResumeLibDTO> p = resumeService.resumeLibList(resumeSearchDTO, page, size);
+		
+		return new ApiResponse(p);
+	}
+	
+	@ApiOperation(value = "简历详情，企业自主查询的简历，不是用户投递过来的简历", notes = "", tags = { "企业部分api" })
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "resumeId", value = "简历id")})
+	@GetMapping("/resume/info")
+	public ApiResponse resumeInfo(HttpServletRequest request,@RequestParam Long resumeId) {
+		
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		
+		ResumeDTO resumeDTO = resumeService.conmpanyGetResume(user.getId(), resumeId);
+		
+		return new ApiResponse(resumeDTO);
+	}
+	
+	@ApiOperation(value = "下载单个简历", notes = "", tags = { "企业部分api" })
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "resumeId", value = "简历id")})
+	@GetMapping("/down/resume")
+	public ApiResponse downloadResume(HttpServletRequest request,HttpServletResponse response, @RequestParam Long resumeId) {
+		
+		//UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		
+		try {
+			//XWPFDocument doc = resumeService.downloadResume(user.getId(), resumeId);
+			XWPFDocument doc = resumeService.downloadResume(1L, 1L);
+			OutputStream os = response.getOutputStream();
+			response.setContentType("text/html; charset=UTF-8");
+			response.setContentType("application/msword");  
+	        response.setHeader("Content-disposition","attachment;filename="+URLEncoder.encode("李康杰简历"+".docx", "UTF-8"));  
+	        doc.write(os);  
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return new ApiResponse();
+	}
+	
+	@ApiOperation(value = "批量下载简历简历", notes = "", tags = { "企业部分api" })
+	@PostMapping("/down/resume/list")
+	public ApiResponse downloadResumes(HttpServletRequest request,HttpServletResponse response, @RequestBody List<Long> resumeIds) {
+		
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		
+		try {
+			// 以流的形式下载文件。
+			InputStream fis = resumeService.downloadResumes(user.getId(), resumeIds);
+			byte[] buffer = new byte[fis.available()];
+			fis.read(buffer);
+			fis.close();
+			// 清空response
+			response.reset();
+
+			OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+			response.setContentType("application/octet-stream");
+
+			// 如果输出的是中文名的文件，在此处就要用URLEncoder.encode方法进行处理
+			response.setHeader("Content-Disposition",
+					"attachment;filename=" + URLEncoder.encode("简历.rar", "UTF-8"));
+			toClient.write(buffer);
+			toClient.flush();
+			toClient.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} 
+		
+		return new ApiResponse();
 	}
 
 }

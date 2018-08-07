@@ -18,6 +18,7 @@ public class Interview extends BaseEntity{
     private String contacts;				//
     private String phone;					//
     private String note;						//
+    private String subject;	
 
     public Long getDeliveryResumeId() {
         return deliveryResumeId;
@@ -74,4 +75,12 @@ public class Interview extends BaseEntity{
     public void setNote(String note) {
         this.note = note == null ? null : note.trim();
     }
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 }

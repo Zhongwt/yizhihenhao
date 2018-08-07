@@ -3,7 +3,7 @@
 <mapper namespace="com.yzhh.backstage.api.dao.mapper.custom.InterviewMapper2">
   
   <!-- 统计某个公司面试数量 -->
-  <select id="countInterview" resultType="Long" parameterType="Long">
+  <select id="countInterview" resultType="Long">
   	SELECT
 		count(i.id)
 	FROM
@@ -14,6 +14,12 @@
 		i.delivery_resume_id = dr.id
 	AND dr.position_id = p.id
 	AND p.company_id = #{companyId}
+	<if test="interviewTimeStar != null">
+		AND  i.interview_time  &gt; #{interviewTimeStar}
+	</if>
+	<if test="interviewTimeEnd != null">
+		AND  i.interview_time  &lt; #{interviewTimeEnd}
+	</if>
   </select>
   
 </mapper>

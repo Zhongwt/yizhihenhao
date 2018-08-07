@@ -6,10 +6,14 @@ public class ResumeSearchDTO {
 
 	@ApiModelProperty(value = "")
 	public String type;
-	@ApiModelProperty(value = "")
+	@ApiModelProperty(value = "职位名称")
+	public String name;
+	@ApiModelProperty(value = "搜索姓名或学校")
 	private String searchKey;
 	@ApiModelProperty(value = "城市")
 	private String city;
+	@ApiModelProperty(value = "实习时间")
+	private String internshipTime;
 	@ApiModelProperty(value = "工作时间")
 	private Integer workDay;
 	@ApiModelProperty(value = "到岗日期")
@@ -18,6 +22,8 @@ public class ResumeSearchDTO {
 	private String education;
 	@ApiModelProperty(value = "毕业时间")
 	private String graduationTime;
+	@ApiModelProperty(value = "毕业学校")
+	private String graduationSchool;
 	@ApiModelProperty(value = "简历性别")
 	private String sex;
 	@ApiModelProperty(value = "状态")
@@ -99,5 +105,23 @@ public class ResumeSearchDTO {
 	}
 	public void setJobSeekerId(Long jobSeekerId) {
 		this.jobSeekerId = jobSeekerId;
+	}
+	public String getGraduationSchool() {
+		return graduationSchool;
+	}
+	public void setGraduationSchool(String graduationSchool) {
+		this.graduationSchool = graduationSchool;
+	}
+	public String getInternshipTime() {
+		return internshipTime;
+	}
+	public void setInternshipTime(String internshipTime) {
+		this.internshipTime = internshipTime;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 }

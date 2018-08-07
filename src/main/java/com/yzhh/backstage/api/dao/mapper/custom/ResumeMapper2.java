@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.yzhh.backstage.api.dto.resume.PageResumeDTO;
+import com.yzhh.backstage.api.dto.resume.ResumeLibDTO;
 
 @Mapper
 public interface ResumeMapper2 {
@@ -24,4 +25,9 @@ public interface ResumeMapper2 {
 
 	// 获取一个人是否投递了职位
 	public Long isDeliveryPosition(Map<String, Object> params);
+	
+	//分页查简历库
+	public List<ResumeLibDTO> queryLibByPage(Map<String,Object> params);
+	
+	public Long countLibByPage(Map<String,Object> params);
 }

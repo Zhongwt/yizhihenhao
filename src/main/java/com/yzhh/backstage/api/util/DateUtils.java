@@ -20,6 +20,8 @@ public class DateUtils {
 	public static final String YYYYMMdd = "yyyy-MM-dd";
 	public static final String yymmddhhmmss = "yyyy-MM-dd HH:mm:ss";
 	
+	public static final String no_yymmddhhmmss = "yyyyMMddHHmmss";
+	
 	public static final Long one_hour = 1000L * 60 * 60; 
 
 	/**
@@ -42,6 +44,9 @@ public class DateUtils {
 	 * @createTime:2018年6月21日 下午5:08:29
 	 */
 	public static String dateToString(Date startDate, String type) {
+		if(startDate == null) {
+			return null;
+		}
 		if (type == null) {
 			type = YYYYMMdd;
 		}
@@ -50,6 +55,9 @@ public class DateUtils {
 	}
 
 	public static String longToString(Long millis, String type) {
+		if(millis == null) {
+			return null;
+		}
 		if (type == null) {
 			type = YYYYMMdd;
 		}

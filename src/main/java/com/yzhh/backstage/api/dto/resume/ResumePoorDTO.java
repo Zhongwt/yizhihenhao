@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 public class ResumePoorDTO {
 
 	private Long id;
+	@ApiModelProperty(value = "头像")
+	private String picUrl;
 	@ApiModelProperty(value = "是否默认")
 	private Integer isDefault;
 	@ApiModelProperty(value = "简历名称")
@@ -75,5 +77,11 @@ public class ResumePoorDTO {
 	}
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
+	}
+	public String getPicUrl() {
+		return picUrl;
+	}
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
 	}
 }

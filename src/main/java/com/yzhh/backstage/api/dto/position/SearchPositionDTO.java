@@ -33,6 +33,8 @@ public class SearchPositionDTO {
 	@ApiModelProperty(value = "工作类型")
 	private String workType;			//工作类型
 	
+	//private String schoolType;
+	
 	@ApiModelProperty(value = "收藏职位id集合，前端不用传")
 	private Set<Long> positionIds;
 	

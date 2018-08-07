@@ -352,17 +352,29 @@ public class CompanyServiceImpl implements ICompanyService {
 		Long notlookResumeCount = resumeDAO.countResume(params);  ;            //为未查看简历
 		
 		params.put("status", PositionStatusEnum.audited.getId());
-		params.put("deadLineEnd", dataTime);
+		params.put("deadLineStar", dataTime);
 		Long underwayPositionCount = positionDAO.countByPage(params);         //在招职位
 		
-		params.put("deadLineEnd", null);
-		params.put("deadLineStar", dataTime);
+		params.put("deadLineEnd", dataTime);
+		params.put("deadLineStar", null);
 		Long alreadyExpiredPositionCount = positionDAO.countByPage(params);   //已经过期职位
 		
 		params.put("deadLineStar", (dataTime - DateUtils.one_hour * 2));
 		Long overduePositionCount = positionDAO.countByPage(params);          //即将过期
 		
-		Long interviewCount = interviewDAO.countInterviewCount(companyId);                        //面试数量
+		params.put("deadLineStar", null);
+		params.put("status", null);
+		params.put("interviewTimeEnd", dataTime);
+		Long interviewCount = interviewDAO.countInterviewCount(params);                        //面试数量
+		
+		params.put("interviewTimeEnd", null);
+		params.put("interviewTimeStar", dataTime);
+		Long willInterviewCount = interviewDAO.countInterviewCount(params);  
+		
+		System.out.println(DateUtils.longToString(dataTime, DateUtils.YYYYMMdd)+" 23:59:59");
+		Long endTime = DateUtils.stringToLong(DateUtils.longToString(dataTime, DateUtils.YYYYMMdd)+" 23:59:59", DateUtils.yymmddhhmmss);
+		params.put("interviewTimeEnd", endTime);
+		Long todayInterviewCount = interviewDAO.countInterviewCount(params);  
 		
 		StatisticsDTO statisticsDTO = new StatisticsDTO();
 		statisticsDTO.setPendingResumeCount(pendingResumeCount);
@@ -374,6 +386,8 @@ public class CompanyServiceImpl implements ICompanyService {
 		statisticsDTO.setAcceptResumeCount(acceptResumeCount);
 		statisticsDTO.setReleasePositionCount(releasePositionCount);
 		statisticsDTO.setInterviewCount(interviewCount);
+		statisticsDTO.setWillInterviewCount(willInterviewCount);
+		statisticsDTO.setTodayInterviewCount(todayInterviewCount);
 		
 		return statisticsDTO;
 	}
@@ -542,6 +556,7 @@ public class CompanyServiceImpl implements ICompanyService {
 		companyDTO.setEmail(company.getEmail());
 		companyDTO.setPhone(company.getPhone());
 		companyDTO.setStatus(CompanyStatusEnum.getValueById(company.getStatus()));
+		companyDTO.setNickName(company.getNickName());
 		
 		redisUtil.set(Constants.COMPANY_LOGIN +companyDTO.getId(), companyDTO,Constants.TWO_HOUR);
 		
@@ -590,6 +605,7 @@ public class CompanyServiceImpl implements ICompanyService {
 		company.setArea(updateCompanyDTO.getArea());
 		company.setDescription(updateCompanyDTO.getDescription());
 		company.setLogo(updateCompanyDTO.getLogo());
+		company.setAddress(updateCompanyDTO.getAddress());
 		
 		companyDAO.updateByPrimaryKeySelective(company);
 		

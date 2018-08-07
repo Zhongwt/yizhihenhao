@@ -26,6 +26,9 @@
  		<if test="graduationTime != null">
  			AND js.graduation_time = #{graduationTime}
  		</if>
+ 		<if test="graduationSchool != null">
+ 			AND js.graduation_school = #{graduationSchool}
+ 		</if>
  		<if test="sex != null">
  			AND js.sex = #{sex}
  		</if>
@@ -44,13 +47,19 @@
  		<if test="status != null and status == 5">
  			AND dr.status in (5,6)
  		</if>
+ 		<if test="name != null">
+ 			AND p.name = #{name}
+ 		</if>
  	</sql>
  	
  	<!-- 分页查询日志 -->
  	<select id="queryByPage" resultType="com.yzhh.backstage.api.dto.resume.PageResumeDTO">
  		SELECT
 			r.deliveryResumeId,
+			r.id id,
+			r.deliveryTime,
 			r. NAME,
+			r.wishPositionName,
 			r.jobSeekerName,
 			r.sex,
 			r.city,
@@ -61,81 +70,87 @@
 			r.education,
 			r.major,
 			r.graduationTime,
-			i.interview_time interviewTime,
 			r.status status,
 			r.companyId,
+			r.companyAddress,
 			r.companyName,
-			r.companyLogo
+			r.companyLogo,
+			r.positionName,
+			r.positionType,
+			from_unixtime(
+				i.interview_time  / 1000,
+				'%Y-%m-%d %H:%m:%s'
+			) interviewTime,
+			i.address interviewAddress,
+			i.phone interviewPhone,
+			i.contacts interviewContract,
+			i.note interviewNote
 		FROM
 			(
 				SELECT
 					dr.id deliveryResumeId,
+					dr.last_access,
+					r.id id,
+					from_unixtime(
+						dr.delivery_time / 1000,
+						'%Y-%m-%d %H:%m:%s'
+					) deliveryTime,
 					r.name name,
+					r.wish_position_name wishPositionName,
 					js.name jobSeekerName,
 					js.sex sex,
 					js.city city,
 					r.work_day workDay,
 					r.internship_time internshipTime,
-					r.arrival_day arrivalDay,
+					from_unixtime(
+						r.arrival_day / 1000,
+						'%Y-%m-%d %H:%m:%s'
+					)  arrivalDay,
 					js.graduation_school graduationSchool,
 					js.education education,
 					js.major major,
 					js.graduation_time graduationTime,
 					dr.status,
-					p.name companyName,
-					p.id companyId,
-					p.logo companyLogo
+					c.name companyName,
+					c.id companyId,
+					c.logo companyLogo,
+					c.address companyAddress,
+					p.name positionName,
+					p.type positionType
 				FROM
 					job_seeker js,
 					delivery_resume dr,
 					resume r,
-					position p
+					position p,
+					company c
 				WHERE
 					r.job_seeker_id = js.id
 				AND dr.position_id = p.id
 				AND dr.resume_id = r.id
+				AND c.id = p.company_id
 				<include refid="condition_sql"></include>
 			) r
 		LEFT JOIN interview i ON r.deliveryResumeId = i.delivery_resume_id
-		<where>
-			<include refid="condition_sql"></include>
-		</where>
-		order by last_access desc 
+		order by r.last_access desc 
 		LIMIT #{starNum},#{size}
  	</select>
  	
  	<!-- 分页查询日志 -->
  	<select id="countByPage" resultType="Long">
- 		SELECT
-			count(r.deliveryResumeId)
-		FROM
-			(
-				SELECT
-					dr.id deliveryResumeId,
-					r.name name,
-					js.name jobSeekerName,
-					js.sex sex,
-					js.city city,
-					r.work_day workDay,
-					r.internship_time internshipTime,
-					r.arrival_day arrivalDay,
-					js.graduation_school graduationSchool,
-					js.education education,
-					js.major major,
-					js.graduation_time graduationTime,
-					dr.status
-				FROM
-					job_seeker js,
-					delivery_resume dr,
-					resume r,
-					position p
-				WHERE
-					r.job_seeker_id = js.id
-				AND dr.position_id = p.id
-				AND dr.resume_id = r.id
-				<include refid="condition_sql"></include>
-			) r
-		LEFT JOIN interview i ON r.deliveryResumeId = i.delivery_resume_id
+			SELECT
+				count(dr.id)
+			FROM
+				job_seeker js,
+				delivery_resume dr,
+				resume r,
+				position p,
+				company c
+			WHERE
+				r.job_seeker_id = js.id
+			AND dr.position_id = p.id
+			AND dr.resume_id = r.id
+			AND c.id = p.company_id
+			<include refid="condition_sql"></include>
  	</select>
  	
  	<!-- 通过deliveryResumeid批量获取简历名字 -->
@@ -165,14 +180,14 @@
 		WHERE
 			dr.position_id = p.id
 		AND p.company_id = #{companyId}
-		<if test="status = '待处理'">
-			AND status IN (1, 2, 3)
+		<if test="status == '待处理'">
+			AND dr.status IN (1, 2)
 		</if>
-		<if test="status = '已处理'">
-			AND status IN (3,4,5)
+		<if test="status == '已处理'">
+			AND dr.status IN (3,4,5)
 		</if>
-		<if test="status = '未查看'">
-			AND status = 1
+		<if test="status == '未查看'">
+			AND dr.status = 1
 		</if>
  	</select>
  	
@@ -186,5 +201,79 @@
 		WHERE
 			r.job_seeker_id = #{jobSeekerId}
 		AND dr.position_id = #{positionId}
+ 	</select>
+ 	
+ 	  <sql id="condition_sql_for_resume_lib">
+ 		<if test="type != null">
+				AND p.type = #{type}
+ 		</if>
+ 		<if test="name != null">
+ 			AND p.name = #{name}
+ 		</if>
+ 		<if test="searchKey != null">
+ 			AND ( js.name like CONCAT(CONCAT('%',#{searchKey},'%')) OR js.graduation_school like CONCAT(CONCAT('%',#{searchKey},'%')) )
+ 		</if>
+ 		<if test="city != null">
+ 			AND js.city = #{city}
+ 		</if>
+ 		<if test="workDay != null">
+ 			AND r.work_day = #{workDay}
+ 		</if>
+ 		<if test="internshipTime != null">
+ 			AND r.internship_time = #{internshipTime}
+ 		</if>
+ 		<if test="arrivalDay != null">
+ 			AND r.arrival_day &gt;= #{arrivalDay}
+ 		</if>
+ 		<if test="education != null">
+ 			AND js.education = #{education}
+ 		</if>
+ 		<if test="graduationTime != null">
+ 			AND js.graduation_time = #{graduationTime}
+ 		</if>
+ 		<if test="graduationSchool != null">
+ 			AND js.graduation_school = #{graduationSchool}
+ 		</if>
+ 		<if test="sex != null">
+ 			AND js.sex = #{sex}
+ 		</if>
+ 	</sql>
+ 	
+ 	<select id="queryLibByPage" resultType="com.yzhh.backstage.api.dto.resume.ResumeLibDTO">
+ 		SELECT
+			r.id,
+			r.`name`,
+			jb. NAME jobSeekerName,
+			jb.image_url imgeUrl,
+			jb.city,
+			jb.sex,
+			r.work_day workDay,
+			r.internship_time internshipTime,
+			from_unixtime(
+				r.arrivalDay  / 1000,
+				'%Y-%m-%d %H:%m:%s'
+			) arrivalDay,
+			jb.graduation_school graduationSchool,
+			jb.education,
+			jb.graduation_time graduationTime
+		FROM
+			resume r,
+			job_seeker jb
+		WHERE
+			r.job_seeker_id = jb.id
+		<include refid="condition_sql_for_resume_lib"></include>
+		order by r.last_access desc
+		LIMIT #{starNum},#{size}
+ 	</select>
+ 	
+ 	<select id="countLibByPage" resultType="Long">
+			SELECT
+				count(r.id)
+			FROM
+				resume r,
+				job_seeker jb
+			WHERE
+				r.job_seeker_id = jb.id
+			<include refid="condition_sql_for_resume_lib"></include>
  	</select>
 </mapper>

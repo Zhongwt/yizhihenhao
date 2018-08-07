@@ -86,9 +86,9 @@ public class AccountDAOImpl extends DAOImpl<Account, AccountExample> implements 
 		Account newAccount = new Account();
 		newAccount.setId(account.getId());
 		newAccount.setLastAccess(account.getLastAccess());
-		newAccount.setBalance(newAccount.getBalance().doubleValue() + capitalAmount.doubleValue() + largessAmount.doubleValue());
-		newAccount.setCapital(newAccount.getCapital().doubleValue() + capitalAmount.doubleValue());
-		newAccount.setLargess(newAccount.getLargess().doubleValue() + largessAmount.doubleValue());
+		newAccount.setBalance(account.getBalance().doubleValue() + capitalAmount.doubleValue() + largessAmount.doubleValue());
+		newAccount.setCapital(account.getCapital().doubleValue() + capitalAmount.doubleValue());
+		newAccount.setLargess(account.getLargess().doubleValue() + largessAmount.doubleValue());
 		mapper.updateByPrimaryKeySelective(newAccount);
 	}
 }

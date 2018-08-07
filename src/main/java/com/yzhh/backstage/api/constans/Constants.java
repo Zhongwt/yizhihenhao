@@ -46,8 +46,8 @@ public class Constants
 	public static String APPID="wxd4be41f24fe20120";
 	
 	 // 公众号APPSECRET
-	//ed0e83c66c2f953d78c6d6a48ba8f9a7 
-	public static String APPSECRET="ed0e83c66c2f953d78c6d6a48ba8f9a7";
+	//04abd4a5573974e5ec5a3288e3b6726e
+	public static String APPSECRET="04abd4a5573974e5ec5a3288e3b6726e";
 	
 	//微信支付商户号 1501498901
 	//商户平台登录账号 1501498901@1501498901

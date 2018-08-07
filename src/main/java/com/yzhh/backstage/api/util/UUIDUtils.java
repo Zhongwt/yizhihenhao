@@ -9,4 +9,9 @@ public class UUIDUtils {
 		return uuid.toString().replaceAll("-","");
 	}
 	
+	public static void main(String[] args) {
+		String str =UUIDUtils.getUUID();
+		System.out.println(str+":"+str.length());
+	}
+	
 }

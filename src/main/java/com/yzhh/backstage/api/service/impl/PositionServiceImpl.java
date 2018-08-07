@@ -80,22 +80,29 @@ public class PositionServiceImpl implements IPositionService {
 			position.setAddress(positionDTO.getAddress());
 			position.setWorkType(positionDTO.getWorkType());
 			position.setInternshipTime(positionDTO.getInternshipTime());
+			position.setRequired(position.getRequired());
 			position.setPerDiem(positionDTO.getPerDiem());
 			position.setWorkTime(positionDTO.getWorkTime());
 			position.setCorrectionChance(positionDTO.getCorrectionChance());
 			position.setDeadline(DateUtils.stringToLong(positionDTO.getDeadline(), null));
+			position.setIsPressing(positionDTO.getIsPressing());
 			position.setStatus(PositionStatusEnum.pending.getId());
 
 			positionDAO.insertSelective(position);
 		} else {
 			// 更新
 			// 校验原职务是否存在
-			checkPosition(positionDTO.getId());
+			Position oldPosition = checkPosition(positionDTO.getId());
+			
+			if(oldPosition.getStatus().intValue() != PositionStatusEnum.pending.getId() 
+					&& oldPosition.getStatus().intValue() != PositionStatusEnum.remove.getId()
+					&& oldPosition.getStatus().intValue() != PositionStatusEnum.reject.getId()) {
+				throw new BizException("职位已通过审核，无法修改");
+			}
 
 			position.setId(positionDTO.getId());
 			position.setLastAccess(date);
 			position.setCompanyId(positionDTO.getCompanyId());
-			// position.setReleaseDate(date);
 			position.setType(positionDTO.getType());
 			position.setName(positionDTO.getName());
 			position.setCity(positionDTO.getCity());
@@ -110,7 +117,9 @@ public class PositionServiceImpl implements IPositionService {
 			position.setWorkTime(positionDTO.getWorkTime());
 			position.setCorrectionChance(positionDTO.getCorrectionChance());
 			position.setDeadline(DateUtils.stringToLong(positionDTO.getDeadline(), null));
-			// position.setStatus(PositionStatusEnum.pending.getId());
+			position.setRequired(position.getRequired());
+			position.setIsPressing(positionDTO.getIsPressing());
+			position.setStatus(PositionStatusEnum.pending.getId());
 
 			positionDAO.updateByPrimaryKeySelective(position);
 		}
@@ -305,8 +314,6 @@ public class PositionServiceImpl implements IPositionService {
 
 		Company company = companyDAO.selectByPrimaryKey(position.getCompanyId());
 
-		// positionDTO.setLastAccess(DateUtils.longToString(position.getLastAccess(),
-		// null));
 		positionDTO.setId(position.getId());
 		positionDTO.setCompanyId(positionDTO.getCompanyId());
 		positionDTO.setReleaseDate(DateUtils.longToString(position.getReleaseDate(), null));

@@ -40,7 +40,7 @@
 	<!-- 分页查询日志 -->
  	<select id="countByPage" resultType="Long">
  		SELECT
-			count(dr.id id)
+			count(dr.id)
 		FROM
 			delivery_resume dr,
 			resume r,
@@ -52,5 +52,20 @@
 		AND p.company_id = c.id
 		<include refid="condition_sql"></include>
  	</select>
+ 	
+ 	<!-- 获取某个简历是否被投给某个公司 -->
+ 	<select id="getDeliveryResume" resultMap="com.yzhh.backstage.api.dao.mapper.DeliveryResumeMapper.BaseResultMap">
+ 		SELECT
+			dr.*
+		FROM
+			position p,
+			delivery_resume dr
+		WHERE
+			p.id = dr.position_id
+		AND dr.resume_id = #{resumeId}
+		AND p.company_id = #{companyId}
+ 	</select>
+ 	
+ 	
 
 </mapper>

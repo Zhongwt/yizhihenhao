@@ -2,7 +2,6 @@ package com.yzhh.backstage.api.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yzhh.backstage.api.commons.ApiResponse;
+import com.yzhh.backstage.api.commons.BizException;
 import com.yzhh.backstage.api.constans.Constants;
 import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.VerifyCodeDTO;
@@ -27,6 +27,8 @@ import com.yzhh.backstage.api.util.RedisUtil;
 import com.yzhh.backstage.api.util.VerifyCodeUtils;
 import com.yzhh.backstage.api.util.eamil.EmailUtil;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @Validated
@@ -109,18 +111,38 @@ public class CommonController {
     }
 	
 	@ApiOperation(value = "充值付款成功", notes = "由微信端调用，我们不用管", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "str", value = "充值信息，由 用户id+'_'+(用户类型，公司为1，用户为2)+'_'+充值金额",required=true)
+		})
 	@GetMapping("/pay/success")
 	public ApiResponse deliveryPositionPaySuccess(String str) {
 
-		String[] strs = str.split("_");
-		accountService.paySuccess(Long.parseLong(strs[0]), strs[1], Integer.parseInt(strs[2]), Double.parseDouble(strs[3]));
+		String s = (String)redisUtil.get(str);
+		if(s != null) {
+			redisUtil.del(str);
+			String[] strs = str.split("_");
+			accountService.paySuccess(Long.parseLong(strs[0]), Integer.parseInt(strs[1]), Double.parseDouble(strs[2]));
+		}else {
+			throw new BizException("支付超时");
+		}
 
 		return new ApiResponse();
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(new Date(1632258691318L));
+	@ApiOperation(value = "充值付款失败，用户redis删除时间用的", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "str", value = "充值信息，由 用户id+'_'+(用户类型，公司为1，用户为2)+'_'+充值金额",required=true)
+		})
+	@GetMapping("/pay/fail")
+	public ApiResponse deliveryPositionPayFail(String str) {
+
+		String s = (String)redisUtil.get(str);
+		if(s!= null) {
+			redisUtil.del(str);
+		}
+		return new ApiResponse();
 	}
+	
 }
 
 

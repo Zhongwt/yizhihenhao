@@ -37,6 +37,9 @@ public class UpdateCompanyDTO {
 	@ApiModelProperty(value = "公司描述")
 	private String description;
 	
+	@ApiModelProperty(value = "公司地址")
+	private String address;
+	
 	public String getNickName() {
 		return nickName;
 	}
@@ -96,5 +99,11 @@ public class UpdateCompanyDTO {
 	}
 	public void setLogo(String logo) {
 		this.logo = logo;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

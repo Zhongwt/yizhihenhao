@@ -20,7 +20,7 @@ public class InternshipExperienceDTO {
 	@ApiModelProperty(value = "结束时间")
 	private String endTime;
 	@NotNull
-	@ApiModelProperty(value = "实现职位")
+	@ApiModelProperty(value = "实习职位")
 	private String dutyName;
 	@NotNull
 	@ApiModelProperty(value = "实习描述")
