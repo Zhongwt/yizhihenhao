@@ -361,19 +361,21 @@ public class CompanyController {
 	}
 	
 	@ApiOperation(value = "下载单个简历", notes = "", tags = { "企业部分api" })
-	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "resumeId", value = "简历id")})
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "resumeId", value = "简历id"),
+		@ApiImplicitParam(paramType = "query", dataType = "String", name = "resumeName", value = "简历名称，懒得查库就直接前台传吧")
+		})
 	@GetMapping("/down/resume")
-	public ApiResponse downloadResume(HttpServletRequest request,HttpServletResponse response, @RequestParam Long resumeId) {
+	public ApiResponse downloadResume(HttpServletRequest request,HttpServletResponse response, @RequestParam Long resumeId,@RequestParam String resumeName) {
 		
-		//UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		
 		try {
-			//XWPFDocument doc = resumeService.downloadResume(user.getId(), resumeId);
-			XWPFDocument doc = resumeService.downloadResume(1L, 1L);
+			XWPFDocument doc = resumeService.downloadResume(user.getId(), resumeId);
 			OutputStream os = response.getOutputStream();
 			response.setContentType("text/html; charset=UTF-8");
 			response.setContentType("application/msword");  
-	        response.setHeader("Content-disposition","attachment;filename="+URLEncoder.encode("李康杰简历"+".docx", "UTF-8"));  
+	        response.setHeader("Content-disposition","attachment;filename="+URLEncoder.encode(resumeName+".docx", "UTF-8"));  
 	        doc.write(os);  
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -383,8 +385,11 @@ public class CompanyController {
 	}
 	
 	@ApiOperation(value = "批量下载简历简历", notes = "", tags = { "企业部分api" })
-	@PostMapping("/down/resume/list")
-	public ApiResponse downloadResumes(HttpServletRequest request,HttpServletResponse response, @RequestBody List<Long> resumeIds) {
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "List", name = "resumeIds", value = "简历id数组")
+		})
+	@GetMapping("/down/resume/list")
+	public ApiResponse downloadResumes(HttpServletRequest request,HttpServletResponse response,@RequestParam List<Long> resumeIds) {
 		
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		

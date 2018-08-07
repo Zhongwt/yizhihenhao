@@ -71,6 +71,7 @@ import com.yzhh.backstage.api.service.IJobSeekerService;
 import com.yzhh.backstage.api.service.IResumeService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
+import com.yzhh.backstage.api.util.PackWord;
 import com.yzhh.backstage.api.util.WordUtil;
 import com.yzhh.backstage.api.util.eamil.EmailUtil;
 
@@ -980,21 +981,23 @@ public class ResumeServiceImpl implements IResumeService {
 	public XWPFDocument downloadResume(Long companyId, Long resumeId) {
 		Resume resume = resumeDAO.selectByPrimaryKey(resumeId);
 
-		// 判断是否已经付过费 true 没付过 false已经付过
+		// 判断是否已经付过费 true 付过了不管 false没付过
 		boolean flag = companyJobSeekerDAO.comfirmIsPay(companyId, resume.getJobSeekerId());
 
 		// 没有付过就查询是否是被投递
-		if (flag) {
+		if (!flag) {
 			// 判断是否被投递给这家公司
 			List<DeliveryResume> list = deliveryResumeDAO.getDeliveryResume(companyId, resumeId);
-			flag = CollectionUtils.isNotEmpty(list) ? false : true;
+			flag = CollectionUtils.isNotEmpty(list) ? true : false;
 		}
 
-		if (flag) {
+		if (!flag) {
 			throw new BizException("简历未付费，下载失败");
 		}
+		
+		JobSeeker jobSeeker = jobSeekerDAO.selectByPrimaryKey(resume.getJobSeekerId());
 
-		String fileName = resume.getId() + "_" + resume.getLastAccess() + ".docx";
+		String fileName = jobSeeker.getName()+"#"+resume.getId() + "_" + resume.getLastAccess() + ".docx";
 		
 		// 下载
 		File file = new File(WordUtil.path +fileName);
@@ -1020,11 +1023,37 @@ public class ResumeServiceImpl implements IResumeService {
 	}
 
 	@Override
-	public InputStream downloadResumes(Long companyId, List<Long> resumeId) {
-			return null;
+	public InputStream downloadResumes(Long companyId, List<Long> resumeIds) {
+		
+			if(CollectionUtils.isEmpty(resumeIds)) {
+				throw new BizException("参数异常，请选择简历");
+			}
+			
+			//生成word文件
+			for(Long resumeId : resumeIds) {
+				this.downloadResume(companyId, resumeId);
+			}
+			
+			ResumeExample example = new ResumeExample();
+			example.createCriteria().andIdIn(resumeIds);
+			List<Resume> list = resumeDAO.selectByExample(example);
+			
+			List<File> files = new ArrayList<>();
+			for(Resume resume : list) {
+				JobSeeker jobSeeker = jobSeekerDAO.selectByPrimaryKey(resume.getJobSeekerId());
+				files.add(new File(WordUtil.path + jobSeeker.getName()+"#"+resume.getId() + "_" + resume.getLastAccess() + ".docx"));
+			}
+			
+			//打包下载
+			InputStream is = null;
+			
+			try {
+				is = PackWord.downLoadFiles(files);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+			return is;
 	}
-	
-	
-
 
 }

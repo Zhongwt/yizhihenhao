@@ -25,7 +25,7 @@ import com.yzhh.backstage.api.dto.resume.ResumeDTO;
 
 public class WordUtil {
 	
-	public static final String path = "D:/code/test/";
+	public static final String path = "/home/yzhh/file/";
 
 	//生成doc
 	public static void makeDoc(ResumeDTO resumeDTO,String fileName) throws IOException {

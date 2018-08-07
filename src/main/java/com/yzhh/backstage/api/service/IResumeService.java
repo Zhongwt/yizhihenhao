@@ -111,5 +111,5 @@ public interface IResumeService {
 	public XWPFDocument downloadResume(Long companyId, Long resumeId);
 
 	// 下载单个简历
-	public InputStream downloadResumes(Long companyId, List<Long> resumeId);
+	public InputStream downloadResumes(Long companyId, List<Long> resumeIds);
 }

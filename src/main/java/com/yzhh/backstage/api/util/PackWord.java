@@ -5,13 +5,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class PackWord {
 
-	public static final String packPath = "D:/code/test/简历.rar";
+	public static final String packPath = "/home/yzhh/file/简历.rar";
 
 	// 文件打包下载
 	public static InputStream downLoadFiles(List<File> files) throws Exception {
@@ -33,7 +34,7 @@ public class PackWord {
 			zipOut.close();
 			fous.close();
 			return new FileInputStream(file);
-			//return downloadZip(file, response);
+			// return downloadZip(file, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -54,38 +55,6 @@ public class PackWord {
 		}
 	}
 
-//	public static HttpServletResponse downloadZip(File file, HttpServletResponse response) {
-//		try {
-//			// 以流的形式下载文件。
-//			InputStream fis = new BufferedInputStream(new FileInputStream(file.getPath()));
-//			byte[] buffer = new byte[fis.available()];
-//			fis.read(buffer);
-//			fis.close();
-//			// 清空response
-//			response.reset();
-//
-//			OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-//			response.setContentType("application/octet-stream");
-//
-//			// 如果输出的是中文名的文件，在此处就要用URLEncoder.encode方法进行处理
-//			response.setHeader("Content-Disposition",
-//					"attachment;filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
-//			toClient.write(buffer);
-//			toClient.flush();
-//			toClient.close();
-//		} catch (IOException ex) {
-//			ex.printStackTrace();
-//		} finally {
-//			try {
-//				File f = new File(file.getPath());
-//				f.delete();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return response;
-//	}
-
 	/**
 	 * 根据输入的文件与输出流对文件进行打包
 	 * 
@@ -95,14 +64,13 @@ public class PackWord {
 	public static void zipFile(File inputFile, ZipOutputStream ouputStream) {
 		try {
 			if (inputFile.exists()) {
-				/**
-				 * 如果是目录的话这里是不采取操作的， 至于目录的打包正在研究中
-				 */
 				if (inputFile.isFile()) {
-					FileInputStream IN = new FileInputStream(inputFile);
-					BufferedInputStream bins = new BufferedInputStream(IN, 512);
-					// org.apache.tools.zip.ZipEntry
-					ZipEntry entry = new ZipEntry(inputFile.getName());
+
+					FileInputStream in = new FileInputStream(inputFile);
+					BufferedInputStream bins = new BufferedInputStream(in, 512);
+					String fileName = inputFile.getName();
+					fileName = fileName.substring(0, fileName.lastIndexOf("#"))+"_"+new Date().getTime()+".docx";
+					ZipEntry entry = new ZipEntry(fileName);
 					ouputStream.putNextEntry(entry);
 					// 向压缩文件中输出数据
 					int nNumber;
@@ -112,7 +80,7 @@ public class PackWord {
 					}
 					// 关闭创建的流对象
 					bins.close();
-					IN.close();
+					in.close();
 				} else {
 					try {
 						File[] files = inputFile.listFiles();
