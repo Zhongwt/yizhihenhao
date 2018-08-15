@@ -44,6 +44,7 @@ public class WeChatHttpUtil {
 
 	private static String ACCESS_TOKEN = "https://api.weixin.qq.com/sns/oauth2/access_token";
 	
+	
 	 /**
      * 扩展xstream,使其支持name带有"_"的节点
      */
@@ -352,9 +353,10 @@ public class WeChatHttpUtil {
 	 * 
 	 * @throws Exception
 	 **/
-	public static Map<String, Object> unifiedOrder(Long userId,String userName, String str, Double fee, Map<String, Object> map)
+	public static Map<String, Object> unifiedOrder(Long userId,Integer userType,Double fee,String ip,String openId,String tradeType)
 			throws Exception {
 		Map<String, Object> resultMap;
+		String str = userId+"_"+userType+"_"+fee;
 		try {
 			WxPaySendData paySendData = new WxPaySendData();
 			String orderStr = UUIDUtils.getUUID();
@@ -369,9 +371,9 @@ public class WeChatHttpUtil {
 			paySendData.setDeviceInfo("WEB");
 			paySendData.setOutTradeNo(orderStr);
 			paySendData.setTotalFee(totalFee);
-			paySendData.setTradeType(Constants.TRADE_TYPE_JSAPI);
-			paySendData.setSpBillCreateIp((String) map.get("remoteIp"));
-			paySendData.setOpenId((String) map.get("openId"));
+			paySendData.setTradeType(tradeType);
+			paySendData.setSpBillCreateIp(ip);
+			paySendData.setOpenId(openId);
 			paySendData.setTimeStart(DateUtils.dateToString(new Date(), DateUtils.no_yymmddhhmmss));
 			paySendData.setTimeExpire(DateUtils.dateToString(new Date(new Date().getTime() + Constants.TEN_MINUTES  * 1000), DateUtils.no_yymmddhhmmss));
 			// 将参数拼成map,生产签名

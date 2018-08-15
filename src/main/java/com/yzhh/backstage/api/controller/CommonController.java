@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,10 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.yzhh.backstage.api.commons.ApiResponse;
 import com.yzhh.backstage.api.commons.BizException;
 import com.yzhh.backstage.api.constans.Constants;
+import com.yzhh.backstage.api.dto.TypeDTO;
 import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.VerifyCodeDTO;
 import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.service.IAttachmentService;
+import com.yzhh.backstage.api.service.IPositionService;
 import com.yzhh.backstage.api.util.MoblieMessageUtil;
 import com.yzhh.backstage.api.util.RedisUtil;
 import com.yzhh.backstage.api.util.VerifyCodeUtils;
@@ -45,6 +48,8 @@ public class CommonController {
 	private RedisUtil redisUtil;
 	@Autowired
 	private IAccountService accountService;
+	@Autowired
+	private IPositionService positionService;
 
 	@ApiOperation(value = "登录验证码", notes = "", tags = { "通用部分api" })
 	@GetMapping("/login/verify/code")
@@ -105,23 +110,33 @@ public class CommonController {
 	
 	@ApiOperation(value = "通用获取配置金额", notes = "", tags = { "通用部分api" })
 	@PostMapping(value = "/amount/setting")
-    public ApiResponse getAmountSetting(@RequestParam String type) {
-		Double amount = accountService.getAmountSettingByType(type);
+    public ApiResponse getAmountSetting(@RequestBody TypeDTO nameDTO) {
+		Double amount = accountService.getAmountSettingByType(nameDTO.getType());
 		return new ApiResponse(amount);
     }
 	
 	@ApiOperation(value = "充值付款成功", notes = "由微信端调用，我们不用管", tags = { "求职者部分api" })
 	@ApiImplicitParams({ 
-		@ApiImplicitParam(paramType = "query", dataType = "long", name = "str", value = "充值信息，由 用户id+'_'+(用户类型，公司为1，用户为2)+'_'+充值金额",required=true)
+		@ApiImplicitParam(paramType = "query", dataType = "String", name = "str", value = "充值信息，由 用户id+'_'+(用户类型，公司为1，用户为2)+'_'+充值金额",required=true)
 		})
 	@GetMapping("/pay/success")
 	public ApiResponse deliveryPositionPaySuccess(String str) {
 
-		String s = (String)redisUtil.get(str);
+		String[] strs = str.split("_");
+		Long relationId = Long.parseLong(strs[0]);
+		Integer type = Integer.parseInt(strs[1]);
+		Double totalFee = Double.parseDouble(strs[2]);
+		
+		Double s = (Double)redisUtil.get(relationId+"_"+type);
 		if(s != null) {
-			redisUtil.del(str);
-			String[] strs = str.split("_");
-			accountService.paySuccess(Long.parseLong(strs[0]), Integer.parseInt(strs[1]), Double.parseDouble(strs[2]));
+			if(s.doubleValue() == 0) {
+				throw new BizException("支付已完成");
+			}else if(s.doubleValue() != totalFee.doubleValue()){
+				throw new BizException("支付金额不对");
+			}else {
+				redisUtil.set(relationId+"_"+type, 0D,Constants.TEN_MINUTES);
+				accountService.paySuccess(relationId, type, totalFee);
+			}
 		}else {
 			throw new BizException("支付超时");
 		}
@@ -135,12 +150,18 @@ public class CommonController {
 		})
 	@GetMapping("/pay/fail")
 	public ApiResponse deliveryPositionPayFail(String str) {
-
+		str = str.substring(0, str.lastIndexOf("_"));
 		String s = (String)redisUtil.get(str);
 		if(s!= null) {
 			redisUtil.del(str);
 		}
 		return new ApiResponse();
+	}
+	
+	@GetMapping("/test")
+	public ApiResponse test() {
+		positionService.testInsert();
+		return new ApiResponse("success");
 	}
 	
 }

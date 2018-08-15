@@ -14,10 +14,10 @@
  			AND account_id = #{accountId}
  		</if>
  		<if test="type == '收入'">
- 			AND steam &gt;= 0
+ 			AND steam &gt; 0
  		</if>
  		<if test="type == '支出'">
- 			AND steam &lt; 0
+ 			AND steam &lt;=0
  		</if>
  	</sql>
  	

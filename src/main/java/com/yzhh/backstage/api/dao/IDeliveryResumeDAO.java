@@ -18,4 +18,6 @@ public interface IDeliveryResumeDAO extends IDAO<DeliveryResume, DeliveryResumeE
 	public Long countByPage(Map<String, Object> params);
 	//获取投递信息
 	public List<DeliveryResume> getDeliveryResume(Long companyId,Long resumeId);
+	//获取投递次数
+	public Long queryByDeliveryCount(Long jobSeekerId);
 }

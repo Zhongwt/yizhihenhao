@@ -17,10 +17,10 @@
 			p.name
 			positionName,
 			p.city city,
-			p.work_date workDate,
+			p.work_time workDay,
 			from_unixtime(
-			dr.last_access / 1000,
-			'%Y-%m-%d %H:%m:%s'
+				dr.last_access / 1000,
+				'%Y-%m-%d %H:%m:%s'
 			) deliveryTime,
 			dr.money money
 		FROM
@@ -64,6 +64,18 @@
 			p.id = dr.position_id
 		AND dr.resume_id = #{resumeId}
 		AND p.company_id = #{companyId}
+ 	</select>
+ 	
+ 	<!-- 获取用户投递次数 -->
+ 	<select id="queryByDeliveryCount" resultType="Long">
+ 		SELECT
+			count(dr.id)
+		FROM
+			delivery_resume dr,
+			resume r
+		WHERE
+			r.job_seeker_id = #{jobSeekerId}
+		AND dr.resume_id = r.id
  	</select>
  	
  	

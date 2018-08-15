@@ -67,6 +67,7 @@ public class Constants
 	public static String REQUEST_POST="POST";
 	public static String OPENIDVALUE="openid";
 	public static String TRADE_TYPE_JSAPI = "JSAPI";
+	public static String TRADE_TYPE_NATIVE = "NATIVE";
 	
 	//微信获取openId接口
 	public static final String WX_GET_OPENID = "https://api.weixin.qq.com/sns/jscode2session?appid={APPID}&secret={SECRET}&js_code={code}&grant_type=authorization_code";
@@ -77,7 +78,7 @@ public class Constants
 	 //微信统一下单url
     public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     //微信支付通知url
-    public static final String NOTIFY_URL ="https://www.yizhihenhao.com/api/pay/success?str=";
+    public static final String NOTIFY_URL ="http://www.yizhihenhao.com/api/pay/success/";
     
     public static final String RETURN_SUCCESS = "SUCCESS";
     

@@ -1,6 +1,6 @@
 package com.yzhh.backstage.api.controller;
 
-import java.util.HashMap;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -70,6 +71,7 @@ import com.yzhh.backstage.api.service.IWxService;
 import com.yzhh.backstage.api.util.RedisUtil;
 import com.yzhh.backstage.api.util.ValidateUtil;
 import com.yzhh.backstage.api.util.WeChatHttpUtil;
+import com.yzhh.backstage.api.util.camera.WebRequest;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -95,6 +97,8 @@ public class JobSeekerController {
 	private IResumeService resumeService;
 	@Autowired
 	private RedisUtil redisUtil;
+	@Autowired
+	private WebRequest webRequest;
 
 	private Logger logger = LoggerFactory.getLogger(JobSeekerController.class);
 	
@@ -138,10 +142,11 @@ public class JobSeekerController {
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "page", value = "页码"),
 		@ApiImplicitParam(paramType = "query", dataType = "int", name = "size", value = "页面大小")})
 	@PostMapping("/position/list")
-	public ApiResponse positionList(@RequestBody SearchPositionDTO searchPositionDTO, Long page, Integer size) {
-
+	public ApiResponse positionList(HttpServletRequest request,@RequestBody SearchPositionDTO searchPositionDTO, Long page, Integer size) {
+		
+		String token = request.getHeader(Constants.TOKEN);
 		searchPositionDTO.setStatus("招聘中");
-		PageDTO<PositionDTO> p = positionService.list(searchPositionDTO, page, size);
+		PageDTO<PositionDTO> p = positionService.list(searchPositionDTO, page, size,StringUtils.isEmpty(token) ? null : Long.parseLong(token));
 
 		return new ApiResponse(p);
 	}
@@ -153,7 +158,7 @@ public class JobSeekerController {
 
 		String token = request.getHeader(Constants.TOKEN);
 
-		PositionDTO p = positionService.findById(id, token == null ? null : Long.parseLong(token));
+		PositionDTO p = positionService.findById(id, StringUtils.isEmpty(token) ? null : Long.parseLong(token));
 
 		return new ApiResponse(p);
 	}
@@ -194,22 +199,19 @@ public class JobSeekerController {
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "double", name = "amount", value = "充值金额")})
 	@GetMapping("/pay")
 	public ApiResponse deliveryPositionPay(HttpServletRequest request,Double amount) throws Exception {
-
+		if(amount.doubleValue() <= 0.01) {
+			throw new BizException("充值金额不能小于0.01元");
+		}
 		WeChatPayDTO weChatPayDTO = null;
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		redisUtil.set(user.getId()+"_"+AccountTypeEnum.job_seeker.getId(), amount,Constants.TEN_MINUTES);
 		String openId = user.getOpenId();
-		String str = user.getId()+"_"+AccountTypeEnum.job_seeker.getId()+"_"+amount;
-		redisUtil.set(str, "123",Constants.TEN_MINUTES);
-		//String str = user.getId() + "_" + positionId + "_" + totalFee;
-		// 通过code获取网页授权access_token
-		// 构建微信统一下单需要的参数
-		Map<String, Object> map = new HashMap<>();
-		map.put("openId", openId);// 用户标识openId
-		map.put("remoteIp", request.getRemoteAddr());// 请求Ip地址
+		String ip = request.getRemoteAddr();
 		// 调用统一下单service
-		Map<String, Object> resultMap = WeChatHttpUtil.unifiedOrder(user.getId(),user.getName(), str, amount, map);
+		Map<String, Object> resultMap = WeChatHttpUtil.unifiedOrder(user.getId(),AccountTypeEnum.job_seeker.getId(),amount, ip,openId,Constants.TRADE_TYPE_JSAPI);
 		String returnCode = (String) resultMap.get("return_code");// 通信标识
 		String resultCode = (String) resultMap.get("result_code");// 交易标识
+		logger.info("----返回参数："+JSON.toJSONString(resultMap));
 		// 只有当returnCode与resultCode均返回“success”，才代表微信支付统一下单成功
 		if (Constants.RETURN_SUCCESS.equals(resultCode) && Constants.RETURN_SUCCESS.equals(returnCode)) {
 			String appId = (String) resultMap.get("appid");// 微信公众号AppId
@@ -516,9 +518,9 @@ public class JobSeekerController {
 		@ApiImplicitParam(paramType = "query", dataType = "String", name = "name", value = "简历名称",required=true)
 		})
 	@PostMapping("/modify/resume/name")
-	public ApiResponse modifyResumeName(@RequestParam Long resumeId,@RequestParam String name) {
-
-		resumeService.modifyResumeName(resumeId, name);
+	public ApiResponse modifyResumeName(@RequestParam Long resumeId,@RequestBody ResumeDTO resumeDTO) throws UnsupportedEncodingException {
+		
+		resumeService.modifyResumeName(resumeId, resumeDTO.getName());
 		
 		return new ApiResponse();
 	}
@@ -629,6 +631,22 @@ public class JobSeekerController {
 		resumeService.deleteSelfEvaluation(selfEvaluationId);
 		
 		return new ApiResponse();
+	}
+	
+	@ApiOperation(value = "获取职位快照", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "positionId", value = "职位id",required=true)
+	})
+	@GetMapping("/get/postion/camara")
+	public ApiResponse getPostionCamara(HttpServletRequest request,@RequestParam Long positionId) {
+		
+		String token = request.getHeader(Constants.TOKEN);
+		
+		PositionDTO p = positionService.findById(positionId, StringUtils.isEmpty(token) ? null : Long.parseLong(token));
+		
+		String path = webRequest.getCamera(p);
+		
+		return new ApiResponse(path);
 	}
 }
 

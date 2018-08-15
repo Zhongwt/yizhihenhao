@@ -1,9 +1,6 @@
 package com.yzhh.backstage.api.service.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -72,8 +68,8 @@ import com.yzhh.backstage.api.service.IResumeService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
 import com.yzhh.backstage.api.util.PackWord;
-import com.yzhh.backstage.api.util.WordUtil;
 import com.yzhh.backstage.api.util.eamil.EmailUtil;
+import com.yzhh.backstage.api.util.pdf.ExportPDF;
 
 @Service
 public class ResumeServiceImpl implements IResumeService {
@@ -368,6 +364,8 @@ public class ResumeServiceImpl implements IResumeService {
 		resumeDTO.setId(resume.getId());
 		resumeDTO.setCity(jobSeeker.getCity());
 		resumeDTO.setEducation(jobSeeker.getEducation());
+		resumeDTO.setImageUrl(jobSeeker.getImageUrl());
+		resumeDTO.setBirthday(jobSeeker.getBirthday());
 		resumeDTO.setGraduationSchool(jobSeeker.getGraduationSchool());
 		resumeDTO.setPhone(jobSeeker.getPhone());
 		resumeDTO.setEmail(jobSeeker.getEmail());
@@ -694,10 +692,10 @@ public class ResumeServiceImpl implements IResumeService {
 		this.calculationResumePerfection(resumeId);
 	}
 
-	private int calculationResumePerfection(Long resumeId) {
+	public int calculationResumePerfection(Long resumeId) {
 
 		Resume resume = this.checkResume(resumeId);
-		JobSeeker jobSeeker = jobSeekerService.checkJobSeeker(resume.getId());
+		JobSeeker jobSeeker = jobSeekerService.checkJobSeeker(resume.getJobSeekerId());
 
 		// 用户名 是 5
 		// 区域地址 是 5
@@ -799,6 +797,12 @@ public class ResumeServiceImpl implements IResumeService {
 				count != null && count > 0 ? IsDefaultEnum.nomal.getId() : IsDefaultEnum.is_default.getId());
 		resume.setIntegrity(0);
 		resumeDAO.insertSelective(resume);
+
+		Long resumeId = resume.getId();
+		resume = new Resume();
+		resume.setId(resumeId);
+		resume.setIntegrity(this.calculationResumePerfection(resumeId));
+		resumeDAO.updateByPrimaryKeySelective(resume);
 	}
 
 	@Override
@@ -827,32 +831,69 @@ public class ResumeServiceImpl implements IResumeService {
 
 	@Override
 	public void deleteInternshipExperience(Long internshipExperienceId) {
+		InternshipExperience entity = internshipExperienceDAO.selectByPrimaryKey(internshipExperienceId);
+		Long resumeId = 0L;
+		if (entity != null) {
+			entity.getResumeId();
+		}
 		internshipExperienceDAO.deleteByPrimaryKey(internshipExperienceId);
+		this.calculationResumePerfection(resumeId);
 	}
 
 	@Override
 	public void deleteEducationalBackground(Long educationalBackgroundId) {
+		EducationalBackground entity = educationalBackgroundDAO.selectByPrimaryKey(educationalBackgroundId);
+		Long resumeId = 0L;
+		if (entity != null) {
+			entity.getResumeId();
+		}
 		educationalBackgroundDAO.deleteByPrimaryKey(educationalBackgroundId);
+		this.calculationResumePerfection(resumeId);
+
 	}
 
 	@Override
 	public void deleteProjectExperience(Long projectExperienceId) {
+		ProjectExperience entity = projectExperienceDAO.selectByPrimaryKey(projectExperienceId);
+		Long resumeId = 0L;
+		if (entity != null) {
+			entity.getResumeId();
+		}
 		projectExperienceDAO.deleteByPrimaryKey(projectExperienceId);
+		this.calculationResumePerfection(resumeId);
 	}
 
 	@Override
 	public void deleteSkillHobby(Long skillHobbyId) {
+		SkillHobby entity = skillHobbyDAO.selectByPrimaryKey(skillHobbyId);
+		Long resumeId = 0L;
+		if (entity != null) {
+			entity.getResumeId();
+		}
 		skillHobbyDAO.deleteByPrimaryKey(skillHobbyId);
+		this.calculationResumePerfection(resumeId);
 	}
 
 	@Override
 	public void deleteWorksShow(Long worksShowId) {
+		WorksShow entity = worksShowDAO.selectByPrimaryKey(worksShowId);
+		Long resumeId = 0L;
+		if (entity != null) {
+			entity.getResumeId();
+		}
 		worksShowDAO.deleteByPrimaryKey(worksShowId);
+		this.calculationResumePerfection(resumeId);
 	}
 
 	@Override
 	public void deleteSelfEvaluation(Long selfEvaluationId) {
+		SelfEvaluation entity = selfEvaluationDAO.selectByPrimaryKey(selfEvaluationId);
+		Long resumeId = 0L;
+		if (entity != null) {
+			entity.getResumeId();
+		}
 		selfEvaluationDAO.deleteByPrimaryKey(selfEvaluationId);
+		this.calculationResumePerfection(resumeId);
 	}
 
 	@Override
@@ -978,7 +1019,7 @@ public class ResumeServiceImpl implements IResumeService {
 	}
 
 	@Override
-	public XWPFDocument downloadResume(Long companyId, Long resumeId) {
+	public String downloadResume(Long companyId, Long resumeId) {
 		Resume resume = resumeDAO.selectByPrimaryKey(resumeId);
 
 		// 判断是否已经付过费 true 付过了不管 false没付过
@@ -997,63 +1038,58 @@ public class ResumeServiceImpl implements IResumeService {
 		
 		JobSeeker jobSeeker = jobSeekerDAO.selectByPrimaryKey(resume.getJobSeekerId());
 
-		String fileName = jobSeeker.getName()+"#"+resume.getId() + "_" + resume.getLastAccess() + ".docx";
-		
-		// 下载
-		File file = new File(WordUtil.path +fileName);
+		String fileName = jobSeeker.getName()+"."+resume.getId() + "_" + resume.getLastAccess();
 
-		try {
-			//XWPFDocument doc;
-			// 判断文件是否存在
-			if (!file.exists()) {
-				// 不存在，生成
-				ResumeDTO resumeDTO = this.findById(resumeId);
-				WordUtil.makeDoc(resumeDTO, fileName);
-				//生成文件
-			}
-			//存在直接去读取就可以
-			InputStream is = new FileInputStream(file);
-			return new XWPFDocument(is);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		String filePath = ExportPDF.path + fileName + ".pdf";
+
+		// 下载
+		File file = new File(filePath);
+
+		// XWPFDocument doc;
+		// 判断文件是否存在
+		if (!file.exists()) {
+			// 不存在，生成
+			ResumeDTO resumeDTO = this.findById(resumeId);
+			ExportPDF.exportPDF(resumeDTO, filePath);
+			// 生成文件
 		}
-		return null;
+
+		return filePath;
 	}
 
 	@Override
 	public InputStream downloadResumes(Long companyId, List<Long> resumeIds) {
-		
-			if(CollectionUtils.isEmpty(resumeIds)) {
-				throw new BizException("参数异常，请选择简历");
-			}
-			
-			//生成word文件
-			for(Long resumeId : resumeIds) {
-				this.downloadResume(companyId, resumeId);
-			}
-			
-			ResumeExample example = new ResumeExample();
-			example.createCriteria().andIdIn(resumeIds);
-			List<Resume> list = resumeDAO.selectByExample(example);
-			
-			List<File> files = new ArrayList<>();
-			for(Resume resume : list) {
-				JobSeeker jobSeeker = jobSeekerDAO.selectByPrimaryKey(resume.getJobSeekerId());
-				files.add(new File(WordUtil.path + jobSeeker.getName()+"#"+resume.getId() + "_" + resume.getLastAccess() + ".docx"));
-			}
-			
-			//打包下载
-			InputStream is = null;
-			
-			try {
-				is = PackWord.downLoadFiles(files);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		
-			return is;
+
+		if (CollectionUtils.isEmpty(resumeIds)) {
+			throw new BizException("参数异常，请选择简历");
+		}
+
+		// 生成word文件
+		for (Long resumeId : resumeIds) {
+			this.downloadResume(companyId, resumeId);
+		}
+
+		ResumeExample example = new ResumeExample();
+		example.createCriteria().andIdIn(resumeIds);
+		List<Resume> list = resumeDAO.selectByExample(example);
+
+		List<File> files = new ArrayList<>();
+		for (Resume resume : list) {
+			JobSeeker jobSeeker = jobSeekerDAO.selectByPrimaryKey(resume.getJobSeekerId());
+			files.add(
+					new File(jobSeeker.getName() + "." + resume.getId() + "_" + resume.getLastAccess() + ".pdf"));
+		}
+
+		// 打包下载
+		InputStream is = null;
+
+		try {
+			is = PackWord.downLoadFiles(files);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return is;
 	}
 
 }

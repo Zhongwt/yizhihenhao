@@ -3,8 +3,6 @@ package com.yzhh.backstage.api.service;
 import java.io.InputStream;
 import java.util.List;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.resume.AddInterviewDTO;
 import com.yzhh.backstage.api.dto.resume.EducationalBackgroundDTO;
@@ -108,8 +106,10 @@ public interface IResumeService {
 	public ResumeDTO conmpanyGetResume(Long companyId, Long resumeId);
 
 	// 下载单个简历
-	public XWPFDocument downloadResume(Long companyId, Long resumeId);
+	public String downloadResume(Long companyId, Long resumeId);
 
 	// 下载单个简历
 	public InputStream downloadResumes(Long companyId, List<Long> resumeIds);
+	//计算简历完善度
+	public int calculationResumePerfection(Long resumeId);
 }

@@ -75,6 +75,7 @@
 			r.companyAddress,
 			r.companyName,
 			r.companyLogo,
+			r.positionId,
 			r.positionName,
 			r.positionType,
 			from_unixtime(
@@ -115,6 +116,7 @@
 					c.id companyId,
 					c.logo companyLogo,
 					c.address companyAddress,
+					p.id positionId,
 					p.name positionName,
 					p.type positionType
 				FROM
@@ -201,6 +203,7 @@
 		WHERE
 			r.job_seeker_id = #{jobSeekerId}
 		AND dr.position_id = #{positionId}
+		AND dr.resume_id = r.id
  	</select>
  	
  	  <sql id="condition_sql_for_resume_lib">

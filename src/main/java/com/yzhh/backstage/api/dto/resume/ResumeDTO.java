@@ -41,6 +41,10 @@ public class ResumeDTO {
 	private String arrivalDay;
 	@ApiModelProperty(value = "实习时间")
 	private String internshipTime;
+	@ApiModelProperty(value="头像")
+	private String imageUrl;
+	@ApiModelProperty(value="生日")
+	private String birthday;
 	
 	@ApiModelProperty(value = "教育背景")
 	private List<EducationalBackgroundDTO> educationalBackgroundList;
@@ -279,5 +283,17 @@ public class ResumeDTO {
 	}
 	public void setJobSeekerId(Long jobSeekerId) {
 		this.jobSeekerId = jobSeekerId;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	public String getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
 	}
 }

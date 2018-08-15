@@ -309,7 +309,7 @@ public class AdminController {
 	@PostMapping("/position/list")
 	public ApiResponse positionList(@RequestBody SearchPositionDTO searchPositionDTO, Long page, Integer size) {
 
-		PageDTO<PositionDTO> p = positionService.list(searchPositionDTO, page, size);
+		PageDTO<PositionDTO> p = positionService.list(searchPositionDTO, page, size,null);
 
 		return new ApiResponse(p);
 	}

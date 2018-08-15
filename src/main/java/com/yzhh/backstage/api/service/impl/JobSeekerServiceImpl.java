@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.yzhh.backstage.api.commons.BizException;
 import com.yzhh.backstage.api.constans.Constants;
@@ -23,6 +24,7 @@ import com.yzhh.backstage.api.entity.Account;
 import com.yzhh.backstage.api.entity.CollectionPosition;
 import com.yzhh.backstage.api.entity.CollectionPositionExample;
 import com.yzhh.backstage.api.entity.DeliveryResume;
+import com.yzhh.backstage.api.entity.DeliveryResumeExample;
 import com.yzhh.backstage.api.entity.Feedback;
 import com.yzhh.backstage.api.entity.JobSeeker;
 import com.yzhh.backstage.api.entity.Position;
@@ -30,10 +32,14 @@ import com.yzhh.backstage.api.entity.Resume;
 import com.yzhh.backstage.api.enums.AccountSettingEnum;
 import com.yzhh.backstage.api.enums.AccountTypeEnum;
 import com.yzhh.backstage.api.enums.DeliveryResumeStatusEnum;
+import com.yzhh.backstage.api.enums.IsDefaultEnum;
+import com.yzhh.backstage.api.enums.IsDeleteEnum;
 import com.yzhh.backstage.api.enums.PositionStatusEnum;
 import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.service.IJobSeekerService;
+import com.yzhh.backstage.api.service.IResumeService;
 import com.yzhh.backstage.api.util.CollectionUtils;
+import com.yzhh.backstage.api.util.DoubleFormat;
 import com.yzhh.backstage.api.util.RedisUtil;
 
 @Service
@@ -58,6 +64,8 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 	
 	@Autowired
 	private IAccountService accountService;
+	@Autowired
+	private IResumeService resumeService;
 
 	@Override
 	public boolean isCollectionPosition(Long positionId, Long jobSeekerId) {
@@ -97,10 +105,21 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 		if(account == null) {
 			throw new BizException("未找到账户信息");
 		}
-		Double amount = accountService.getAmountSettingByType(AccountSettingEnum.resumes.getName());
 		
-		if(account.getBalance() -  amount.doubleValue() < 0) {
-			throw new BizException("账余额不足");
+		//投递三次免费
+		boolean flag = true;
+		Long count = deliveryResumeDAO.queryByDeliveryCount(jobSeekerId);
+		if((count.longValue()+1) % 4 == 0) {
+			flag = false;
+		}
+		
+		Double amount = 0D;
+		if(flag) {
+			amount = accountService.getAmountSettingByType(AccountSettingEnum.resumes.getName());
+			
+			if(account.getBalance() -  amount.doubleValue() < 0) {
+				throw new BizException("账余额不足");
+			}
 		}
 		
 		Resume resume = resumeDAO.selectByPrimaryKey(resumeId);
@@ -121,6 +140,13 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 			throw new BizException("职位招聘已截止");
 		}
 		
+		DeliveryResumeExample example = new DeliveryResumeExample();
+		example.createCriteria().andResumeIdEqualTo(resumeId).andPositionIdEqualTo(positionId);
+		List<DeliveryResume> list = deliveryResumeDAO.selectByExample(example);
+		if(CollectionUtils.isNotEmpty(list)) {
+			throw new BizException("已投递过该职位，请等待回复");
+		}
+		
 		DeliveryResume deliveryResume = new DeliveryResume();
 		deliveryResume.setLastAccess(date.getTime());
 		deliveryResume.setResumeId(resume.getId());
@@ -130,9 +156,15 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 		deliveryResume.setMoney(amount);
 		deliveryResumeDAO.insertSelective(deliveryResume);
 		
-		accountDAO.consumptionWater(account, amount, "用户使用"+resume.getName()+"简历，投递"+position.getName()+"职位，消费"+amount+"元");
+		String str = "";
+		if(flag) {
+			str = "投递【"+position.getName()+"】职位，消费"+DoubleFormat.m2(amount)+"元";
+		}else {
+			str = "投递【"+position.getName()+"】职位，活动赠送无需付费";
+		}
+		accountDAO.consumptionWater(account, amount, str);
 	}
-
+	
 	@Override
 	public UserDTO login(WeChatUserInfo user) {
 		
@@ -159,6 +191,14 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 			account.setCapital(0d);
 			account.setLargess(0d);
 			accountDAO.insertSelective(account);
+			
+			Resume resume = new Resume();
+			resume.setLastAccess(lastAccess);
+			resume.setIsDelete(IsDeleteEnum.nomal.getId());
+			resume.setIsDefault(IsDefaultEnum.is_default.getId());
+			resumeDAO.insertSelective(resume);
+			
+			resumeService.calculationResumePerfection(resume.getId());
 		}
 		
 		UserDTO userDTO = new UserDTO();
@@ -295,40 +335,39 @@ public class JobSeekerServiceImpl implements IJobSeekerService {
 			matching += 30;
 		}else {
 			str += "期望职位，";
-			mystr += "期望职位："+resume.getWishPositionName() +"，";
+			mystr += "期望职位："+(StringUtils.isEmpty(resume.getWishPositionName()) ? "" : resume.getWishPositionName() +"，");
 		}
 		if(position.getCity().equals(resume.getWishCity())) {
 			matching += 10;
 		}else {
 			str += "期望城市，";
-			mystr += "期望城市："+resume.getWishCity() +"，";
+			mystr += "期望城市："+(StringUtils.isEmpty(resume.getWishCity()) ? "" : resume.getWishCity()+"，");
 		}
 		if(position.getPerDiem().equals(resume.getPerDiem())) {
 			matching += 25;
 		}else {
 			str += "日薪，";
-			mystr += "日薪："+resume.getPerDiem() +"，";
+			mystr += "日薪："+(StringUtils.isEmpty(resume.getPerDiem()) ? "" : resume.getPerDiem() +"，");
 		}
 		if(position.getEducation().equals(jobSeeker.getEducation())) {
 			matching += 15;
 		}else {
 			str += "学历，";
-			mystr += "学历："+jobSeeker.getEducation() +"，";
+			mystr += "学历："+(StringUtils.isEmpty(jobSeeker.getEducation()) ? "" : jobSeeker.getEducation() +"，");
 		}
 		if(position.getWorkDate().equals(resume.getWorkDay())) {
 			matching += 20;
 		}else {
 			str += "周工作天数，";
-			mystr += "周工作天数："+resume.getWorkDay() +"，";
+			mystr += "周工作天数："+(StringUtils.isEmpty(resume.getWorkDay()) ? "" : resume.getWorkDay()+"，");
 		}
 		str = str.substring(0, str.length() - 1);
-		mystr = mystr.substring(0, str.length() - 1);
 		
 		String s = "";
 		if(matching == 100) {
 			s = "匹配度为100%";
 		}else {
-			s = "匹配度为"+matching+"%，其中"+str+"与该职位要求不匹配，"+mystr;
+			s = "匹配度为"+matching+"%，其中"+str+"与该职位要求不匹配，"+mystr+"确定要投递么？";
 		}
 		return s;
 	}

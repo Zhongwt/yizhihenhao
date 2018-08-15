@@ -69,7 +69,7 @@ public class PackWord {
 					FileInputStream in = new FileInputStream(inputFile);
 					BufferedInputStream bins = new BufferedInputStream(in, 512);
 					String fileName = inputFile.getName();
-					fileName = fileName.substring(0, fileName.lastIndexOf("#"))+"_"+new Date().getTime()+".docx";
+					fileName = fileName.substring(0, fileName.indexOf("."))+"_"+new Date().getTime()+".pdf";
 					ZipEntry entry = new ZipEntry(fileName);
 					ouputStream.putNextEntry(entry);
 					// 向压缩文件中输出数据

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.yzhh.backstage.api.commons.RedisTemplateHelper;
 import com.yzhh.backstage.api.util.VerifyCodeUtils;
+import com.yzhh.backstage.api.util.camera.WebRequest;
 
 @Configuration
 public class Config {
@@ -29,6 +30,11 @@ public class Config {
     @Bean
     public VerifyCodeUtils getVerifyCodeUtils() {
     	return new VerifyCodeUtils();
+    }
+    
+    @Bean
+    public WebRequest WebRequest() {
+    	return new WebRequest();
     }
 
 }

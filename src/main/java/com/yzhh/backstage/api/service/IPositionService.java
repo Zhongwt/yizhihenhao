@@ -13,7 +13,7 @@ public interface IPositionService {
 	//保存职位
 	public void saveOrUpdatePosition(PositionDTO positionDTO);
 	//职位列表
-	public PageDTO<PositionDTO> list(SearchPositionDTO searchPositionDTO,Long page,Integer size);
+	public PageDTO<PositionDTO> list(SearchPositionDTO searchPositionDTO,Long page,Integer size,Long jobSeekerId);
 	//批量下线
 	public void downLine(List<Long> ids);
 	//职位详情
@@ -30,4 +30,6 @@ public interface IPositionService {
 	public PageDTO<PositionDTO> collectionList(Long jobSeekerId,Long page,Integer size);
 	//是否投递职位
 	public Boolean isDelivery(Long jobSeekerId,Long positionId);
+	
+	public void testInsert();
 }

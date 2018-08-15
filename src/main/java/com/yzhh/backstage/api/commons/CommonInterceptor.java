@@ -46,6 +46,8 @@ public class CommonInterceptor implements HandlerInterceptor {
 		exceptionUrl.add("/api/company/register");
 		exceptionUrl.add("/api/company/forget/password");
 		exceptionUrl.add("/api/company/login");
+		exceptionUrl.add("/api/company/down/resume");
+		exceptionUrl.add("/api/company/down/resume/list");
 		
 		exceptionUrl.add("/api/pay/success");
 		exceptionUrl.add("/api/pay/fail");
@@ -54,6 +56,7 @@ public class CommonInterceptor implements HandlerInterceptor {
 		exceptionUrl.add("/api/job/get/code/token");
 		exceptionUrl.add("/api/job/position/list");
 		exceptionUrl.add("/api/job/position/info");
+		exceptionUrl.add("/api/job/get/postion/camara");
 		exceptionUrl.add("/api/job/company/info");
 		exceptionUrl.add("/api/job/position/city");
 	}
@@ -96,7 +99,7 @@ public class CommonInterceptor implements HandlerInterceptor {
 		if (uri.startsWith("/swagger-resources") || uri.startsWith("/v2") || uri.startsWith("/configuration")) {
 			return true;
 		}
-
+		
 		if (exceptionUrl.contains(uri)) {
 			return true;
 		}

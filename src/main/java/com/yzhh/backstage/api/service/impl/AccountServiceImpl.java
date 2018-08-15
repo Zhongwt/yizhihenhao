@@ -28,6 +28,7 @@ import com.yzhh.backstage.api.enums.AccountSettingEnum;
 import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
+import com.yzhh.backstage.api.util.DoubleFormat;
 
 @Service
 public class AccountServiceImpl implements IAccountService{
@@ -144,20 +145,20 @@ public class AccountServiceImpl implements IAccountService{
 		}
 		
 		Double largessAmount = 0d;
-		if(totalFee > 200) {
+		if(totalFee >= 200) {
 			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
-		}else if(totalFee > 100){
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
-		}else if(totalFee > 50){
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
-		}else if(totalFee > 30){
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
-		}else if(totalFee > 20){
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
-		}else if(totalFee > 10){
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
+		}else if(totalFee >= 100){
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_fifth_gear.getName());
+		}else if(totalFee >= 50){
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_fourth_gear.getName());
+		}else if(totalFee >= 30){
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_third_gear.getName());
+		}else if(totalFee >= 20){
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_second_gear.getName());
+		}else if(totalFee >= 10){
+			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_first_gear.getName());
 		}
 		
-		accountDAO.rechargeWater(account, totalFee,largessAmount , "用户充值【"+totalFee+"】元成功");
+		accountDAO.rechargeWater(account, totalFee,largessAmount , "充值【"+DoubleFormat.m2(totalFee)+"】元成功");
 	}
 }

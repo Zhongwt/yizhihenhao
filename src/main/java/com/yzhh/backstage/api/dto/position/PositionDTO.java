@@ -1,11 +1,14 @@
 package com.yzhh.backstage.api.dto.position;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class PositionDTO {
+public class PositionDTO implements Serializable{
 
+	private static final long serialVersionUID = -1406639887339976621L;
 	private Long id;
 	@NotNull
 	@ApiModelProperty(value="公司id")
@@ -71,6 +74,8 @@ public class PositionDTO {
 	private String required;				//简历要求
 	@ApiModelProperty(value="是否投递")
 	private Boolean isDelivery;			//是否投递
+	
+	private String spCode;			//小程序码
 	
 	
 	public String getCompanyNickName() {
@@ -253,5 +258,11 @@ public class PositionDTO {
 	}
 	public void setIsDelivery(Boolean isDelivery) {
 		this.isDelivery = isDelivery;
+	}
+	public String getSpCode() {
+		return spCode;
+	}
+	public void setSpCode(String spCode) {
+		this.spCode = spCode;
 	}
 }

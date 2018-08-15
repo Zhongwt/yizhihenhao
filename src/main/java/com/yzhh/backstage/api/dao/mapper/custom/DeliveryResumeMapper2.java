@@ -20,4 +20,6 @@ public interface DeliveryResumeMapper2{
 	//获取某个简历是否投某个公司
 	public List<DeliveryResume> getDeliveryResume(@Param("resumeId")Long resumeId,@Param("companyId")Long companyId);
 	
+	//获取投递次数
+	public Long queryByDeliveryCount(@Param("jobSeekerId") Long jobSeekerId);
 }

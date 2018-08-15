@@ -46,6 +46,8 @@ public class PageResumeDTO {
 	private String companyAddress;
 	@ApiModelProperty(value = "公司logo")
 	private String companyLogo;
+	@ApiModelProperty(value = "职位id")
+	private Long positionId;
 	@ApiModelProperty(value = "职位名称")
 	private String positionName;
 	@ApiModelProperty(value = "职位类型")
@@ -221,5 +223,11 @@ public class PageResumeDTO {
 	}
 	public void setCompanyAddress(String companyAddress) {
 		this.companyAddress = companyAddress;
+	}
+	public Long getPositionId() {
+		return positionId;
+	}
+	public void setPositionId(Long positionId) {
+		this.positionId = positionId;
 	}
 }

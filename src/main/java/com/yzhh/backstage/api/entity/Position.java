@@ -5,49 +5,27 @@ public class Position extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 
 	private Long companyId;
-
     private Long releaseDate;
-
     private String type;
-
     private String name;
-
     private String province;
-
     private String city;
-
     private String area;
-
     private Integer perpleNum;
-
     private String seduction;
-
     private String description;
-
     private String education;
-
     private String address;
-
     private String workType;
-
     private String internshipTime;
-
     private String workTime;
-
     private String correctionChance;
-
     private Integer status;
-
     private Long deadline;
-
     private String perDiem;
-
     private Boolean isPressing;
-
     private String workDate;
-    
     private String optionNote;
-    
     private String required;
 
     public String getRequired() {

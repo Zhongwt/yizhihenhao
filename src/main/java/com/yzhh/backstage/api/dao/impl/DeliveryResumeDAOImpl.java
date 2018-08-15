@@ -46,4 +46,9 @@ public class DeliveryResumeDAOImpl extends DAOImpl<DeliveryResume, DeliveryResum
 		return mapper2.getDeliveryResume(resumeId, companyId);
 	}
 
+	@Override
+	public Long queryByDeliveryCount(Long jobSeekerId) {
+		return mapper2.queryByDeliveryCount(jobSeekerId);
+	}
+
 }

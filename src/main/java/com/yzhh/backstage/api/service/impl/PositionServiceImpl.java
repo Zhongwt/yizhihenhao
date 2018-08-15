@@ -126,7 +126,7 @@ public class PositionServiceImpl implements IPositionService {
 	}
 
 	@Override
-	public PageDTO<PositionDTO> list(SearchPositionDTO searchPositionDTO, Long page, Integer size) {
+	public PageDTO<PositionDTO> list(SearchPositionDTO searchPositionDTO, Long page, Integer size,Long jobSeekerId) {
 
 		if (page == null) {
 			page = 1L;
@@ -156,7 +156,7 @@ public class PositionServiceImpl implements IPositionService {
 			if (searchPositionDTO.getStatus().equals("招聘中")) {
 				// 招聘中
 				params.put("status", PositionStatusEnum.audited.getId());
-				params.put("deadLineStar", DateUtils.dateToString(date, null));
+				params.put("deadLineStar", DateUtils.stringToLong(DateUtils.dateToString(date, null), null));
 			}
 			if (searchPositionDTO.getStatus().equals("已下线")) {
 				// 已下线
@@ -165,7 +165,7 @@ public class PositionServiceImpl implements IPositionService {
 			if (searchPositionDTO.getStatus().equals("已过期")) {
 				// 已过期
 				params.put("status", PositionStatusEnum.audited.getId());
-				params.put("deadLineEnd", DateUtils.dateToString(date, null));
+				params.put("deadLineEnd", DateUtils.stringToLong(DateUtils.dateToString(date, null),null) );
 			}
 			if (searchPositionDTO.getStatus().equals("未审核")) {
 				// 审核中
@@ -267,6 +267,7 @@ public class PositionServiceImpl implements IPositionService {
 				positionDTO.setCompanyScale(company.getScale());
 				positionDTO.setIsPressing(position.getIsPressing());
 				positionDTO.setWorkDate(position.getWorkDate());
+				positionDTO.setIsDelivery(jobSeekerId == null? false : this.isDelivery(jobSeekerId, position.getId()));
 
 				list.add(positionDTO);
 			}
@@ -315,7 +316,7 @@ public class PositionServiceImpl implements IPositionService {
 		Company company = companyDAO.selectByPrimaryKey(position.getCompanyId());
 
 		positionDTO.setId(position.getId());
-		positionDTO.setCompanyId(positionDTO.getCompanyId());
+		positionDTO.setCompanyId(position.getCompanyId());
 		positionDTO.setReleaseDate(DateUtils.longToString(position.getReleaseDate(), null));
 		positionDTO.setType(position.getType());
 		positionDTO.setName(position.getName());
@@ -458,7 +459,7 @@ public class PositionServiceImpl implements IPositionService {
 			SearchPositionDTO searchPositionDTO = new SearchPositionDTO();
 			searchPositionDTO.setStatus("招聘中");
 			searchPositionDTO.setPositionIds(positionIds);
-			return this.list(searchPositionDTO, page, size);
+			return this.list(searchPositionDTO, page, size,jobSeekerId);
 		}
 		List<PositionDTO> l = new ArrayList<>();
 		
@@ -474,6 +475,36 @@ public class PositionServiceImpl implements IPositionService {
 		Long count = resumeDAO.isDelivery(params);
 		
 		return count != null && count > 0 ? true : false;
+	}
+
+	@Override
+	public void testInsert() {
+		Position position = new Position();
+		for(int i=0;i<=200;i++) {
+			Long lastAccess = new Date().getTime();
+			position.setId(null);
+			position.setLastAccess(lastAccess);
+			position.setCompanyId(1L);
+			position.setReleaseDate(lastAccess);
+			position.setType("测试类");
+			position.setName("测试职位"+i);
+			position.setProvince("江西");
+			position.setCity("南昌");
+			position.setArea("南昌县");
+			position.setProvince("1");
+			position.setSeduction("职业诱惑");
+			position.setDescription("描述");
+			position.setEducation("本科");
+			position.setAddress("江西省南昌市老福山");
+			position.setWorkType("实习");
+			position.setCorrectionChance("面议");
+			position.setStatus(2);
+			position.setDeadline(lastAccess+10000000);
+			position.setPerDiem("100-200");
+			position.setIsPressing(false);
+			position.setWorkDate("长期");
+			positionDAO.insertSelective(position);
+		}
 	}
 
 }

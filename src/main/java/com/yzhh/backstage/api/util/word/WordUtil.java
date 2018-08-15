@@ -1,4 +1,4 @@
-//package com.yzhh.backstage.api.util;
+//package com.yzhh.backstage.api.util.word;
 //
 //import java.io.ByteArrayOutputStream;
 //import java.io.File;
@@ -9,6 +9,7 @@
 //import java.net.HttpURLConnection;
 //import java.net.URL;
 //
+//import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 //import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 //import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 //import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -301,9 +302,9 @@
 //	}
 //	
 //	//生成doc
-//		public static void makeDocx(ResumeDTO resumeDTO,String fileName) throws IOException {
+//		public static void makeDocx(ResumeDTO resumeDTO,String fileName) throws IOException, InvalidFormatException {
 //			// Blank Document
-//			XWPFDocument document = new XWPFDocument();
+//			CustomXWPFDocument document = new CustomXWPFDocument();
 //
 //			// Write the Document in file system
 //			FileOutputStream out = new FileOutputStream(new File(path+fileName));
@@ -334,11 +335,9 @@
 //			mergeCellsHorizontal(table,3,4,6);
 //			
 //			table.getRow(0).getCell(0).setText("头像:");
-//			byte[] imgByte =  getImageFromNetByUrl("http://img.yizhihenhao.com/3");
 //			
 //			
-//			//String picId1 = document.addPictureData(imgByte, XWPFDocument.PICTURE_TYPE_JPEG);
-//	        //document.createPicture(picId1, document.getNextPicNameNumber(XWPFDocument.PICTURE_TYPE_PNG), 580, 250);
+//			
 //			
 //			table.getRow(1).getCell(1).setText("性    别:");
 //			table.getRow(1).getCell(2).setText("女");
@@ -358,7 +357,16 @@
 //			table.getRow(3).getCell(4).setText("245473357@qq.com");
 //			
 //			
-//			
+//			try {
+//				byte[] imgByte =  getImageFromNetByUrl("http://img.yizhihenhao.com/3");
+//				CTP ctp = CTP.Factory.newInstance();
+//				XWPFParagraph p = new XWPFParagraph(ctp, table.getRow(3).getCell(0));
+//				table.getRow(3).getCell(0).addParagraph(p);
+//				String picId1 = document.addPictureData(imgByte, XWPFDocument.PICTURE_TYPE_JPEG);
+//				document.createPicture(picId1, document.getNextPicNameNumber(XWPFDocument.PICTURE_TYPE_PNG), 140, 180);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 //			
 //
 //			document.write(out);
@@ -445,7 +453,7 @@
 //	        return outStream.toByteArray();  
 //	    }  
 //		
-//		public static void main(String[] args) throws IOException {
+//		public static void main(String[] args) throws IOException, InvalidFormatException {
 //			WordUtil.makeDocx(null, 123+".docx");
 //			System.out.println("生成成功");
 //		}
