@@ -61,7 +61,7 @@ public class WebRequest {
 		
 		Map<String,Object> map = new HashMap<>();
 		map.put("scene", str);
-		map.put("path", path);
+		map.put("page", path);
 		map.put("width", 430);
 		map.put("auto_color", false);
 		map.put("line_color", colorMap);
@@ -95,6 +95,7 @@ public class WebRequest {
 		//获取小程序码
 		String spCode = this.getWxCode(path, str);		
 		positionDTO.setSpCode(spCode);
+		positionDTO.setDescription(null);
 		
 		logger.info("发送post请求");
 		String param = "data="+JSON.toJSONString(positionDTO);

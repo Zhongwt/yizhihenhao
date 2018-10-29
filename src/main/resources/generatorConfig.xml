@@ -40,7 +40,7 @@
 
 
 
-      <table schema="DB2ADMIN" tableName="feedback">
+      <table schema="DB2ADMIN" tableName="banner">
           <generatedKey column="ID" sqlStatement="Mysql" identity="true"/>
       </table>
 

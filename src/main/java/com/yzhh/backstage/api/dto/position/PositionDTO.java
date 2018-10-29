@@ -10,12 +10,14 @@ public class PositionDTO implements Serializable{
 
 	private static final long serialVersionUID = -1406639887339976621L;
 	private Long id;
-	@NotNull
 	@ApiModelProperty(value="公司id")
 	private Long companyId;
 	@NotNull
 	@ApiModelProperty(value="职位类型")
 	private String type;
+	@NotNull
+	@ApiModelProperty(value="职位类型2")
+	private String type2;
 	@NotNull
 	@ApiModelProperty(value="职位名称")
 	private String name;
@@ -77,7 +79,22 @@ public class PositionDTO implements Serializable{
 	
 	private String spCode;			//小程序码
 	
+	private String province;
+	private String area;
 	
+	
+	public String getProvince() {
+		return province;
+	}
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	public String getArea() {
+		return area;
+	}
+	public void setArea(String area) {
+		this.area = area;
+	}
 	public String getCompanyNickName() {
 		return companyNickName;
 	}
@@ -264,5 +281,11 @@ public class PositionDTO implements Serializable{
 	}
 	public void setSpCode(String spCode) {
 		this.spCode = spCode;
+	}
+	public String getType2() {
+		return type2;
+	}
+	public void setType2(String type2) {
+		this.type2 = type2;
 	}
 }

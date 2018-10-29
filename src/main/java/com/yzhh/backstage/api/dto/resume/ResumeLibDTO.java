@@ -28,6 +28,8 @@ public class ResumeLibDTO {
 	private String education;
 	@ApiModelProperty(value="毕业时间")
 	private String graduationTime;
+	@ApiModelProperty(value="期望职位")
+	private String wishPositionName;
 	
 	public Long getId() {
 		return id;
@@ -100,5 +102,11 @@ public class ResumeLibDTO {
 	}
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	public String getWishPositionName() {
+		return wishPositionName;
+	}
+	public void setWishPositionName(String wishPositionName) {
+		this.wishPositionName = wishPositionName;
 	}
 }

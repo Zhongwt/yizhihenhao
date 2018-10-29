@@ -1,37 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yzhh.backstage.api.dao.mapper.custom.PositionMapper2">
-  <resultMap id="BaseResultMap" type="com.yzhh.backstage.api.entity.Position">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
-    <result column="company_id" jdbcType="BIGINT" property="companyId" />
-    <result column="release_date" jdbcType="BIGINT" property="releaseDate" />
-    <result column="type" jdbcType="VARCHAR" property="type" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="province" jdbcType="VARCHAR" property="province" />
-    <result column="city" jdbcType="VARCHAR" property="city" />
-    <result column="area" jdbcType="VARCHAR" property="area" />
-    <result column="perple_num" jdbcType="INTEGER" property="perpleNum" />
-    <result column="seduction" jdbcType="VARCHAR" property="seduction" />
-    <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="education" jdbcType="VARCHAR" property="education" />
-    <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="work_type" jdbcType="VARCHAR" property="workType" />
-    <result column="internship_time" jdbcType="VARCHAR" property="internshipTime" />
-    <result column="work_time" jdbcType="VARCHAR" property="workTime" />
-    <result column="correction_chance" jdbcType="VARCHAR" property="correctionChance" />
-    <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="deadline" jdbcType="BIGINT" property="deadline" />
-    <result column="per_diem" jdbcType="VARCHAR" property="perDiem" />
-    <result column="is_pressing" jdbcType="BIT" property="isPressing" />
-    <result column="work_date" jdbcType="VARCHAR" property="workDate" />
-    <result column="option_note" jdbcType="VARCHAR" property="optionNote" />
-    <result column="required" jdbcType="VARCHAR" property="required" />
-  </resultMap>
+  
 	<sql id="condition_sql">
 		p.company_id = c.id
 		<if test="searchKey">
-			AND (p.name like CONCAT(CONCAT('%',#{searchKey},'%')) or c.name like CONCAT(CONCAT('%',#{searchKey},'%')))
+			AND (p.name like CONCAT(CONCAT('%',#{searchKey},'%')) or c.nick_name like CONCAT(CONCAT('%',#{searchKey},'%')))
 		</if>
 		<if test="status">
 			AND p.status = #{status}
@@ -51,11 +25,67 @@
 		<if test="perDiem != null">
 			AND  p.per_diem  = #{perDiem}
 		</if>
+		<if test="perDiems != null and perDiems == '100-200'">
+			AND  (p.per_diem  = '100-150' or p.per_diem  = '150-200') 
+		</if>
+		<if test="perDiems != null and perDiems == '200以上'">
+			AND  (p.per_diem  = '200-250' 
+			or p.per_diem  = '250-300' 
+			or p.per_diem  = '300-350' 
+			or p.per_diem  = '350-400' 
+			or p.per_diem  = '400-450' 
+			or p.per_diem  = '450-500' 
+			or p.per_diem  = '500-600' 
+			or p.per_diem  = '600-700' 
+			or p.per_diem  = '700-800' 
+			or p.per_diem  = '800-900' 
+			or p.per_diem  = '900-1000' 
+			or p.per_diem  = '1000以上')
+		</if>
+		<if test="perDiems != null and perDiems == '250以上'">
+			AND  (p.per_diem  = '250-300' 
+			or p.per_diem  = '300-350' 
+			or p.per_diem  = '350-400' 
+			or p.per_diem  = '400-450' 
+			or p.per_diem  = '450-500' 
+			or p.per_diem  = '500-600' 
+			or p.per_diem  = '600-700' 
+			or p.per_diem  = '700-800' 
+			or p.per_diem  = '800-900' 
+			or p.per_diem  = '900-1000' 
+			or p.per_diem  = '1000以上')
+		</if>
 		<if test="workTime != null">
 			AND  p.work_time  = #{workTime}
 		</if>
+		<if test="workTimes != null and workTimes == '1-3天'">
+			AND ( p.work_time  = '1' or p.work_time  = '2' or p.work_time  = '3')
+		</if>
+		<if test="workTimes != null and workTimes == '3天以上'">
+			AND ( p.work_time  = '4' 
+			or p.work_time  = '5' 
+			or p.work_time  = '6' 
+			or p.work_time  = '7' )
+		</if>
 		<if test="workDate != null">
 			AND  p.work_date  = #{workDate}
+		</if>
+		<if test="workDates != null and workDates == '1月以下'">
+			AND  p.internship_time  = '1月以下'
+		</if>
+		<if test="workDates != null and workDates == '1-3月'">
+			AND  (p.internship_time  = '1个月' or p.internship_time  = '2个月' or p.internship_time  = '3个月')
+		</if>
+		<if test="workDates != null and workDates == '3月以上'">
+			AND  (p.internship_time  = '4个月' 
+			or p.internship_time  = '5个月' 
+			or p.internship_time  = '6个月' 
+			or p.internship_time  = '7个月' 
+			or p.internship_time  = '8个月' 
+			or p.internship_time  = '9个月' 
+			or p.internship_time  = '10个月' 
+			or p.internship_time  = '11个月' 
+			or p.internship_time  = '12个月')
 		</if>
 		<if test="education != null">
 			AND  p.education  = #{education}
@@ -67,7 +97,7 @@
 			AND  p.type  = #{type}
 		</if>
 		<if test="name != null">
-			AND  p.name  = #{name}
+			AND  p.name  like CONCAT(CONCAT('%',#{name},'%'))
 		</if>
 		<if test="workType != null">
 			AND  p.work_type  = #{workType}
@@ -90,7 +120,7 @@
 	</sql>
 	
 	<!-- 分页查询日志 -->
- 	<select id="queryByPage" resultMap="BaseResultMap">
+ 	<select id="queryByPage" resultMap="com.yzhh.backstage.api.dao.mapper.PositionMapper.BaseResultMap">
  		SELECT
 			p.*
 		FROM

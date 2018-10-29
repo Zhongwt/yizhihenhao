@@ -17,7 +17,7 @@ public class MoblieMessageUtil {
 	// 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
 	private static String accessKeyId = "LTAI8Sd9lsD0ZWL9";
 	private static String accessKeySecret = "lnnTwgvkGTlaHLzykhXJoi27zpIgSm";
-	private static String signName = "阿里云短信测试专用";
+	private static String signName = "一职很好";
 	private static String identifyingTempleteCode = "SMS_139865027";
 	private static String registTempleteCode = "SMS_139865026";
 

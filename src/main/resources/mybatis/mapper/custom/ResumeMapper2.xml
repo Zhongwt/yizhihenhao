@@ -41,11 +41,14 @@
  		<if test="jobSeekerId != null">
  			AND js.id = #{jobSeekerId}
  		</if>
- 		<if test="status != null and status != 5">
+ 		<if test="status != null and status != 5 and status != 1">
  			AND dr.status = #{status}
  		</if>
  		<if test="status != null and status == 5">
  			AND dr.status in (5,6)
+ 		</if>
+ 		<if test="status != null and status == 1">
+ 			AND dr.status in (1,2)
  		</if>
  		<if test="name != null">
  			AND p.name = #{name}
@@ -85,7 +88,8 @@
 			i.address interviewAddress,
 			i.phone interviewPhone,
 			i.contacts interviewContract,
-			i.note interviewNote
+			i.note interviewNote,
+			r.imageUrl
 		FROM
 			(
 				SELECT
@@ -118,7 +122,8 @@
 					c.address companyAddress,
 					p.id positionId,
 					p.name positionName,
-					p.type positionType
+					p.type positionType,
+					js.image_url imageUrl
 				FROM
 					job_seeker js,
 					delivery_resume dr,
@@ -208,16 +213,16 @@
  	
  	  <sql id="condition_sql_for_resume_lib">
  		<if test="type != null">
-				AND p.type = #{type}
+				AND r.work_type = #{type}
  		</if>
  		<if test="name != null">
- 			AND p.name = #{name}
+ 			AND r.wish_position_name = #{name}
  		</if>
  		<if test="searchKey != null">
- 			AND ( js.name like CONCAT(CONCAT('%',#{searchKey},'%')) OR js.graduation_school like CONCAT(CONCAT('%',#{searchKey},'%')) )
+ 			AND ( jb.name like CONCAT(CONCAT('%',#{searchKey},'%')) OR jb.graduation_school like CONCAT(CONCAT('%',#{searchKey},'%')) )
  		</if>
  		<if test="city != null">
- 			AND js.city = #{city}
+ 			AND jb.city = #{city}
  		</if>
  		<if test="workDay != null">
  			AND r.work_day = #{workDay}
@@ -229,36 +234,37 @@
  			AND r.arrival_day &gt;= #{arrivalDay}
  		</if>
  		<if test="education != null">
- 			AND js.education = #{education}
+ 			AND jb.education = #{education}
  		</if>
  		<if test="graduationTime != null">
- 			AND js.graduation_time = #{graduationTime}
+ 			AND jb.graduation_time = #{graduationTime}
  		</if>
  		<if test="graduationSchool != null">
- 			AND js.graduation_school = #{graduationSchool}
+ 			AND jb.graduation_school = #{graduationSchool}
  		</if>
  		<if test="sex != null">
- 			AND js.sex = #{sex}
+ 			AND jb.sex = #{sex}
  		</if>
  	</sql>
  	
  	<select id="queryLibByPage" resultType="com.yzhh.backstage.api.dto.resume.ResumeLibDTO">
  		SELECT
 			r.id,
-			r.`name`,
+			jb.`name`,
 			jb. NAME jobSeekerName,
-			jb.image_url imgeUrl,
+			jb.image_url imageUrl,
 			jb.city,
 			jb.sex,
 			r.work_day workDay,
 			r.internship_time internshipTime,
 			from_unixtime(
-				r.arrivalDay  / 1000,
-				'%Y-%m-%d %H:%m:%s'
+				r.arrival_day  / 1000,
+				'%Y-%m-%d'
 			) arrivalDay,
 			jb.graduation_school graduationSchool,
 			jb.education,
-			jb.graduation_time graduationTime
+			jb.graduation_time graduationTime,
+			r.wish_position_name wishPositionName
 		FROM
 			resume r,
 			job_seeker jb
@@ -279,4 +285,6 @@
 				r.job_seeker_id = jb.id
 			<include refid="condition_sql_for_resume_lib"></include>
  	</select>
+ 	
+ 	
 </mapper>

@@ -105,4 +105,8 @@ public class MD5 {
  		int d2 = n % 16;
  		return hexDigits[d1] + hexDigits[d2];
  	}
+ 	
+ 	public static void main(String[] args) {
+		System.out.println(MD5.getMD5("yzhh1230030"));
+	}
 }

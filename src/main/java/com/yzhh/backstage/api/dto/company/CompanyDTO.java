@@ -34,8 +34,15 @@ public class CompanyDTO {
 	private String registeredCapital;			//注册资本
 	private Double balance;						//公司余额
 	private String nickName;
+	private String optionNote;
 	
 	
+	public String getOptionNote() {
+		return optionNote;
+	}
+	public void setOptionNote(String optionNote) {
+		this.optionNote = optionNote;
+	}
 	public String getNickName() {
 		return nickName;
 	}

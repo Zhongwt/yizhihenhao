@@ -10,6 +10,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,6 +31,8 @@ import com.yzhh.backstage.api.util.RedisUtil;
  * @version 1.0.1
  */
 public class CommonInterceptor implements HandlerInterceptor {
+	
+	private Logger logger = LoggerFactory.getLogger(CommonInterceptor.class);
 
 	@Autowired
 	private RedisUtil redisUtil;
@@ -40,8 +44,13 @@ public class CommonInterceptor implements HandlerInterceptor {
 		exceptionUrl.add("/api/mobile/verify/code");
 		exceptionUrl.add("/ap/email/verify/code");
 		exceptionUrl.add("/api/upload/file");
+		
+		exceptionUrl.add("/api/amount/gift");
 
 		exceptionUrl.add("/api/admin/login");
+		
+		exceptionUrl.add("/api/wx/banner");
+		
 
 		exceptionUrl.add("/api/company/register");
 		exceptionUrl.add("/api/company/forget/password");
@@ -51,6 +60,8 @@ public class CommonInterceptor implements HandlerInterceptor {
 		
 		exceptionUrl.add("/api/pay/success");
 		exceptionUrl.add("/api/pay/fail");
+		
+		exceptionUrl.add("/api/wx/pay/success");
 
 		exceptionUrl.add("/api/job/get/code");
 		exceptionUrl.add("/api/job/get/code/token");
@@ -75,25 +86,14 @@ public class CommonInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
-		// -------测试代码 start -----------------------//
-		// LoginUser testUser = new LoginUser();
-
-		// UserDTO userDTO = new UserDTO();
-		//
-		// userDTO.setId(1L);
-		// userDTO.setJurisdiction("1,2,3,4,5,6,7,8,9,10");
-		// userDTO.setEmail("");
-		// userDTO.setName("admin");
-		// userDTO.setRole(0);
-		// request.getSession().setAttribute(Constants.USER_LOGIN, userDTO);
-		// if (userDTO != null) {
-		// return true;
-		// }
-
 		String uri = request.getRequestURI();
 		String ip = getIpAddr(request);
 
 		request.getSession().setAttribute(Constants.IP, ip);
+		
+		if(uri.equals("/api/wx/pay/success")) {
+			logger.info("已收到微信返回url");
+		}
 
 		// 如果是swagger的请求就直接通过
 		if (uri.startsWith("/swagger-resources") || uri.startsWith("/v2") || uri.startsWith("/configuration")) {
@@ -112,27 +112,34 @@ public class CommonInterceptor implements HandlerInterceptor {
 			switch (identity) {
 			case "admin":
 				user = (UserDTO) redisUtil.get(Constants.ADMIN_LOGIN + token);
+				if (user == null) {
+					throw new BizException(CommonError.USER_AUTH_ERROR);
+				}
 				// 刷新缓存
 				redisUtil.set(Constants.ADMIN_LOGIN + user.getId(), user, Constants.TWO_HOUR);
 				request.getSession().setAttribute(Constants.USER_LOGIN_SESSION, user);
 				break;
 			case "company":
 				user = (UserDTO) redisUtil.get(Constants.COMPANY_LOGIN + token);
+				if (user == null) {
+					throw new BizException(CommonError.USER_AUTH_ERROR);
+				}
 				// 刷新缓存
 				redisUtil.set(Constants.COMPANY_LOGIN + user.getId(), user, Constants.TWO_HOUR);
 				request.getSession().setAttribute(Constants.USER_LOGIN_SESSION, user);
 				break;
 			case "jobSeeker":
 				user = (UserDTO) redisUtil.get(Constants.JOB_SEEKER_LOGIN + token);
+				if (user == null) {
+					throw new BizException(CommonError.USER_AUTH_ERROR);
+				}
 				// 刷新缓存
 				request.getSession().setAttribute(Constants.USER_LOGIN_SESSION, user);
 				break;
 			}
 		}
 
-		if (user == null) {
-			throw new BizException(CommonError.USER_AUTH_ERROR);
-		}
+		
 
 		return true;
 	}

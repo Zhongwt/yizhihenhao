@@ -7,6 +7,7 @@
     <result column="company_id" jdbcType="BIGINT" property="companyId" />
     <result column="release_date" jdbcType="BIGINT" property="releaseDate" />
     <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="type2" jdbcType="VARCHAR" property="type2" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="province" jdbcType="VARCHAR" property="province" />
     <result column="city" jdbcType="VARCHAR" property="city" />
@@ -87,7 +88,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, last_access, company_id, release_date, type, name, province, city, area, perple_num, 
+    id, last_access, company_id, release_date, type, type2, name, province, city, area, perple_num, 
     seduction, description, education, address, work_type, internship_time, work_time, 
     correction_chance, status, deadline, per_diem, is_pressing, work_date,option_note,required
   </sql>
@@ -126,7 +127,7 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into position (last_access, company_id, release_date, 
-      type, name, province, 
+      type, type2, name, province, 
       city, area, perple_num, 
       seduction, description, education, 
       address, work_type, internship_time, 
@@ -134,7 +135,7 @@
       deadline, per_diem, is_pressing, 
       work_date,option_note,required)
     values (#{lastAccess,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT}, #{releaseDate,jdbcType=BIGINT}, 
-      #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{type2,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{perpleNum,jdbcType=INTEGER}, 
       #{seduction,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{workType,jdbcType=VARCHAR}, #{internshipTime,jdbcType=VARCHAR}, 
@@ -159,6 +160,9 @@
       </if>
       <if test="type != null">
         type,
+      </if>
+      <if test="type2 != null">
+        type2,
       </if>
       <if test="name != null">
         name,
@@ -233,6 +237,9 @@
       </if>
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="type2 != null">
+        #{type2,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -320,6 +327,9 @@
       <if test="record.type != null">
         type = #{record.type,jdbcType=VARCHAR},
       </if>
+      <if test="record.type2 != null">
+        type2 = #{record.type2,jdbcType=VARCHAR},
+      </if>
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
       </if>
@@ -393,6 +403,7 @@
       company_id = #{record.companyId,jdbcType=BIGINT},
       release_date = #{record.releaseDate,jdbcType=BIGINT},
       type = #{record.type,jdbcType=VARCHAR},
+      type2 = #{record.type2,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       province = #{record.province,jdbcType=VARCHAR},
       city = #{record.city,jdbcType=VARCHAR},
@@ -431,6 +442,9 @@
       </if>
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="type2 != null">
+        type2 = #{type2,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
@@ -501,6 +515,7 @@
       company_id = #{companyId,jdbcType=BIGINT},
       release_date = #{releaseDate,jdbcType=BIGINT},
       type = #{type,jdbcType=VARCHAR},
+      type2 = #{type2,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       province = #{province,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},

@@ -1,5 +1,9 @@
 package com.yzhh.backstage.api.service;
 
+import java.util.List;
+import java.util.Map;
+
+import com.yzhh.backstage.api.dto.AuditDTO;
 import com.yzhh.backstage.api.dto.ForgetPasswordDTO;
 import com.yzhh.backstage.api.dto.LoginDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
@@ -37,7 +41,7 @@ public interface ICompanyService {
 	public void updatePassword(Long companyId, UpdatePasswordDTO updatePasswordDTO);
 
 	// 审核通过企业
-	public void passCompany(Long id);
+	public void passCompany(AuditDTO auditDTO);
 
 	// 移除企业
 	public void removeCompany(Long id);
@@ -69,4 +73,9 @@ public interface ICompanyService {
 	// 更新企业基础信息
 	public void update(Long companyId, UpdateCompanyDTO updateCompanyDTO);
 
+	// 公司付下载简历的钱
+	public void payForResume(Long companyId, List<Long> resumeIds);
+
+	// 判断这个公司下载这些简历需要多少钱
+	public Map<String,Object> resumeShowPay(Long companyId, List<Long> resumeIds);
 }

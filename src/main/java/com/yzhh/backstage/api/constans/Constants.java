@@ -78,7 +78,7 @@ public class Constants
 	 //微信统一下单url
     public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     //微信支付通知url
-    public static final String NOTIFY_URL ="http://www.yizhihenhao.com/api/pay/success/";
+    public static final String NOTIFY_URL ="https://www.yizhihenhao.com/api/wx/pay/success";
     
     public static final String RETURN_SUCCESS = "SUCCESS";
     

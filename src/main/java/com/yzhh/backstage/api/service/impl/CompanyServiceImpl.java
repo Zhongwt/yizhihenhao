@@ -3,8 +3,10 @@ package com.yzhh.backstage.api.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +17,14 @@ import com.yzhh.backstage.api.commons.BizException;
 import com.yzhh.backstage.api.constans.Constants;
 import com.yzhh.backstage.api.dao.IAccountDAO;
 import com.yzhh.backstage.api.dao.ICompanyDAO;
+import com.yzhh.backstage.api.dao.ICompanyJobSeekerDAO;
 import com.yzhh.backstage.api.dao.ICompanyNoticeDAO;
+import com.yzhh.backstage.api.dao.IDeliveryResumeDAO;
 import com.yzhh.backstage.api.dao.IInterviewDAO;
+import com.yzhh.backstage.api.dao.IJobSeekerDAO;
 import com.yzhh.backstage.api.dao.IPositionDAO;
 import com.yzhh.backstage.api.dao.IResumeDAO;
+import com.yzhh.backstage.api.dto.AuditDTO;
 import com.yzhh.backstage.api.dto.ForgetPasswordDTO;
 import com.yzhh.backstage.api.dto.LoginDTO;
 import com.yzhh.backstage.api.dto.PageDTO;
@@ -37,8 +43,15 @@ import com.yzhh.backstage.api.dto.company.UpdateCompanyDTO;
 import com.yzhh.backstage.api.entity.Account;
 import com.yzhh.backstage.api.entity.Company;
 import com.yzhh.backstage.api.entity.CompanyExample;
+import com.yzhh.backstage.api.entity.CompanyJobSeeker;
+import com.yzhh.backstage.api.entity.CompanyJobSeekerExample;
 import com.yzhh.backstage.api.entity.CompanyNotice;
 import com.yzhh.backstage.api.entity.CompanyNoticeExample;
+import com.yzhh.backstage.api.entity.DeliveryResume;
+import com.yzhh.backstage.api.entity.JobSeeker;
+import com.yzhh.backstage.api.entity.Resume;
+import com.yzhh.backstage.api.entity.ResumeExample;
+import com.yzhh.backstage.api.enums.AccountSettingEnum;
 import com.yzhh.backstage.api.enums.AccountTypeEnum;
 import com.yzhh.backstage.api.enums.CompanyIdentificationEnum;
 import com.yzhh.backstage.api.enums.CompanyStatusEnum;
@@ -46,11 +59,13 @@ import com.yzhh.backstage.api.enums.IsReadEnum;
 import com.yzhh.backstage.api.enums.PositionStatusEnum;
 import com.yzhh.backstage.api.enums.RoleEnum;
 import com.yzhh.backstage.api.error.CommonError;
+import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.service.ICompanyService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
 import com.yzhh.backstage.api.util.MD5;
 import com.yzhh.backstage.api.util.RedisUtil;
+import com.yzhh.backstage.api.util.camera.SensitiveString;
 
 @Service
 public class CompanyServiceImpl implements ICompanyService {
@@ -68,7 +83,18 @@ public class CompanyServiceImpl implements ICompanyService {
 	@Autowired
 	private IAccountDAO accountDAO;
 	@Autowired
+	private IJobSeekerDAO jobSeekerDAO;
+	@Autowired
+	private ICompanyJobSeekerDAO companyJobSeekerDAO;
+	@Autowired
+	private IDeliveryResumeDAO deliveryResumeDAO;
+	@Autowired
 	private RedisUtil redisUtil;
+	@Autowired
+	private SensitiveString sensitiveString;
+	
+	@Autowired
+	private IAccountService accountService;
 
 	@Override
 	public PageDTO<CompanyDTO> queryByPage(CompanySearchDTO companySearchDTO, Long page, Integer size) {
@@ -105,7 +131,7 @@ public class CompanyServiceImpl implements ICompanyService {
 				companyDTO.setCity(company.getCity());
 				companyDTO.setName(company.getName());
 				companyDTO.setJoinDate(DateUtils.longToString(company.getJoinDate(), null));
-				companyDTO.setStatus(CompanyStatusEnum.getValueById(company.getStatus()));
+				companyDTO.setStatus(company.getStatus() == null ? "" :CompanyStatusEnum.getValueById(company.getStatus()));
 				companyDTO.setLogo(company.getLogo());
 				list.add(companyDTO);
 			}
@@ -200,7 +226,7 @@ public class CompanyServiceImpl implements ICompanyService {
 		companyDTO.setName(company.getName());
 		companyDTO.setCity(company.getCity());
 		companyDTO.setJoinDate(DateUtils.longToString(company.getJoinDate(),null));
-		companyDTO.setStatus(CompanyStatusEnum.getValueById(company.getStatus()));
+		companyDTO.setStatus(company.getStatus()+"");
 		companyDTO.setAddress(company.getAddress());
 		companyDTO.setField(company.getField());
 		companyDTO.setScale(company.getScale());
@@ -224,6 +250,7 @@ public class CompanyServiceImpl implements ICompanyService {
 		companyDTO.setArea(company.getArea());
 		companyDTO.setBalance(balance);
 		companyDTO.setNickName(company.getNickName());
+		companyDTO.setOptionNote(company.getOptionNote());
 		
 		return companyDTO;
 	}
@@ -286,13 +313,20 @@ public class CompanyServiceImpl implements ICompanyService {
 	}
 
 	@Override
-	public void passCompany(Long id) {
-		checkCompany(id);
+	public void passCompany(AuditDTO auditDTO) {
+		Company company = checkCompany(auditDTO.getId());
 		Company newCompany = new Company();
-		newCompany.setId(id);
+		newCompany.setId(auditDTO.getId());
 		newCompany.setLastAccess(new Date().getTime());
-		newCompany.setStatus(CompanyStatusEnum.audited.getId());
+		if("通过".equals(auditDTO.getStatus())) {
+			newCompany.setStatus(CompanyStatusEnum.audited.getId());
+		}else{
+			newCompany.setStatus(CompanyStatusEnum.reject.getId());
+		}
+		newCompany.setOptionNote(auditDTO.getNote());
 		companyDAO.updateByPrimaryKeySelective(newCompany);
+		company.setStatus(CompanyStatusEnum.audited.getId());
+		this.updateLogin(company);
 	}
 
 	@Override
@@ -313,11 +347,13 @@ public class CompanyServiceImpl implements ICompanyService {
 		
 		CompanyExample example = new CompanyExample();
 		example.createCriteria()
-			.andPhoneEqualTo(loginDTO.getUsername())
-			.andStatusNotEqualTo(CompanyStatusEnum.remove.getId());
+			.andPhoneEqualTo(loginDTO.getUsername());
 		List<Company> list = companyDAO.selectByExample(example);
 		
 		if(CollectionUtils.isNotEmpty(list)) {
+			if(list.get(0).getStatus() != null && list.get(0).getStatus() == CompanyStatusEnum.remove.getId()) {
+				throw new BizException("企业已被删除，请联系管理员");
+			}
 			if(password.equals(list.get(0).getPassword())) {
 				
 				UserDTO companyDTO = this.updateLogin(list.get(0));
@@ -346,7 +382,11 @@ public class CompanyServiceImpl implements ICompanyService {
 		params.put("status", "待处理");
 		Long pendingResumeCount = resumeDAO.countResume(params);            //多少待处理简历
 		
-		Long simpleTreatmentPercentage = aleadyResumeCount/acceptResumeCount; //简历处理率
+		Long simpleTreatmentPercentage = 0L;
+		if(aleadyResumeCount != 0 && acceptResumeCount != 0) {
+			simpleTreatmentPercentage = aleadyResumeCount/acceptResumeCount; //简历处理率
+		}
+		
 		
 		params.put("status", "未查看");
 		Long notlookResumeCount = resumeDAO.countResume(params);  ;            //为未查看简历
@@ -495,7 +535,7 @@ public class CompanyServiceImpl implements ICompanyService {
 	public void registerCompany(RegisterCompany registerCompany) {
 
 		CompanyExample example = new CompanyExample();
-		example.createCriteria().andPhoneEqualTo(registerCompany.getPhone());
+		example.createCriteria().andPhoneEqualTo(registerCompany.getPhone()).andStatusNotEqualTo(CompanyStatusEnum.remove.getId());
 		List<Company> list = companyDAO.selectByExample(example);
 		if(CollectionUtils.isNotEmpty(list)) {
 			throw new BizException("手机号已被注册");
@@ -510,24 +550,50 @@ public class CompanyServiceImpl implements ICompanyService {
 		company.setIdentification(CompanyIdentificationEnum.Uncertified.getId());
 		
 		companyDAO.insertSelective(company);
+		
+		Account account = new Account();
+		account.setLastAccess(lastAccess);
+		account.setType(AccountTypeEnum.company.getId());
+		account.setRelationId(company.getId());
+		account.setBalance(0d);
+		account.setCapital(0d);
+		account.setLargess(0d);
+		accountDAO.insertSelective(account);
+
 	}
 
 	@Override
 	public void applyCompany(Long companyId, ApplyCompany applyCompany) {
 		
-		checkCompany(companyId);
+		Company oldCompany = checkCompany(companyId);
+		if(oldCompany.getStatus() != null && oldCompany.getStatus().intValue() != CompanyStatusEnum.reject.getId()) {
+			throw new BizException("公司名称正在审核中");
+		}
 		Company company = new Company();
 		
 		CompanyExample example = new CompanyExample();
-		example.createCriteria().andPhoneEqualTo(applyCompany.getName());
+		example.createCriteria().andPhoneEqualTo(applyCompany.getName()).andStatusNotEqualTo(CompanyStatusEnum.remove.getId());
 		List<Company> list = companyDAO.selectByExample(example);
-		if(CollectionUtils.isNotEmpty(list) || list.get(0).getId().longValue() != companyId) {
+		if(CollectionUtils.isNotEmpty(list) && list.get(0).getId().longValue() != companyId) {
 			throw new BizException("公司名称已被注册");
 		}
-		example.createCriteria().andPhoneEqualTo(applyCompany.getEmail());
+		example.createCriteria().andPhoneEqualTo(applyCompany.getEmail()).andStatusNotEqualTo(CompanyStatusEnum.remove.getId());
 		list = companyDAO.selectByExample(example);
-		if(CollectionUtils.isNotEmpty(list) || list.get(0).getId().longValue() != companyId) {
+		if(CollectionUtils.isNotEmpty(list) && list.get(0).getId().longValue() != companyId) {
 			throw new BizException("公司邮箱已被注册");
+		}
+		
+		if(sensitiveString.comfirmSensitiveString(applyCompany.getName())) {
+			throw new BizException("公司名称含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(applyCompany.getCompanyType())) {
+			throw new BizException("公司类型含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(applyCompany.getRegistrationNumber())) {
+			throw new BizException("公司注册号含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(applyCompany.getRegisteredCapital())) {
+			throw new BizException("公司注册资本含有敏感词语");
 		}
 		
 		company.setId(companyId);
@@ -536,7 +602,7 @@ public class CompanyServiceImpl implements ICompanyService {
 		company.setEmail(applyCompany.getEmail());
 		company.setCompanyType(applyCompany.getCompanyType());
 		company.setRegistrationNumber(applyCompany.getRegistrationNumber());
-		company.setEstablishTime(applyCompany.getEstablishTime());
+		company.setEstablishTime(applyCompany.getEstablishTime() == null ? "" : applyCompany.getEstablishTime().substring(0,10));
 		company.setRegisteredCapital(applyCompany.getRegisteredCapital());
 		company.setAttachment(applyCompany.getAttachment());
 		company.setStatus(CompanyStatusEnum.pending.getId());
@@ -555,7 +621,8 @@ public class CompanyServiceImpl implements ICompanyService {
 		companyDTO.setRole(RoleEnum.company.getId());
 		companyDTO.setEmail(company.getEmail());
 		companyDTO.setPhone(company.getPhone());
-		companyDTO.setStatus(CompanyStatusEnum.getValueById(company.getStatus()));
+		
+		companyDTO.setStatus(company.getStatus()+"");
 		companyDTO.setNickName(company.getNickName());
 		
 		redisUtil.set(Constants.COMPANY_LOGIN +companyDTO.getId(), companyDTO,Constants.TWO_HOUR);
@@ -570,8 +637,12 @@ public class CompanyServiceImpl implements ICompanyService {
 		CompanyExample example = new CompanyExample();
 		example.createCriteria().andPhoneEqualTo(statementDTO.getEmail());
 		List<Company> list = companyDAO.selectByExample(example);
-		if(CollectionUtils.isNotEmpty(list) || list.get(0).getId().longValue() != companyId) {
+		if(CollectionUtils.isNotEmpty(list) && list.get(0).getId().longValue() != companyId) {
 			throw new BizException("公司邮箱已被注册");
+		}
+		
+		if(sensitiveString.comfirmSensitiveString(statementDTO.getOptionNote())) {
+			throw new BizException("申述理由含有敏感词语");
 		}
 		
 		Company company = new Company();
@@ -579,7 +650,7 @@ public class CompanyServiceImpl implements ICompanyService {
 		company.setLastAccess(new Date().getTime());
 		company.setEmail(statementDTO.getEmail());
 		company.setOptionNote(statementDTO.getOptionNote());
-		company.setAttachment(statementDTO.getOptionNote());
+		company.setAttachment(statementDTO.getAttachment());
 		company.setStatus(CompanyStatusEnum.pending.getId());
 		companyDAO.updateByPrimaryKeySelective(company);
 		
@@ -591,6 +662,19 @@ public class CompanyServiceImpl implements ICompanyService {
 	public void update(Long companyId, UpdateCompanyDTO updateCompanyDTO) {
 
 		this.checkCompany(companyId);
+		
+		if(sensitiveString.comfirmSensitiveString(updateCompanyDTO.getNickName())) {
+			throw new BizException("公司昵称含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(updateCompanyDTO.getNote())) {
+			throw new BizException("公司备注含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(updateCompanyDTO.getWebsite())) {
+			throw new BizException("公司网站含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(updateCompanyDTO.getAddress())) {
+			throw new BizException("公司地址含有敏感词语");
+		}
 		
 		Company company = new Company();
 		company.setId(companyId);
@@ -611,6 +695,141 @@ public class CompanyServiceImpl implements ICompanyService {
 		
 		company = companyDAO.selectByPrimaryKey(companyId);
 		this.updateLogin(company);
+	}
+
+	@Override
+	public Map<String,Object> resumeShowPay(Long companyId, List<Long> resumeIds) {
+		
+		Map<String,Object> map = new HashMap<>();
+		
+		if(CollectionUtils.isEmpty(resumeIds)) {
+			throw new BizException("请选择文件");
+		}
+		
+		ResumeExample resumeExample = new ResumeExample();
+		
+		resumeExample.createCriteria().andIdIn(resumeIds);
+		
+		List<Resume> resumeList = resumeDAO.selectByExample(resumeExample);
+		
+		if(CollectionUtils.isEmpty(resumeList)) {
+			throw new BizException("未找到简历");
+		}
+		
+		Map<Long,Long> resumeIdJobSeekerIdMap = new HashMap<>();
+		Map<Long,Resume> resumeMap = new HashMap<>();
+		Set<Long> jobSeekerIdSet = new HashSet<>();
+		
+		for(Resume resume : resumeList) {
+			resumeIdJobSeekerIdMap.put(resume.getId(), resume.getJobSeekerId());
+			jobSeekerIdSet.add(resume.getJobSeekerId());
+			resumeMap.put(resume.getId(), resume);
+		}
+		
+		CompanyJobSeekerExample companyJobSeekerExample = new CompanyJobSeekerExample();
+		
+		companyJobSeekerExample.createCriteria().andCompanyIdEqualTo(companyId).andJobSeekerIdIn(new ArrayList<>(jobSeekerIdSet));
+		
+		//剔除所有有关系的resume
+		List<CompanyJobSeeker> companyJobSeekerList = companyJobSeekerDAO.selectByExample(companyJobSeekerExample);
+		if(CollectionUtils.isNotEmpty(companyJobSeekerList)) {
+			for(CompanyJobSeeker companyJobSeeker : companyJobSeekerList) {
+				Map<Long,Long> newResumeIdJobSeekerIdMap = new HashMap<>();
+				for(Long resumeId : resumeIdJobSeekerIdMap.keySet()) {
+					if(resumeIdJobSeekerIdMap.get(resumeId).longValue() != companyJobSeeker.getJobSeekerId().longValue()) {
+						newResumeIdJobSeekerIdMap.put(resumeId, resumeIdJobSeekerIdMap.get(resumeId));
+					}
+				}
+				resumeIdJobSeekerIdMap = newResumeIdJobSeekerIdMap;
+			}
+		}
+		
+		resumeIds = new ArrayList<>(resumeIdJobSeekerIdMap.keySet());
+		
+		List<DeliveryResume> deliveryResumeList = deliveryResumeDAO.getResumeDeliveryCompany(companyId, resumeIds);
+		if(CollectionUtils.isNotEmpty(deliveryResumeList)) {
+			for(DeliveryResume deliveryResume : deliveryResumeList) {
+				if(resumeIds.contains(deliveryResume.getResumeId())) {
+					resumeIds.remove(deliveryResume.getResumeId());
+				}
+			}
+		}
+		
+		//硕士及以上
+		Double amt1 = accountService.getAmountSettingByType(AccountSettingEnum.education_master.getName());
+		//本科
+		Double amt2 = accountService.getAmountSettingByType(AccountSettingEnum.education_undergraduate.getName());
+		//大专
+		Double amt3 = accountService.getAmountSettingByType(AccountSettingEnum.education_specialty.getName());
+		//高中
+		Double amt4 = accountService.getAmountSettingByType(AccountSettingEnum.education_high_school.getName());
+		
+		Map<Long,JobSeeker> jobSeekerMap = new HashMap<>();
+		
+		Double amount = 0D;
+		
+		for(Long resumeId : resumeIds) {
+			Resume resume = resumeMap.get(resumeId);
+			JobSeeker jobSeeker = jobSeekerMap.get(resume.getJobSeekerId());
+			
+			if(jobSeeker == null) {
+				
+				jobSeeker = jobSeekerDAO.selectByPrimaryKey(resume.getJobSeekerId());
+				jobSeekerMap.put(jobSeeker.getId(), jobSeeker);
+				
+				if(AccountSettingEnum.education_master.getName().equals(jobSeeker.getEducation())) {
+					amount += amt1;
+				}else if(AccountSettingEnum.education_undergraduate.getName().equals(jobSeeker.getEducation())) {
+					amount += amt2;
+				}else if(AccountSettingEnum.education_specialty.getName().equals(jobSeeker.getEducation())) {
+					amount += amt3;
+				}else if(AccountSettingEnum.education_high_school.getName().equals(jobSeeker.getEducation())) {
+					amount += amt4;
+				}
+				
+			}
+		}
+		
+		map.put("amount", amount);
+		map.put("jobSeekerIds", jobSeekerMap.keySet());
+		
+		return map;
+	}
+
+	@Override
+	public void payForResume(Long companyId, List<Long> resumeIds) {
+	
+		Map<String,Object> map = this.resumeShowPay(companyId, resumeIds);
+		
+		Double amount = (Double)map.get("amount");
+		
+		@SuppressWarnings("unchecked")
+		Set<Long> jobSeekerIds = (Set<Long>)map.get("jobSeekerIds");
+		
+		Account account = accountDAO.getAccountByRelationId(companyId, AccountTypeEnum.company.getId());
+		
+		if(account == null) {
+			throw new BizException("未找到当前公司账户，请联系管理员");
+		}
+		
+		if(account.getBalance().longValue() < amount.longValue()) {
+			throw new BizException("用户金额不足以支付，请充值");
+		}
+		
+		if(CollectionUtils.isNotEmpty(jobSeekerIds)) {
+			CompanyJobSeeker companyJobSeeker = new CompanyJobSeeker();
+			Long lastAccess = new Date().getTime();
+			for(Long jobSeekerId : jobSeekerIds) {
+				companyJobSeeker.setId(null);
+				companyJobSeeker.setLastAccess(lastAccess);
+				companyJobSeeker.setCompanyId(companyId);
+				companyJobSeeker.setJobSeekerId(jobSeekerId);
+				companyJobSeekerDAO.insertSelective(companyJobSeeker);
+			}
+		}
+		
+		//扣费
+		accountDAO.consumptionWater(account, amount, "下载简历花费");
 	}
 
 }

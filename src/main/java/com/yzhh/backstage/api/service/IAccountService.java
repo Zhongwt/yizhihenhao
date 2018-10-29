@@ -1,8 +1,11 @@
 package com.yzhh.backstage.api.service;
 
+import java.util.List;
+
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.account.AccountDTO;
 import com.yzhh.backstage.api.dto.account.AccountLogDTO;
+import com.yzhh.backstage.api.dto.account.GiftDTO;
 import com.yzhh.backstage.api.dto.jobseeker.DeliveryDTO;
 
 public interface IAccountService {
@@ -21,4 +24,7 @@ public interface IAccountService {
 	
 	//充值成功
 	public void paySuccess(Long relationId,Integer type,Double totalFee);
+	
+	//获取充值赠送
+	public List<GiftDTO> getGift(); 
 }

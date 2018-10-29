@@ -18,6 +18,7 @@ import com.yzhh.backstage.api.dao.IDeliveryResumeDAO;
 import com.yzhh.backstage.api.dto.PageDTO;
 import com.yzhh.backstage.api.dto.account.AccountDTO;
 import com.yzhh.backstage.api.dto.account.AccountLogDTO;
+import com.yzhh.backstage.api.dto.account.GiftDTO;
 import com.yzhh.backstage.api.dto.jobseeker.DeliveryDTO;
 import com.yzhh.backstage.api.entity.Account;
 import com.yzhh.backstage.api.entity.AccountExample;
@@ -25,6 +26,7 @@ import com.yzhh.backstage.api.entity.AccountLog;
 import com.yzhh.backstage.api.entity.AmountSetting;
 import com.yzhh.backstage.api.entity.AmountSettingExample;
 import com.yzhh.backstage.api.enums.AccountSettingEnum;
+import com.yzhh.backstage.api.enums.AccountTypeEnum;
 import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
@@ -145,20 +147,63 @@ public class AccountServiceImpl implements IAccountService{
 		}
 		
 		Double largessAmount = 0d;
-		if(totalFee >= 200) {
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
-		}else if(totalFee >= 100){
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_fifth_gear.getName());
-		}else if(totalFee >= 50){
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_fourth_gear.getName());
-		}else if(totalFee >= 30){
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_third_gear.getName());
-		}else if(totalFee >= 20){
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_second_gear.getName());
-		}else if(totalFee >= 10){
-			largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_first_gear.getName());
+		
+		if(AccountTypeEnum.job_seeker.getId() == type) {
+			if(totalFee >= 200) {
+				largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_sixth_gear.getName());
+			}else if(totalFee >= 100){
+				largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_fifth_gear.getName());
+			}else if(totalFee >= 50){
+				largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_fourth_gear.getName());
+			}else if(totalFee >= 30){
+				largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_third_gear.getName());
+			}else if(totalFee >= 20){
+				largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_second_gear.getName());
+			}else if(totalFee >= 10){
+				largessAmount = this.getAmountSettingByType(AccountSettingEnum.job_seeker_first_gear.getName());
+			}
 		}
 		
 		accountDAO.rechargeWater(account, totalFee,largessAmount , "充值【"+DoubleFormat.m2(totalFee)+"】元成功");
+	}
+
+	@Override
+	public List<GiftDTO> getGift() {
+		
+		
+		List<GiftDTO> giftList = new ArrayList<>();
+		
+		List<AmountSetting> list = amountSettingDAO.selectByExample(new AmountSettingExample());
+		
+		for(AmountSetting entity : list) {
+			GiftDTO giftDTO = new GiftDTO();
+			if(AccountSettingEnum.job_seeker_first_gear.getName().equals(entity.getType())) {
+				giftDTO.setAmount(10L);
+				giftDTO.setLabel("赠送"+entity.getAmount().intValue()+"元");
+				giftList.add(giftDTO);
+			}else if(AccountSettingEnum.job_seeker_second_gear.getName().equals(entity.getType())){
+				giftDTO.setAmount(20L);
+				giftDTO.setLabel("赠送"+entity.getAmount().intValue()+"元");
+				giftList.add(giftDTO);
+			}else if(AccountSettingEnum.job_seeker_third_gear.getName().equals(entity.getType())){
+				giftDTO.setAmount(30L);
+				giftDTO.setLabel("赠送"+entity.getAmount().intValue()+"元");
+				giftList.add(giftDTO);
+			}else if(AccountSettingEnum.job_seeker_fourth_gear.getName().equals(entity.getType())){
+				giftDTO.setAmount(50L);
+				giftDTO.setLabel("赠送"+entity.getAmount().intValue()+"元");
+				giftList.add(giftDTO);
+			}else if(AccountSettingEnum.job_seeker_fifth_gear.getName().equals(entity.getType())){
+				giftDTO.setAmount(100L);
+				giftDTO.setLabel("赠送"+entity.getAmount().intValue()+"元");
+				giftList.add(giftDTO);
+			}else if(AccountSettingEnum.job_seeker_sixth_gear.getName().equals(entity.getType())){
+				giftDTO.setAmount(200L);
+				giftDTO.setLabel("赠送"+entity.getAmount().intValue()+"元");
+				giftList.add(giftDTO);
+			}
+		}
+		
+		return giftList;
 	}
 }

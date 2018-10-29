@@ -6,6 +6,7 @@
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="amount" jdbcType="DOUBLE" property="amount" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, last_access, type, amount
+    id, last_access, type, amount, note
   </sql>
   <select id="selectByExample" parameterType="com.yzhh.backstage.api.entity.AmountSettingExample" resultMap="BaseResultMap">
     select
@@ -102,9 +103,9 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into amount_setting (last_access, type, amount
+    insert into amount_setting (last_access, type, amount, note
       )
-    values (#{lastAccess,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{amount,jdbcType=DOUBLE}
+    values (#{lastAccess,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{amount,jdbcType=DOUBLE}, #{note,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yzhh.backstage.api.entity.AmountSetting">
@@ -122,6 +123,9 @@
       <if test="amount != null">
         amount,
       </if>
+      <if test="note != null">
+        note,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="lastAccess != null">
@@ -132,6 +136,9 @@
       </if>
       <if test="amount != null">
         #{amount,jdbcType=DOUBLE},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -156,6 +163,9 @@
       <if test="record.amount != null">
         amount = #{record.amount,jdbcType=DOUBLE},
       </if>
+      <if test="record.note != null">
+        note = #{record.note,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -166,7 +176,8 @@
     set id = #{record.id,jdbcType=BIGINT},
       last_access = #{record.lastAccess,jdbcType=BIGINT},
       type = #{record.type,jdbcType=VARCHAR},
-      amount = #{record.amount,jdbcType=DOUBLE}
+      amount = #{record.amount,jdbcType=DOUBLE},
+      note = #{record.note,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -183,6 +194,9 @@
       <if test="amount != null">
         amount = #{amount,jdbcType=DOUBLE},
       </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -190,7 +204,8 @@
     update amount_setting
     set last_access = #{lastAccess,jdbcType=BIGINT},
       type = #{type,jdbcType=VARCHAR},
-      amount = #{amount,jdbcType=DOUBLE}
+      amount = #{amount,jdbcType=DOUBLE},
+       note = #{note,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

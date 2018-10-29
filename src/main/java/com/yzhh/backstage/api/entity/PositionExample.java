@@ -413,6 +413,76 @@ public class PositionExample {
             addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
+        
+        public Criteria andType2IsNull() {
+            addCriterion("type2 is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2IsNotNull() {
+            addCriterion("type2 is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2EqualTo(String value) {
+            addCriterion("type2 =", value, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2NotEqualTo(String value) {
+            addCriterion("type2 <>", value, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2GreaterThan(String value) {
+            addCriterion("type2 >", value, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2GreaterThanOrEqualTo(String value) {
+            addCriterion("type2 >=", value, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2LessThan(String value) {
+            addCriterion("type2 <", value, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2LessThanOrEqualTo(String value) {
+            addCriterion("type2 <=", value, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2Like(String value) {
+            addCriterion("type2 like", value, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2NotLike(String value) {
+            addCriterion("type2 not like", value, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2In(List<String> values) {
+            addCriterion("type2 in", values, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2NotIn(List<String> values) {
+            addCriterion("type2 not in", values, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2Between(String value1, String value2) {
+            addCriterion("type2 between", value1, value2, "type2");
+            return (Criteria) this;
+        }
+
+        public Criteria andType2NotBetween(String value1, String value2) {
+            addCriterion("type2 not between", value1, value2, "type2");
+            return (Criteria) this;
+        }
 
         public Criteria andNameIsNull() {
             addCriterion("name is null");

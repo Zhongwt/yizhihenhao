@@ -244,6 +244,7 @@ public class AdminServiceImpl implements IAdminService{
 				e.setId(amountSetting.getId());
 				e.setType(amountSetting.getType());
 				e.setAmount(amountSetting.getAmount());
+				e.setNote(amountSetting.getNote());
 				list.add(e);
 			}
 		}

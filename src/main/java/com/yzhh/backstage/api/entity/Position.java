@@ -7,6 +7,7 @@ public class Position extends BaseEntity{
 	private Long companyId;
     private Long releaseDate;
     private String type;
+    private String type2;
     private String name;
     private String province;
     private String city;
@@ -212,7 +213,11 @@ public class Position extends BaseEntity{
 		this.optionNote = optionNote;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public String getType2() {
+		return type2;
+	}
+
+	public void setType2(String type2) {
+		this.type2 = type2;
 	}
 }

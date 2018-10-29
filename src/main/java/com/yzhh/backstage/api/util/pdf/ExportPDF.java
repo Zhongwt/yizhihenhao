@@ -36,9 +36,10 @@ import com.yzhh.backstage.api.util.word.BytePictureUtils;
 
 public class ExportPDF {
 
-	// public static final String path = "/home/yzhh/file/";
-	public static final String path = "D:/code/test/";
-	private static final String titlePath = "D:/code/test/images/";
+	public static final String path = "/home/yzhh/file/";
+	//public static final String path = "D:/code/test/";
+	private static final String titlePath = "/home/yzhh/file/images/";
+	//private static final String titlePath = "D:/code/test/images/";
 	private static final String EducationalBackground = "EducationalBackground.png";
 	private static final String InternshipExpectation = "InternshipExpectation.png";
 	private static final String InternshipExperience = "InternshipExperience.png";
@@ -99,18 +100,24 @@ public class ExportPDF {
 	// 设置用户简历基础属性表格
 	private static void pdfResumeInfo(Document document, ResumeDTO resumeDTO, BaseFont bfChinese)
 			throws DocumentException, MalformedURLException, IOException {
-		Font nameFont = new Font(bfChinese, 18, Font.BOLD);
-		Font contentFont = new Font(bfChinese, 14, Font.BOLD);
+		Font nameFont = new Font(bfChinese, 18, Font.NORMAL);
+		Font contentFont = new Font(bfChinese, 14, Font.NORMAL);
+		contentFont.setColor(new BaseColor(51,51,51));
+		
 		// 按百分比分配单元格宽带
 		int[] tableWidthRatio = { 13, 13, 16, 13, 16,13,16 };
 		PdfPTable table = null;
 		PdfPCell baseTableCell = null;
 		
 		int age = 0;
+		//String birthday = "";
 		
 		if(!StringUtils.isEmpty(resumeDTO.getBirthday())) {
 			Calendar a=Calendar.getInstance();
 			age = a.get(Calendar.YEAR) - Integer.parseInt(resumeDTO.getBirthday().substring(0, 4));
+			//birthday = resumeDTO.getBirthday().substring(0,resumeDTO.getBirthday().indexOf("-"))+"年"
+					//+resumeDTO.getBirthday().substring(resumeDTO.getBirthday().indexOf("-")+1,resumeDTO.getBirthday().lastIndexOf("-"))+"月"
+					//+resumeDTO.getBirthday().substring(resumeDTO.getBirthday().lastIndexOf("-")+1,resumeDTO.getBirthday().length())+"日";
 		}
 
 		// 设置第一行
@@ -127,7 +134,7 @@ public class ExportPDF {
 		table.addCell(baseTableCell);
 
 		// 第一行
-		baseTableCell = createCellTL(resumeDTO.getJobSeekerName(), Element.ALIGN_RIGHT, nameFont, 1, 1);
+		baseTableCell = createCellTL(resumeDTO.getJobSeekerName(), Element.ALIGN_CENTER, nameFont, 1, 1);
 		table.addCell(baseTableCell);
 		baseTableCell = createCellTL("", Element.ALIGN_LEFT, contentFont, 1, 5);
 		table.addCell(baseTableCell);
@@ -171,8 +178,9 @@ public class ExportPDF {
 	// 添加教育背景
 	private static void setEducationalBackground(Document document, List<EducationalBackgroundDTO> eduList,
 			BaseFont bfChinese) throws MalformedURLException, IOException, DocumentException {
-		Font titleFont = new Font(bfChinese, 12, Font.BOLD);
+		Font titleFont = new Font(bfChinese, 12, Font.NORMAL);
 		Font contentFont = new Font(bfChinese, 12, 0);
+		contentFont.setColor(new BaseColor(51,51,51));
 
 		// 添加一个图片，设置图片的位置，大小
 		Image png = Image.getInstance(titlePath + EducationalBackground);
@@ -234,15 +242,14 @@ public class ExportPDF {
 				document.add(new Paragraph("\n"));
 			}
 		}
-
-		document.add(new Paragraph("\n"));
 	}
 
 	// 添加实习期望
 	private static void setInternshipExpectation(Document document, ResumeDTO resumeDTO, BaseFont bfChinese)
 			throws MalformedURLException, IOException, DocumentException {
-		Font titleFont = new Font(bfChinese, 12, Font.BOLD);
+		Font titleFont = new Font(bfChinese, 12, Font.NORMAL);
 		Font contentFont = new Font(bfChinese, 12, 0);
+		contentFont.setColor(new BaseColor(51,51,51));
 
 		// 添加一个图片，设置图片的位置，大小
 		Image png = Image.getInstance(titlePath + InternshipExpectation);
@@ -297,8 +304,9 @@ public class ExportPDF {
 	private static void setInternshipExperience(Document document,
 			List<InternshipExperienceDTO> internshipExperienceList, BaseFont bfChinese)
 			throws MalformedURLException, IOException, DocumentException {
-		Font titleFont = new Font(bfChinese, 12, Font.BOLD);
+		Font titleFont = new Font(bfChinese, 12, Font.NORMAL);
 		Font contentFont = new Font(bfChinese, 12, 0);
+		contentFont.setColor(new BaseColor(51,51,51));
 
 		// 添加一个图片，设置图片的位置，大小
 		Image png = Image.getInstance(titlePath + InternshipExperience);
@@ -345,15 +353,14 @@ public class ExportPDF {
 				document.add(new Paragraph("\n"));
 			}
 		}
-
-		document.add(new Paragraph("\n"));
 	}
 
 	// 设置项目经历
 	private static void setProjectExperience(Document document, List<ProjectExperienceDTO> projectExperienceList,
 			BaseFont bfChinese) throws MalformedURLException, IOException, DocumentException {
-		Font titleFont = new Font(bfChinese, 12, Font.BOLD);
+		Font titleFont = new Font(bfChinese, 12, Font.NORMAL);
 		Font contentFont = new Font(bfChinese, 12, 0);
+		contentFont.setColor(new BaseColor(51,51,51));
 
 		// 添加一个图片，设置图片的位置，大小
 		Image png = Image.getInstance(titlePath + ProjectExperience);
@@ -400,15 +407,14 @@ public class ExportPDF {
 				document.add(new Paragraph("\n"));
 			}
 		}
-
-		document.add(new Paragraph("\n"));
 	}
 
 	// 设置技能爱好
 	private static void setSkillHobby(Document document, List<SkillHobbyDTO> skillHobbyList, BaseFont bfChinese)
 			throws MalformedURLException, IOException, DocumentException {
-		Font titleFont = new Font(bfChinese, 12, Font.BOLD);
+		Font titleFont = new Font(bfChinese, 12, Font.NORMAL);
 		Font contentFont = new Font(bfChinese, 12, 0);
+		contentFont.setColor(new BaseColor(51,51,51));
 
 		// 添加一个图片，设置图片的位置，大小
 		Image png = Image.getInstance(titlePath + SkillHobby);
@@ -437,15 +443,14 @@ public class ExportPDF {
 				document.add(new Paragraph("\n"));
 			}
 		}
-
-		document.add(new Paragraph("\n"));
 	}
 
 	// 设置作品展示
 	private static void setWorkShow(Document document, List<WorksShowDTO> worksShowList, BaseFont bfChinese)
 			throws MalformedURLException, IOException, DocumentException {
-		Font titleFont = new Font(bfChinese, 12, Font.BOLD);
+		Font titleFont = new Font(bfChinese, 12, Font.NORMAL);
 		Font contentFont = new Font(bfChinese, 12, 0);
+		contentFont.setColor(new BaseColor(51,51,51));
 		Font websideFont = new Font(bfChinese, 12, 0);
 		websideFont.setColor(new BaseColor(92, 145, 253));
 
@@ -485,15 +490,14 @@ public class ExportPDF {
 				document.add(new Paragraph("\n"));
 			}
 		}
-
-		document.add(new Paragraph("\n"));
 	}
 
 	// 设置自我评价
 	private static void setSelfEvaluation(Document document, List<SelfEvaluationDTO> selfEvaluationList,
 			BaseFont bfChinese) throws MalformedURLException, IOException, DocumentException {
-		Font titleFont = new Font(bfChinese, 12, Font.BOLD);
+		Font titleFont = new Font(bfChinese, 12, Font.NORMAL);
 		Font contentFont = new Font(bfChinese, 12, 0);
+		contentFont.setColor(new BaseColor(51,51,51));
 
 		// 添加一个图片，设置图片的位置，大小
 		Image png = Image.getInstance(titlePath + SelfEvaluation);
@@ -519,8 +523,6 @@ public class ExportPDF {
 				document.add(new Paragraph("\n"));
 			}
 		}
-
-		document.add(new Paragraph("\n"));
 	}
 
 	/**
@@ -631,7 +633,7 @@ public class ExportPDF {
 
 	public static void main(String[] args) {
 		ResumeDTO resumeDTO = makeDate();
-		exportPDF(resumeDTO, "test");
+		exportPDF(resumeDTO, "D:/code/test/test.pdf");
 		System.out.println("success");
 	}
 

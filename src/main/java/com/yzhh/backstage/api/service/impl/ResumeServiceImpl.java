@@ -68,6 +68,7 @@ import com.yzhh.backstage.api.service.IResumeService;
 import com.yzhh.backstage.api.util.CollectionUtils;
 import com.yzhh.backstage.api.util.DateUtils;
 import com.yzhh.backstage.api.util.PackWord;
+import com.yzhh.backstage.api.util.camera.SensitiveString;
 import com.yzhh.backstage.api.util.eamil.EmailUtil;
 import com.yzhh.backstage.api.util.pdf.ExportPDF;
 
@@ -105,7 +106,9 @@ public class ResumeServiceImpl implements IResumeService {
 	private IJobSeekerService jobSeekerService;
 	@Autowired
 	private IAccountService accountService;
-
+	@Autowired
+	private SensitiveString sensitiveString;
+	
 	@Override
 	public PageDTO<PageResumeDTO> queryPage(ResumeSearchDTO resumeSearchDTO, Long page, Integer size) {
 
@@ -230,7 +233,7 @@ public class ResumeServiceImpl implements IResumeService {
 		Company company = companyDAO.selectByPrimaryKey(position.getCompanyId());
 
 		StringBuffer html = new StringBuffer();
-		html.append("<div style=\"margin:20px 0;padding:20px 15px;\">");
+		html.append("<div style=\"margin:20px auto;padding:20px 15px;width:400px\">");
 		html.append(jobSeeker.getName() + "，您好~");
 		html.append("<br> 你的简历已经通过筛选，很高兴邀请你参加面试。");
 		html.append("<br>");
@@ -248,9 +251,9 @@ public class ResumeServiceImpl implements IResumeService {
 		html.append("<br> ");
 		html.append("<strong>联系人：" + addInterviewDTO.getContacts() + "</strong>");
 		html.append("<br> ");
-		html.append("<strong>联系电话：" + addInterviewDTO.getPhone());
+		html.append("<strong>联系电话：" + addInterviewDTO.getPhone() + "</strong>");
 		html.append("<br>");
-		html.append("<strong>备注：" + addInterviewDTO.getNote());
+		html.append("<strong>备注：" + addInterviewDTO.getNote() + "</strong>");
 		html.append("<br>");
 		html.append("<br>");
 		html.append("<div style=\"MARGIN-BOTTOM: 10px; HEIGHT: 30px; TEXT-ALIGN: right; MARGIN-TOP: 10px\">");
@@ -512,6 +515,11 @@ public class ResumeServiceImpl implements IResumeService {
 	@Override
 	public void saveInternshipExpectation(Long resumeId, InternshipExpectationDTO internshipExpectationDTO) {
 		this.checkResume(resumeId);
+		
+		if(sensitiveString.comfirmSensitiveString(internshipExpectationDTO.getWishPositionName())) {
+			throw new BizException("期望职位含有敏感词语");
+		}
+		
 		Resume resume = new Resume();
 		resume.setId(resumeId);
 		resume.setLastAccess(new Date().getTime());
@@ -530,6 +538,17 @@ public class ResumeServiceImpl implements IResumeService {
 	@Override
 	public void saveInternshipExperience(Long resumeId, InternshipExperienceDTO internshipExperienceDTO) {
 		this.checkResume(resumeId);
+		
+		if(sensitiveString.comfirmSensitiveString(internshipExperienceDTO.getCompanyName())) {
+			throw new BizException("公司名称含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(internshipExperienceDTO.getDutyName())) {
+			throw new BizException("职位名称含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(internshipExperienceDTO.getDescription())) {
+			throw new BizException("实习描述含有敏感词语");
+		}
+		
 		InternshipExperience internshipExperience = new InternshipExperience();
 		if (internshipExperienceDTO.getId() != null) {
 			InternshipExperience i = internshipExperienceDAO.selectByPrimaryKey(internshipExperienceDTO.getId());
@@ -559,6 +578,26 @@ public class ResumeServiceImpl implements IResumeService {
 	@Override
 	public void saveEducationalBackground(Long resumeId, EducationalBackgroundDTO dto) {
 		this.checkResume(resumeId);
+		
+		if(sensitiveString.comfirmSensitiveString(dto.getSchool())) {
+			throw new BizException("学校含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(dto.getMajor())) {
+			throw new BizException("专业含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(dto.getMajorType())) {
+			throw new BizException("专业类别含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(dto.getMajorCourses())) {
+			throw new BizException("主修课程含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(dto.getRanking())) {
+			throw new BizException("排名含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(dto.getHonor())) {
+			throw new BizException("所获荣誉含有敏感词语");
+		}
+		
 		EducationalBackground entity = new EducationalBackground();
 		if (dto.getId() != null) {
 			EducationalBackground i = educationalBackgroundDAO.selectByPrimaryKey(dto.getId());
@@ -592,6 +631,17 @@ public class ResumeServiceImpl implements IResumeService {
 	@Override
 	public void saveProjectExperience(Long resumeId, ProjectExperienceDTO dto) {
 		this.checkResume(resumeId);
+		
+		if(sensitiveString.comfirmSensitiveString(dto.getProjectName())) {
+			throw new BizException("项目名称含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(dto.getRole())) {
+			throw new BizException("项目角色含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(dto.getDescription())) {
+			throw new BizException("项目描述含有敏感词语");
+		}
+		
 		ProjectExperience entity = new ProjectExperience();
 		if (dto.getId() != null) {
 			ProjectExperience i = projectExperienceDAO.selectByPrimaryKey(dto.getId());
@@ -621,6 +671,11 @@ public class ResumeServiceImpl implements IResumeService {
 	@Override
 	public void saveSkillHobby(Long resumeId, SkillHobbyDTO dto) {
 		this.checkResume(resumeId);
+		
+		if(sensitiveString.comfirmSensitiveString(dto.getName())) {
+			throw new BizException("技能爱好含有敏感词语");
+		}
+		
 		SkillHobby entity = new SkillHobby();
 		if (dto.getId() != null) {
 			SkillHobby i = skillHobbyDAO.selectByPrimaryKey(dto.getId());
@@ -646,6 +701,14 @@ public class ResumeServiceImpl implements IResumeService {
 	@Override
 	public void saveWorksShow(Long resumeId, WorksShowDTO dto) {
 		this.checkResume(resumeId);
+		
+		if(sensitiveString.comfirmSensitiveString(dto.getDescription())) {
+			throw new BizException("作品描述含有敏感词语");
+		}
+		if(sensitiveString.comfirmSensitiveString(dto.getWorksUrl())) {
+			throw new BizException("作品链接含有敏感词语");
+		}
+		
 		WorksShow entity = new WorksShow();
 		if (dto.getId() != null) {
 			WorksShow i = worksShowDAO.selectByPrimaryKey(dto.getId());
@@ -671,6 +734,12 @@ public class ResumeServiceImpl implements IResumeService {
 	@Override
 	public void saveSelfEvaluation(Long resumeId, SelfEvaluationDTO dto) {
 		this.checkResume(resumeId);
+		
+		if(sensitiveString.comfirmSensitiveString(dto.getDescription())) {
+			throw new BizException("自我评价含有敏感词语");
+		}
+		
+		
 		SelfEvaluation entity = new SelfEvaluation();
 		if (dto.getId() != null) {
 			SelfEvaluation i = selfEvaluationDAO.selectByPrimaryKey(dto.getId());
@@ -808,6 +877,22 @@ public class ResumeServiceImpl implements IResumeService {
 	@Override
 	public void modifyResumeName(Long resumeId, String name) {
 		this.checkResume(resumeId);
+		
+		if(sensitiveString.comfirmSensitiveString(name)) {
+			throw new BizException("简历名称含有敏感词语");
+		}
+		
+		ResumeExample example = new ResumeExample();
+		example.createCriteria().andNameEqualTo(name);
+		List<Resume> list = resumeDAO.selectByExample(example);
+		if(CollectionUtils.isNotEmpty(list)) {
+			for(Resume entity : list) {
+				if(entity.getId().longValue() != resumeId) {
+					throw new BizException("简历名称不能重复！");
+				}
+			}
+		}
+		
 		Resume resume = new Resume();
 		resume.setId(resumeId);
 		resume.setName(name);
@@ -921,6 +1006,12 @@ public class ResumeServiceImpl implements IResumeService {
 			resumeDTO.setInterviewPhone(interview.getPhone());
 			resumeDTO.setInterviewNote(interview.getNote());
 		}
+		
+		if(deliveryResume.getStatus() == DeliveryResumeStatusEnum.notlook.getId()) {
+			List<Long> ids = new ArrayList<>();
+			ids.add(deliveryResume.getId());
+			this.updateStatus(ids, DeliveryResumeStatusEnum.look.getId());
+		}
 
 		return resumeDTO;
 	}
@@ -1021,6 +1112,7 @@ public class ResumeServiceImpl implements IResumeService {
 	@Override
 	public String downloadResume(Long companyId, Long resumeId) {
 		Resume resume = resumeDAO.selectByPrimaryKey(resumeId);
+		JobSeeker jobSeeker = jobSeekerDAO.selectByPrimaryKey(resume.getJobSeekerId());
 
 		// 判断是否已经付过费 true 付过了不管 false没付过
 		boolean flag = companyJobSeekerDAO.comfirmIsPay(companyId, resume.getJobSeekerId());
@@ -1031,14 +1123,12 @@ public class ResumeServiceImpl implements IResumeService {
 			List<DeliveryResume> list = deliveryResumeDAO.getDeliveryResume(companyId, resumeId);
 			flag = CollectionUtils.isNotEmpty(list) ? true : false;
 		}
-
-		if (!flag) {
+		
+		if (jobSeeker.getEducation() != null && !flag) {
 			throw new BizException("简历未付费，下载失败");
 		}
 		
-		JobSeeker jobSeeker = jobSeekerDAO.selectByPrimaryKey(resume.getJobSeekerId());
-
-		String fileName = jobSeeker.getName()+"."+resume.getId() + "_" + resume.getLastAccess();
+		String fileName = resume.getId() + "_" + resume.getLastAccess();
 
 		String filePath = ExportPDF.path + fileName + ".pdf";
 
@@ -1075,16 +1165,15 @@ public class ResumeServiceImpl implements IResumeService {
 
 		List<File> files = new ArrayList<>();
 		for (Resume resume : list) {
-			JobSeeker jobSeeker = jobSeekerDAO.selectByPrimaryKey(resume.getJobSeekerId());
 			files.add(
-					new File(jobSeeker.getName() + "." + resume.getId() + "_" + resume.getLastAccess() + ".pdf"));
+					new File(ExportPDF.path + resume.getId() + "_" + resume.getLastAccess() + ".pdf"));
 		}
 
 		// 打包下载
 		InputStream is = null;
 
 		try {
-			is = PackWord.downLoadFiles(files);
+			is = PackWord.downLoadFiles(files,companyId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

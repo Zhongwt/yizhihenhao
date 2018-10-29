@@ -122,15 +122,10 @@ public class JobSeekerController {
 			JSONObject jsonObj = JSON.parseObject(sessionData);
 			// 获取用户的唯一标识
 			String openId = jsonObj.getString("openid");
-			logger.info(openId);
-			// 获取会话秘钥
-			String sessionKey = jsonObj.getString("session_key");
-			logger.info(sessionKey);
 			
 			// 下面就可以写自己的业务代码了
 			// 最后要返回一个自定义的登录态,用来做后续数据传输的验证
 			WeChatUserInfo user = JSON.parseObject(req.getRawData(),WeChatUserInfo.class);
-			System.out.println(openId);
 			user.setOpenId(openId);
 			userDTO = jobSeekerService.login(user);
 		}
@@ -143,6 +138,8 @@ public class JobSeekerController {
 		@ApiImplicitParam(paramType = "query", dataType = "int", name = "size", value = "页面大小")})
 	@PostMapping("/position/list")
 	public ApiResponse positionList(HttpServletRequest request,@RequestBody SearchPositionDTO searchPositionDTO, Long page, Integer size) {
+		
+		logger.info("职位列表参数:"+JSON.toJSONString(searchPositionDTO));
 		
 		String token = request.getHeader(Constants.TOKEN);
 		searchPositionDTO.setStatus("招聘中");
@@ -199,7 +196,7 @@ public class JobSeekerController {
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "double", name = "amount", value = "充值金额")})
 	@GetMapping("/pay")
 	public ApiResponse deliveryPositionPay(HttpServletRequest request,Double amount) throws Exception {
-		if(amount.doubleValue() <= 0.01) {
+		if(amount.doubleValue() < 0.01) {
 			throw new BizException("充值金额不能小于0.01元");
 		}
 		WeChatPayDTO weChatPayDTO = null;
@@ -647,6 +644,19 @@ public class JobSeekerController {
 		String path = webRequest.getCamera(p);
 		
 		return new ApiResponse(path);
+	}
+	
+	@ApiOperation(value = "需要付费多少", notes = "", tags = { "求职者部分api" })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "query", dataType = "long", name = "positionId", value = "职位id",required=true)
+	})
+	@GetMapping("/delivery/need/pay")
+	public ApiResponse getDeliveryNeedPay(HttpServletRequest request) {
+		
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		Double amount = jobSeekerService.deliveryNeedPay(user.getId());
+		
+		return new ApiResponse(amount);
 	}
 }
 

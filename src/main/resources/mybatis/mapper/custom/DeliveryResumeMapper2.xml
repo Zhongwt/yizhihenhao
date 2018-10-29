@@ -78,6 +78,22 @@
 		AND dr.resume_id = r.id
  	</select>
  	
- 	
+ 	<!-- 判断一堆简历是否投递过一家公司 -->
+ 	<select id="getResumeDeliveryCompany" resultMap="com.yzhh.backstage.api.dao.mapper.DeliveryResumeMapper.BaseResultMap">
+ 		SELECT
+			dr.*
+		FROM
+			position p,
+			delivery_resume dr
+		WHERE
+			p.id = dr.position_id
+		AND p.company_id = #{companyId}
+		<if test="resumeIds != null and resumeIds.size > 0">
+			<foreach collection="resumeIds" open=" AND dr.resume_id  in (" close=")"
+				item="resumeId" separator=",">
+				#{resumeId}
+			</foreach>
+		</if>
+ 	</select>
 
 </mapper>

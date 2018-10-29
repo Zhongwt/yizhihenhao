@@ -16,6 +16,8 @@ public class PageResumeDTO {
 	private String name;
 	@ApiModelProperty(value = "投递用户名称")
 	private String jobSeekerName;
+	@ApiModelProperty(value="简历头像")
+	private String imageUrl;
 	@ApiModelProperty(value = "性别")
 	private String sex;
 	@ApiModelProperty(value = "城市")
@@ -62,6 +64,12 @@ public class PageResumeDTO {
 	private String interviewNote;
 	
 	
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 	public Long getDeliveryResumeId() {
 		return deliveryResumeId;
 	}

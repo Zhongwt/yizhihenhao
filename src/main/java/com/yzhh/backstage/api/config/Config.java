@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.yzhh.backstage.api.commons.RedisTemplateHelper;
 import com.yzhh.backstage.api.util.VerifyCodeUtils;
+import com.yzhh.backstage.api.util.camera.SensitiveString;
 import com.yzhh.backstage.api.util.camera.WebRequest;
 
 @Configuration
@@ -36,5 +37,10 @@ public class Config {
     public WebRequest WebRequest() {
     	return new WebRequest();
     }
-
+    
+    @Bean
+    public SensitiveString SensitiveString() {
+    	return new SensitiveString();
+    }
+    
 }

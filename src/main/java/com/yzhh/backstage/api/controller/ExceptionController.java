@@ -118,7 +118,7 @@ public class ExceptionController {
     @ResponseBody
     public ApiResponse processException(Exception ex) {
     	ex.printStackTrace();
-    	ApiResponse response = new ApiResponse(20000, "系统错误", ex);
+    	ApiResponse response = new ApiResponse(20000, "请允许登录", ex);
         return response;
     }
 

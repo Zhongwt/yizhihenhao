@@ -22,4 +22,7 @@ public interface DeliveryResumeMapper2{
 	
 	//获取投递次数
 	public Long queryByDeliveryCount(@Param("jobSeekerId") Long jobSeekerId);
+	
+	//获取一个公司是否被某些简历投递
+	public List<DeliveryResume> getResumeDeliveryCompany(@Param("companyId")Long companyId,@Param("resumeIds")List<Long> resumeIds); 
 }

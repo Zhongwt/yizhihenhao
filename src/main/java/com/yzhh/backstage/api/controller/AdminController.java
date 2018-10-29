@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yzhh.backstage.api.commons.ApiResponse;
@@ -41,12 +42,14 @@ import com.yzhh.backstage.api.dto.position.SearchPositionDTO;
 import com.yzhh.backstage.api.dto.resume.AddInterviewDTO;
 import com.yzhh.backstage.api.dto.resume.PageResumeDTO;
 import com.yzhh.backstage.api.dto.resume.ResumeSearchDTO;
+import com.yzhh.backstage.api.entity.Banner;
 import com.yzhh.backstage.api.enums.AccountTypeEnum;
 import com.yzhh.backstage.api.enums.DeliveryResumeStatusEnum;
 import com.yzhh.backstage.api.enums.JurisdictionEnum;
 import com.yzhh.backstage.api.error.CommonError;
 import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.service.IAdminService;
+import com.yzhh.backstage.api.service.IBannerService;
 import com.yzhh.backstage.api.service.ICompanyService;
 import com.yzhh.backstage.api.service.ILogService;
 import com.yzhh.backstage.api.service.IPositionService;
@@ -73,6 +76,8 @@ public class AdminController {
 	private ILogService logService;
 	@Autowired
 	private IAccountService accountService;
+	@Autowired
+	private IBannerService bannerService;
 	
 
 	@ApiOperation(value = "登录", notes = "", tags = { "管理员部分api" })
@@ -252,15 +257,15 @@ public class AdminController {
 	}
 
 	@ApiOperation(value = "审核通过企业", notes = "", tags = { "管理员部分api" })
-	@PutMapping("/company/pass/{id}")
-	public ApiResponse passCompany(HttpServletRequest request, @PathVariable Long id) {
+	@PutMapping("/company/pass")
+	public ApiResponse passCompany(HttpServletRequest request,@RequestBody AuditDTO auditDTO) {
 
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
 		checkRole(JurisdictionEnum.audit_company.getId(), user.getJurisdiction());
 
-		companyService.passCompany(id);
+		companyService.passCompany(auditDTO);
 
-		CompanyDTO companyDTO = companyService.findById(id);
+		CompanyDTO companyDTO = companyService.findById(auditDTO.getId());
 		String ip = (String) request.getSession().getAttribute(Constants.IP);
 		logService.addLog(user.getId(), user.getName(), ip, user.getName() + "审核通过企业" + companyDTO.getName() + "");
 
@@ -502,5 +507,25 @@ public class AdminController {
 			}
 		}
 		return false;
+	}
+	
+	@ApiOperation(value = "获取banner列表", notes = "", tags = { "管理员部分api" })
+	@GetMapping("/banner/list")
+	public ApiResponse getBannerList() {
+		return new ApiResponse(bannerService.list());
+	}
+	
+	@ApiOperation(value = "保存banner", notes = "", tags = { "管理员部分api" })
+	@PostMapping("/banner/save")
+	public ApiResponse saveBanner(@RequestBody Banner banner) {
+		bannerService.save(banner);
+		return new ApiResponse();
+	}
+	
+	@ApiOperation(value = "删除banner", notes = "", tags = { "管理员部分api" })
+	@DeleteMapping("/banner/delete")
+	public ApiResponse deleteBanner(@RequestParam Long id) {
+		bannerService.delete(id);
+		return new ApiResponse();
 	}
 }

@@ -37,4 +37,7 @@ public interface IJobSeekerService {
 	
 	//新增反馈意见
 	public void addFeedback(Long jobSeekerId,FeedBackDTO feedBackDTO);
+	
+	//投递需要付费多少
+	public Double deliveryNeedPay(Long jobSeekerId);
 }

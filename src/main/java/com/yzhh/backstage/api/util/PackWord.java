@@ -5,23 +5,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class PackWord {
 
-	public static final String packPath = "/home/yzhh/file/简历.rar";
+	public static final String packPath = "/home/yzhh/file/";
+	//public static final String packPath = "D:/code/test/简历.rar";
 
 	// 文件打包下载
-	public static InputStream downLoadFiles(List<File> files) throws Exception {
+	public static InputStream downLoadFiles(List<File> files,Long companyId) throws Exception {
 		InputStream is = null;
 		try {
 			// 这个集合就是你想要打包的所有文件， 这里假设已经准备好了所要打包的文件
 			// List<File> files = new ArrayList<File>();
 			// 创建一个临时压缩文件， 我们会把文件流全部注入到这个文件中 这里的文件你可以自定义是.rar还是.zip
-			File file = new File(packPath);
+			File file = new File(packPath+companyId+"_简历.rar");
 			if (!file.exists()) {
 				file.createNewFile();
 			}
@@ -51,7 +51,7 @@ public class PackWord {
 		int size = files.size();
 		for (int i = 0; i < size; i++) {
 			File file = (File) files.get(i);
-			zipFile(file, outputStream);
+			zipFile(file, outputStream,(i+1)+"");
 		}
 	}
 
@@ -61,7 +61,7 @@ public class PackWord {
 	 * @param File
 	 * @param org.apache.tools.zip.ZipOutputStream
 	 */
-	public static void zipFile(File inputFile, ZipOutputStream ouputStream) {
+	public static void zipFile(File inputFile, ZipOutputStream ouputStream,String x) {
 		try {
 			if (inputFile.exists()) {
 				if (inputFile.isFile()) {
@@ -69,7 +69,7 @@ public class PackWord {
 					FileInputStream in = new FileInputStream(inputFile);
 					BufferedInputStream bins = new BufferedInputStream(in, 512);
 					String fileName = inputFile.getName();
-					fileName = fileName.substring(0, fileName.indexOf("."))+"_"+new Date().getTime()+".pdf";
+					fileName = "简历_"+x+".pdf";
 					ZipEntry entry = new ZipEntry(fileName);
 					ouputStream.putNextEntry(entry);
 					// 向压缩文件中输出数据
@@ -85,7 +85,7 @@ public class PackWord {
 					try {
 						File[] files = inputFile.listFiles();
 						for (int i = 0; i < files.length; i++) {
-							zipFile(files[i], ouputStream);
+							zipFile(files[i], ouputStream,x+"_"+(i+1));
 						}
 					} catch (Exception e) {
 						e.printStackTrace();

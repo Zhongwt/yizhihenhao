@@ -42,8 +42,8 @@ public class QrCide {
 		//生成二维码
 		try {
 			BitMatrix bitMatrix = new MultiFormatWriter().encode(contents, BarcodeFormat.QR_CODE, width, height, map);
-			//String path="/home/yzhh/img/qr/"+name+".png";
-			String path = "D:/code/test/"+name+".png";
+			String path="/home/yzhh/img/qr/"+name+".png";
+			//String path = "D:/code/test/"+name+".png";
 			Path file = new File(path).toPath();
 			MatrixToImageWriter.writeToPath(bitMatrix, format, file);
 		} catch (Exception e) {

@@ -241,7 +241,7 @@ public class CompanyController {
 		}
 
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
-		if (user.getStatus().equals(CompanyStatusEnum.audited.getName())) {
+		if (!user.getStatus().equals(CompanyStatusEnum.audited.getId()+"")) {
 			throw new BizException("公司无权操作职位");
 		}
 
@@ -252,10 +252,14 @@ public class CompanyController {
 	}
 
 	@ApiOperation(value = "职位列表", notes = "", tags = { "企业部分api" })
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "page", value = "页码"),
+		@ApiImplicitParam(paramType = "query", dataType = "int", name = "size", value = "页面大小")})
 	@PostMapping("/position/list")
 	public ApiResponse positionList(HttpServletRequest request, @RequestBody SearchPositionDTO searchPositionDTO,
 			Long page, Integer size) {
 
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+		searchPositionDTO.setCompanyId(user.getId());
 		PageDTO<PositionDTO> p = positionService.list(searchPositionDTO, page, size, null);
 
 		return new ApiResponse(p);
@@ -285,6 +289,8 @@ public class CompanyController {
 	}
 
 	@ApiOperation(value = "投递过来的简历列表", notes = "这个对接的时候再说", tags = { "企业部分api" })
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "page", value = "页码"),
+		@ApiImplicitParam(paramType = "query", dataType = "int", name = "size", value = "页面大小")})
 	@PostMapping("/delivery/resume/list")
 	public ApiResponse deliveryResumeList(HttpServletRequest request, @RequestBody ResumeSearchDTO resumeSearchDTO,
 			Long page, Integer size) {
@@ -352,6 +358,8 @@ public class CompanyController {
 	}
 
 	@ApiOperation(value = "简历列表，企业自主查询的简历，不是用户投递过来的简历", notes = "", tags = { "企业部分api" })
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "long", name = "page", value = "页码"),
+		@ApiImplicitParam(paramType = "query", dataType = "int", name = "size", value = "页面大小")})
 	@PostMapping("/resume/list")
 	public ApiResponse resumeList(HttpServletRequest request, @RequestBody ResumeSearchDTO resumeSearchDTO, Long page,
 			Integer size) {
@@ -371,6 +379,30 @@ public class CompanyController {
 		ResumeDTO resumeDTO = resumeService.conmpanyGetResume(user.getId(), resumeId);
 
 		return new ApiResponse(resumeDTO);
+	}
+	
+	@ApiOperation(value = "校验这几个简历需要支付多少钱", notes = "", tags = { "企业部分api" })
+	@PostMapping("/resume/show/pay")
+	public ApiResponse checkShowPayMoney(HttpServletRequest request, @RequestBody List<Long> resumeIds) {
+
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+
+		Map<String,Object> map = companyService.resumeShowPay(user.getId(),resumeIds);
+		
+		Double amount = (Double)map.get("amount");
+
+		return new ApiResponse(amount);
+	}
+	
+	@ApiOperation(value = "支付简历的钱", notes = "", tags = { "企业部分api" })
+	@PostMapping("/resume/pay")
+	public ApiResponse payMoney(HttpServletRequest request, @RequestBody List<Long> resumeIds) {
+
+		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
+
+		 companyService.payForResume(user.getId(), resumeIds);
+
+		return new ApiResponse();
 	}
 
 	@ApiOperation(value = "下载单个简历", notes = "", tags = { "企业部分api" })
@@ -436,7 +468,7 @@ public class CompanyController {
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", dataType = "double", name = "amount", value = "充值金额") })
 	@GetMapping("/pay")
 	public ApiResponse deliveryPositionPay(HttpServletRequest request, @RequestParam Double amount) throws Exception {
-		if (amount.doubleValue() <= 0.01) {
+		if (amount.doubleValue() < 0.01) {
 			throw new BizException("充值金额不能小于0.01元");
 		}
 		UserDTO user = (UserDTO) request.getSession().getAttribute(Constants.USER_LOGIN_SESSION);
@@ -471,5 +503,7 @@ public class CompanyController {
 		}
 		return new ApiResponse(false);
 	}
+	
+	
 
 }

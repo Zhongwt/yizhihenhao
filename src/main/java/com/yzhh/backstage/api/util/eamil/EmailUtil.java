@@ -12,20 +12,16 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EmailUtil {
 	
-	@Value("${smtpServer}")
-	private static String smtpServer;
-	@Value("${port}")
-	private static String port;
-	@Value("${fromUserName}")
-	private static String fromUserName;
-	@Value("${fromUserPassword}")
-	private static String fromUserPassword;
+	private static String smtpServer = "smtp.mxhichina.com";
+	private static String port = "465";
+	private static String fromUserName = "zhongwentao@yizhihenhao.com";
+	private static String fromUserPassword = "Zxc123456";
+	private static String sign = "一职很好";
 	
 	@SuppressWarnings("restriction")
 	public static void sendMail(String toMail,String subject,String content) {
@@ -53,11 +49,12 @@ public class EmailUtil {
 			// 附带发件人名字
 			// message.setFrom(new InternetAddress("from_mail@qq.com",
 			// "optional-personal"));
-			message.setFrom(new InternetAddress(fromUserName));
+			String nick=javax.mail.internet.MimeUtility.encodeText(sign);  
+			message.setFrom(new InternetAddress(nick+" <"+fromUserName+">"));
 			message.setRecipients(Message.RecipientType.TO, toMail);
 			message.setSubject(subject);
 			// 文本
-			message.setText(content);
+			message.setContent(content,  "text/html;charset=gbk");
 			message.setSentDate(new Date());
 			message.saveChanges();
 			// 发送邮件
@@ -65,6 +62,10 @@ public class EmailUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void main(String[] args) {
+		EmailUtil.sendMail("245473357@qq.com",  "验证码", "您的验证码为："+2323+"，请不要告诉任何人！");
 	}
 
 }

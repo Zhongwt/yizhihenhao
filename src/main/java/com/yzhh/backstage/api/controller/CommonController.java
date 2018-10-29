@@ -1,10 +1,16 @@
 package com.yzhh.backstage.api.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.yzhh.backstage.api.commons.ApiResponse;
 import com.yzhh.backstage.api.commons.BizException;
 import com.yzhh.backstage.api.constans.Constants;
@@ -24,10 +31,12 @@ import com.yzhh.backstage.api.dto.UserDTO;
 import com.yzhh.backstage.api.dto.VerifyCodeDTO;
 import com.yzhh.backstage.api.service.IAccountService;
 import com.yzhh.backstage.api.service.IAttachmentService;
+import com.yzhh.backstage.api.service.IBannerService;
 import com.yzhh.backstage.api.service.IPositionService;
 import com.yzhh.backstage.api.util.MoblieMessageUtil;
 import com.yzhh.backstage.api.util.RedisUtil;
 import com.yzhh.backstage.api.util.VerifyCodeUtils;
+import com.yzhh.backstage.api.util.WeChatHttpUtil;
 import com.yzhh.backstage.api.util.eamil.EmailUtil;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -40,6 +49,8 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin
 public class CommonController {
 	
+	private Logger logger = LoggerFactory.getLogger(CommonController.class);
+	
 	@Autowired
 	private VerifyCodeUtils verifyCodeUtils;
 	@Autowired
@@ -48,8 +59,11 @@ public class CommonController {
 	private RedisUtil redisUtil;
 	@Autowired
 	private IAccountService accountService;
+	@SuppressWarnings("unused")
 	@Autowired
 	private IPositionService positionService;
+	@Autowired
+	private IBannerService bannerService;
 
 	@ApiOperation(value = "登录验证码", notes = "", tags = { "通用部分api" })
 	@GetMapping("/login/verify/code")
@@ -128,6 +142,7 @@ public class CommonController {
 		Double totalFee = Double.parseDouble(strs[2]);
 		
 		Double s = (Double)redisUtil.get(relationId+"_"+type);
+		logger.info("支付成功字符串:"+str);
 		if(s != null) {
 			if(s.doubleValue() == 0) {
 				throw new BizException("支付已完成");
@@ -158,11 +173,74 @@ public class CommonController {
 		return new ApiResponse();
 	}
 	
-	@GetMapping("/test")
-	public ApiResponse test() {
-		positionService.testInsert();
-		return new ApiResponse("success");
+	@ApiOperation(value = "充值付款成功", notes = "由微信端调用，我们不用管", tags = { "求职者部分api" })
+	@RequestMapping("/wx/pay/success")
+	public ApiResponse paySuccess(HttpServletRequest request) throws Exception {
+
+        //设置支付参数
+		InputStream inputStream;
+        inputStream = request.getInputStream();
+        Map<String, Object> resultMap = WeChatHttpUtil.parseXml(inputStream);
+		
+		logger.info("微信回调参数："+JSON.toJSONString(resultMap));
+		
+		String str = (String)resultMap.get("attach");
+		
+		String[] strs = str.split("_");
+		Long relationId = Long.parseLong(strs[0]);
+		Integer type = Integer.parseInt(strs[1]);
+		Double totalFee = Double.parseDouble(strs[2]);
+		
+		Double s = (Double)redisUtil.get(relationId+"_"+type);
+		logger.info("支付成功字符串:"+str);
+		if(s != null) {
+			if(s.doubleValue() == 0) {
+				throw new BizException("支付已完成");
+			}else if(s.doubleValue() != totalFee.doubleValue()){
+				throw new BizException("支付金额不对");
+			}else {
+				redisUtil.set(relationId+"_"+type, 0D,Constants.TEN_MINUTES);
+				accountService.paySuccess(relationId, type, totalFee);
+			}
+		}else {
+			throw new BizException("支付超时");
+		}
+
+		return new ApiResponse();
 	}
+	
+	public String reciverWx(HttpServletRequest request) throws IOException
+    {
+        InputStream inputStream;
+        StringBuffer sb = new StringBuffer();
+        inputStream = request.getInputStream();
+        String s;
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        while ((s = in.readLine()) != null)
+        {
+            sb.append(s);
+        }
+        in.close();
+        inputStream.close();
+        return sb.toString();
+    }
+
+	@ApiOperation(value = "充值赠送金额", notes = "", tags = { "通用部分api" })
+	@ApiImplicitParams({ 
+		})
+	@GetMapping("/amount/gift")
+	public ApiResponse amountGift() {
+		return new ApiResponse(accountService.getGift());
+	}
+	
+	@ApiOperation(value = "微信banner", notes = "", tags = { "通用部分api" })
+	@ApiImplicitParams({ 
+		})
+	@GetMapping("/wx/banner")
+	public ApiResponse bannerList() {
+		return new ApiResponse(bannerService.list());
+	}
+
 	
 }
 

@@ -20,4 +20,7 @@ public interface IDeliveryResumeDAO extends IDAO<DeliveryResume, DeliveryResumeE
 	public List<DeliveryResume> getDeliveryResume(Long companyId,Long resumeId);
 	//获取投递次数
 	public Long queryByDeliveryCount(Long jobSeekerId);
+	
+	//获取一家公司是否被某些简历投递
+	public List<DeliveryResume> getResumeDeliveryCompany(Long companyId,List<Long> resumeIds);
 }

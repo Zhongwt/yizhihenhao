@@ -9,6 +9,7 @@ public class AmountSettingDTO {
 	private String type;
 	@NotNull
 	private Double amount;
+	private String note;
 	
 	public Long getId() {
 		return id;
@@ -27,5 +28,11 @@ public class AmountSettingDTO {
 	}
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
 	}
 }

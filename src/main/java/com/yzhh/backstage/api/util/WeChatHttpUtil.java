@@ -29,6 +29,8 @@ import javax.net.ssl.TrustManager;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONException;
@@ -43,6 +45,9 @@ import com.yzhh.backstage.api.dto.wx.WxPaySendData;
 public class WeChatHttpUtil {
 
 	private static String ACCESS_TOKEN = "https://api.weixin.qq.com/sns/oauth2/access_token";
+	
+	@SuppressWarnings("unused")
+	private static Logger logger = LoggerFactory.getLogger(WeChatHttpUtil.class);
 	
 	
 	 /**
@@ -367,7 +372,7 @@ public class WeChatHttpUtil {
 			paySendData.setBody(new String("充值描述".getBytes("UTF-8")));
 			paySendData.setMchId(Constants.MCH_ID);
 			paySendData.setNonceStr(getRandomStr(32));
-			paySendData.setNotifyUrl(Constants.NOTIFY_URL + str);
+			paySendData.setNotifyUrl(Constants.NOTIFY_URL);
 			paySendData.setDeviceInfo("WEB");
 			paySendData.setOutTradeNo(orderStr);
 			paySendData.setTotalFee(totalFee);
